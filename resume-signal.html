@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+
+<html data-theme="auto" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="light dark" name="color-scheme"/>
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="favicon.ico" sizes="any" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<title>Brandon S. Clark — Tailored Resume</title>
+<meta content="Tailorable resume for Brandon S. Clark. Senior Software Engineer focused on AWS backend/platform engineering, APIs, serverless architecture, and operational execution." name="description"/>
+<link href="https://northwoodscode.github.io/resume/resume-signal.html" rel="canonical"/>
+<meta content="Brandon S. Clark — Tailored Resume" property="og:title"/>
+<meta content="Tailor by focus area, search bullets, copy ATS text, and export a clean PDF view." property="og:description"/>
+<meta content="profile" property="og:type"/>
+<meta content="https://northwoodscode.github.io/resume/resume-signal.html" property="og:url"/>
+<meta content="https://northwoodscode.github.io/resume/og-image.png" property="og:image"/>
+<meta content="Brandon S. Clark — Senior Software Engineer (AWS Backend / Platform)" property="og:image:alt"/>
+<meta content="summary_large_image" name="twitter:card"/>
+<meta content="Brandon S. Clark — Tailored Resume" name="twitter:title"/>
+<meta content="Tailor by focus area, search bullets, copy ATS text, and export a clean PDF view." name="twitter:description"/>
+<meta content="https://northwoodscode.github.io/resume/og-image.png" name="twitter:image"/>
+<style>
+    :root{
+      --bg:#f5f7fb;
+      --surface:#ffffff;
+      --surface-2:#f3f6fb;
+      --text:#0f172a;
+      --muted:#516078;
+      --border:#d7deea;
+      --accent:#6d28d9;
+      --accent-2:#10b981;
+      --warn:#b45309;
+      --shadow:0 16px 38px rgba(15,23,42,.10);
+      --radius:20px;
+      --max:1120px;
+      --mono:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans:ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      --focus:rgba(109,40,217,.28);
+    }
+
+    html[data-theme="dark"]{
+      --bg:#0b1020;
+      --surface:#12192d;
+      --surface-2:#0f1628;
+      --text:#e8edf8;
+      --muted:#acb7cb;
+      --border:#25314b;
+      --accent:#b794f6;
+      --accent-2:#34d399;
+      --warn:#fbbf24;
+      --shadow:0 22px 56px rgba(0,0,0,.45);
+      --focus:rgba(183,148,246,.30);
+    }
+
+    *{box-sizing:border-box}
+    html,body{min-height:100%}
+    body{
+      margin:0;
+      font-family:var(--sans);
+      color:var(--text);
+      background:
+        radial-gradient(900px 520px at 14% 0%, rgba(109,40,217,.12), transparent 60%),
+        radial-gradient(760px 440px at 88% 10%, rgba(16,185,129,.08), transparent 60%),
+        var(--bg);
+      line-height:1.58;
+    }
+
+    a{color:var(--accent); text-decoration:none}
+    a:hover{text-decoration:underline}
+
+    :where(a,button,input,summary):focus-visible{
+      outline:3px solid var(--focus);
+      outline-offset:3px;
+      border-radius:12px;
+    }
+
+    .skip{
+      position:absolute;
+      left:-999px;
+      top:12px;
+      background:var(--surface);
+      border:1px solid var(--border);
+      color:var(--text);
+      padding:.55rem .8rem;
+      border-radius:999px;
+      z-index:1000;
+      box-shadow:var(--shadow);
+    }
+    .skip:focus{left:12px}
+
+    .wrap{
+      max-width:var(--max);
+      margin:0 auto;
+      padding:20px 18px 78px;
+    }
+
+    .top{
+      display:flex;
+      gap:14px;
+      flex-wrap:wrap;
+      align-items:flex-start;
+      justify-content:space-between;
+    }
+
+    .hero{
+      flex:1 1 560px;
+      padding:18px;
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      background:linear-gradient(135deg, rgba(109,40,217,.10), rgba(255,255,255,.75));
+      box-shadow:var(--shadow);
+    }
+    html[data-theme="dark"] .hero{
+      background:linear-gradient(135deg, rgba(183,148,246,.12), rgba(18,25,45,.92));
+    }
+
+    .navrow{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.55rem;
+      margin-bottom:.8rem;
+    }
+
+    .navpill{
+      display:inline-flex;
+      align-items:center;
+      gap:.4rem;
+      padding:.38rem .68rem;
+      border:1px solid var(--border);
+      border-radius:999px;
+      background:var(--surface-2);
+      color:var(--muted);
+      font-size:.9rem;
+      font-weight:850;
+      text-decoration:none;
+    }
+
+    .hero h1{
+      margin:0;
+      font-size:clamp(1.55rem, 3vw, 2.4rem);
+      letter-spacing:-.03em;
+      line-height:1.05;
+    }
+
+    .tagline{
+      margin:.28rem 0 0;
+      color:var(--muted);
+      font-weight:800;
+    }
+
+    .meta{
+      margin:.95rem 0 0;
+      padding:0;
+      list-style:none;
+      display:flex;
+      flex-wrap:wrap;
+      gap:.45rem .8rem;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:.45rem;
+      padding:.34rem .62rem;
+      border:1px solid var(--border);
+      border-radius:999px;
+      background:var(--surface-2);
+      color:var(--text);
+      font-weight:700;
+      font-size:.92rem;
+      white-space:nowrap;
+    }
+
+    .dot{
+      width:9px;
+      height:9px;
+      border-radius:999px;
+      background:var(--accent-2);
+      flex:0 0 auto;
+    }
+
+    .kpis{
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:.65rem;
+      margin-top:12px;
+    }
+
+    .kpi{
+      padding:12px 14px;
+      border-radius:16px;
+      border:1px dashed rgba(109,40,217,.32);
+      background:rgba(255,255,255,.72);
+    }
+    html[data-theme="dark"] .kpi{
+      background:rgba(15,22,40,.85);
+      border-color:rgba(183,148,246,.34);
+    }
+
+    .kpi b{
+      display:block;
+      font-family:var(--mono);
+      font-size:1.08rem;
+      letter-spacing:.01em;
+    }
+
+    .kpi small{color:var(--muted)}
+
+    .hint{
+      margin-top:10px;
+      color:var(--muted);
+      font-size:.95rem;
+    }
+
+    .screenNote{}
+
+    .panel{
+      flex:1 1 390px;
+      padding:16px;
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      background:var(--surface);
+      box-shadow:var(--shadow);
+    }
+
+    .panel h2,
+    .card h3{
+      margin:0;
+      font-size:1rem;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      color:var(--muted);
+    }
+
+    .toggleRow,
+    .presetRow,
+    .controls{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.55rem;
+      margin-top:10px;
+      align-items:center;
+    }
+
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:.5rem;
+      padding:.46rem .68rem;
+      border:1px solid var(--border);
+      border-radius:999px;
+      background:var(--surface-2);
+      cursor:pointer;
+      user-select:none;
+      font-weight:800;
+    }
+    .chip input{accent-color:var(--accent)}
+    .chip[data-on="true"]{
+      border-color:rgba(109,40,217,.34);
+      box-shadow:inset 0 0 0 2px rgba(109,40,217,.12);
+    }
+    html[data-theme="dark"] .chip[data-on="true"]{
+      border-color:rgba(183,148,246,.42);
+      box-shadow:inset 0 0 0 2px rgba(183,148,246,.16);
+    }
+
+    .btn{
+      appearance:none;
+      border:1px solid var(--border);
+      background:var(--surface-2);
+      color:var(--text);
+      padding:.58rem .82rem;
+      border-radius:999px;
+      font:inherit;
+      font-weight:850;
+      cursor:pointer;
+      transition:transform .08s ease, box-shadow .2s ease;
+    }
+    .btn:hover{box-shadow:0 14px 28px rgba(15,23,42,.10); text-decoration:none}
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{
+      background:linear-gradient(135deg, rgba(109,40,217,.14), rgba(16,185,129,.12));
+      border-color:rgba(109,40,217,.34);
+    }
+
+    .search{
+      margin-top:10px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:.55rem;
+      align-items:center;
+    }
+
+    .search input{
+      flex:1 1 260px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      padding:.62rem .86rem;
+      background:var(--surface-2);
+      color:var(--text);
+      font:inherit;
+    }
+
+    .matchHint{
+      margin-top:10px;
+      color:var(--muted);
+      font-size:.95rem;
+      min-height:1.5em;
+    }
+
+    .row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+      margin-top:18px;
+    }
+    @media (max-width:940px){ .row{grid-template-columns:1fr} }
+
+    .card{
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      background:var(--surface);
+      padding:16px;
+      box-shadow:var(--shadow);
+    }
+
+    .sub{
+      margin:.35rem 0 .45rem;
+      color:var(--muted);
+      font-weight:800;
+      font-size:.95rem;
+    }
+
+    .card ul{margin:.55rem 0 0; padding-left:1.15rem}
+    .card li{margin:.38rem 0}
+
+    h4{
+      margin:12px 0 0;
+      font-size:1.02rem;
+      letter-spacing:-.01em;
+    }
+
+    .metaLine{
+      color:var(--muted);
+      font-weight:800;
+      font-size:.95rem;
+    }
+
+    .item{
+      border-left:4px solid transparent;
+      padding-left:.6rem;
+      transition:opacity .15s ease, border-color .15s ease, transform .15s ease;
+    }
+    .item[data-match="true"]{
+      border-left-color:var(--accent);
+      opacity:1;
+      transform:translateX(0);
+    }
+    .item[data-match="false"]{
+      opacity:.52;
+    }
+    .item[data-hidden="true"]{display:none}
+.sectionGroup{
+  margin-top:12px;
+  border:1px solid var(--border);
+  border-radius:16px;
+  background:var(--surface-2);
+  padding:10px 12px;
+}
+
+.sectionLabel{
+  margin:0 0 8px 0;
+  font-size:1rem;
+  font-weight:800;
+  color:var(--text);
+}
+
+.mono{font-family:var(--mono)}
+
+    .toast{
+      position:fixed;
+      bottom:18px;
+      left:50%;
+      transform:translateX(-50%);
+      background:rgba(15,23,42,.92);
+      color:#fff;
+      border-radius:999px;
+      padding:.6rem .92rem;
+      font-weight:900;
+      box-shadow:var(--shadow);
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .18s ease, transform .18s ease;
+      z-index:50;
+    }
+    .toast.show{
+      opacity:1;
+      transform:translateX(-50%) translateY(-6px);
+    }
+
+    .printMeta{
+      display:none;
+      margin-bottom:12px;
+      color:var(--muted);
+      font-size:.95rem;
+      font-weight:800;
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *{transition:none !important; scroll-behavior:auto !important}
+    }
+
+    @media print{
+      .panel, .toast, .search, .navrow, .skip, .hint, .screenNote{display:none !important}
+      .printMeta{display:block}
+      body{background:#fff;color:#000}
+      .wrap{max-width:8.5in; padding:0}
+      .row{grid-template-columns:1fr !important}
+      .card, .hero{box-shadow:none !important; background:#fff !important}
+      .card{break-inside:avoid-page; page-break-inside:avoid}
+      a{color:#000; text-decoration:none}
+      #profilesLabel, #profilesList{display:none !important}
+      .item[data-hidden="true"]{display:none !important}
+      .item{opacity:1 !important; border-left-color:transparent !important}
+    }
+    #read-progress{
+      position:fixed;
+      top:0;left:0;
+      width:0%;
+      height:3px;
+      background:var(--accent);
+      z-index:9999;
+      transition:width .1s linear;
+      pointer-events:none;
+    }
+    @media print{#read-progress{display:none}}
+  </style>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"ProfilePage",
+  "mainEntity":{
+    "@type":"Person",
+    "name":"Brandon S. Clark",
+    "jobTitle":"Senior Software Engineer",
+    "email":"mailto:bsc_work@gmx.com",
+    "url":"https://northwoodscode.github.io/resume/",
+    "sameAs":[
+      "https://github.com/NorthwoodsCode",
+      "https://www.linkedin.com/in/brandon-c-it-industry"
+    ],
+    "address":{
+      "@type":"PostalAddress",
+      "addressRegion":"WI",
+      "addressCountry":"US"
+    }
+  }
+}
+</script>
+<style>
+  /* command palette */
+  #cmd-pal{position:fixed;inset:0;z-index:99998;display:flex;align-items:flex-start;justify-content:center;padding-top:clamp(48px,9vh,130px)}
+  #cmd-pal[hidden]{display:none !important}
+  #cmd-pal{--cp-bg:#fff;--cp-border:#e5e7eb;--cp-text:#111827;--cp-muted:#6b7280;--cp-sub:#f9fafb;--cp-hover:#eff6ff;--cp-cat:#9ca3af;--cp-bdrop:rgba(0,0,0,.48)}
+  html[data-theme="dark"] #cmd-pal{--cp-bg:#0f172a;--cp-border:#1e3a5f;--cp-text:#e2e8f0;--cp-muted:#64748b;--cp-sub:#071224;--cp-hover:rgba(37,99,235,.15);--cp-cat:#475569;--cp-bdrop:rgba(0,0,0,.72)}
+  @media(prefers-color-scheme:dark){html:not([data-theme="light"]) #cmd-pal{--cp-bg:#0f172a;--cp-border:#1e3a5f;--cp-text:#e2e8f0;--cp-muted:#64748b;--cp-sub:#071224;--cp-hover:rgba(37,99,235,.15);--cp-cat:#475569;--cp-bdrop:rgba(0,0,0,.72)}}
+  #cmd-bg{position:absolute;inset:0;background:var(--cp-bdrop);backdrop-filter:blur(4px)}
+  #cmd-box{position:relative;width:min(620px,92vw);background:var(--cp-bg);border-radius:16px;box-shadow:0 28px 70px rgba(0,0,0,.22);overflow:hidden;border:1px solid var(--cp-border)}
+  #cmd-sr{display:flex;align-items:center;gap:.65rem;padding:.9rem 1rem;border-bottom:1px solid var(--cp-border)}
+  #cmd-sr svg{flex-shrink:0;color:var(--cp-muted)}
+  #cmd-q{flex:1;border:none;outline:none;font-size:1rem;background:transparent;color:var(--cp-text);font-family:inherit}
+  #cmd-q::placeholder{color:var(--cp-cat)}
+  #cmd-esk{font-size:.7rem;padding:.18rem .42rem;border:1px solid var(--cp-border);border-radius:4px;color:var(--cp-cat);background:var(--cp-sub);font-family:inherit;white-space:nowrap;cursor:pointer}
+  #cmd-list{margin:0;padding:.3rem 0;list-style:none;max-height:min(380px,52vh);overflow-y:auto}
+  #cmd-list:empty::after{content:'No results';display:block;padding:.9rem 1.1rem;color:var(--cp-cat);font-size:.88rem}
+  .cpcat{padding:.5rem 1.1rem .15rem;font-size:.7rem;font-weight:760;letter-spacing:.1em;text-transform:uppercase;color:var(--cp-cat)}
+  .cpi{display:flex;align-items:center;gap:.65rem;padding:.58rem 1.1rem;cursor:pointer;user-select:none}
+  .cpi:hover,.cpi[aria-selected="true"]{background:var(--cp-hover)}
+  .cpi-lbl{font-size:.93rem;font-weight:560;color:var(--cp-text)}
+  .cpi-desc{font-size:.8rem;color:var(--cp-muted);margin-left:auto;white-space:nowrap;padding-left:.5rem}
+  #cmd-foot{display:flex;gap:1rem;padding:.5rem 1rem;border-top:1px solid var(--cp-border);background:var(--cp-sub)}
+  #cmd-foot span{font-size:.73rem;color:var(--cp-cat);display:flex;align-items:center;gap:.25rem}
+  #cmd-foot kbd{font-size:.69rem;padding:.12rem .32rem;border:1px solid var(--cp-border);border-radius:4px;background:var(--cp-bg);font-family:inherit}
+</style>
+</head>
+<body>
+<div id="read-progress" role="progressbar" aria-hidden="true"></div>
+<a class="skip" href="#content">Skip to content</a>
+<div class="wrap">
+<div class="top">
+<section aria-label="Resume header" class="hero">
+<h1>Brandon S. Clark</h1>
+<div class="tagline">Senior Software Engineer • AWS Backend / Cloud Platform</div>
+<ul aria-label="Contact and profile links" class="meta">
+<li class="badge"><span aria-hidden="true" class="dot"></span>Wisconsin (Remote)</li>
+<li class="badge"><a href="mailto:bsc_work@gmx.com">bsc_work@gmx.com</a></li>
+<li class="badge"><a href="https://github.com/NorthwoodsCode" rel="noopener noreferrer">GitHub</a></li>
+<li class="badge"><a href="https://www.linkedin.com/in/brandon-c-it-industry" rel="noopener noreferrer">LinkedIn</a></li>
+<li class="badge"><a href="https://northwoodscode.github.io/resume/" rel="noopener noreferrer">Portfolio</a></li></ul>
+<div aria-label="Impact highlights" class="kpis">
+<div class="kpi"><b>$85M processed</b><small>Payment portal handling ~250K transactions</small></div>
+<div class="kpi"><b>1,200+ hrs saved</b><small>Automated data-entry eliminating manual work</small></div>
+<div class="kpi"><b>&lt;1 min / device</b><small>Provisioning automation down from ~10 minutes</small></div>
+<div class="kpi"><b>Multi-env IaC</b><small>Terraform-managed dev / test / prod pipelines</small></div>
+</div>
+<p class="screenNote hint">Tailor on screen for a target role, then export a cleaner PDF or copy ATS text from the filtered view.</p>
+</section>
+<aside aria-label="Tailoring controls" class="panel">
+<h2>Tailor this view</h2>
+<div aria-label="Focus areas" class="toggleRow" role="group">
+<label class="chip" data-chip="cloud"><input type="checkbox" value="cloud"/>Cloud &amp; AWS</label>
+<label class="chip" data-chip="api"><input type="checkbox" value="api"/>APIs &amp; Integrations</label>
+<label class="chip" data-chip="iot"><input type="checkbox" value="iot"/>IoT &amp; Devices</label>
+<label class="chip" data-chip="data"><input type="checkbox" value="data"/>Data Platforms</label>
+<label class="chip" data-chip="opex"><input type="checkbox" value="opex"/>Ops / Reliability</label>
+<label class="chip" data-chip="lead"><input type="checkbox" value="lead"/>Leadership</label>
+<label class="chip" data-chip="enable"><input type="checkbox" value="enable"/>Enablement</label>
+<label class="chip" data-chip="ai"><input type="checkbox" value="ai"/>GenAI</label>
+</div>
+<div aria-label="Starter presets" class="presetRow" role="group"><button class="btn" data-preset-focus="cloud,api,data,opex" type="button">Backend / Platform</button>
+<button class="btn" data-preset-focus="api,cloud,data" type="button">API / Integrations</button>
+<button class="btn" data-preset-focus="iot,cloud,api,opex" type="button">Cloud / IoT</button>
+<button class="btn" data-preset-focus="data,cloud,api" type="button">Data / Tooling</button>
+<button class="btn" data-preset-focus="lead,enable,opex" type="button">Leadership</button>
+<button class="btn" data-preset-focus="ai,enable,lead" type="button">AI / Productivity</button></div>
+<div aria-label="Search bullets" class="search">
+<input aria-label="Search resume bullets" id="searchBox" placeholder="Search bullets (for example: Terraform, OpenAPI, MQTT, Auth0)" type="search"/>
+<button class="btn" id="clearSearch" type="button">Clear</button>
+</div>
+<div aria-label="Display options" class="toggleRow">
+<label class="chip" data-chip="only">
+<input id="onlyMatches" type="checkbox"/>
+            Show only matches
+          </label>
+</div>
+<div aria-label="Actions" class="controls">
+<button class="btn primary" id="shareBtn" type="button">Copy tailored link</button>
+<button class="btn" id="copyTextBtn" type="button">Copy ATS text</button>
+<button class="btn" id="resetBtn" type="button">Reset filters</button>
+<button class="btn" id="themeBtn" type="button">Toggle theme</button>
+<button class="btn" id="printBtn" type="button">Print / Save PDF</button>
+</div>
+<div aria-live="polite" class="matchHint" id="matchHint"></div>
+</aside>
+</div>
+<main class="row" id="content">
+<section aria-label="Summary" class="card">
+<div class="printMeta" id="printMeta"></div>
+<h3>Summary</h3>
+<div class="sub">AWS backend + platform systems • APIs, serverless, and data workflows • clear execution + enablement</div>
+<ul id="summaryBullets">
+<li class="item" data-tags="cloud api data opex">Senior Software Engineer focused on AWS backend/platform systems, serverless architecture, API integrations, and data workflows.</li>
+<li class="item" data-tags="opex lead">Builds secure, multi-environment automation with an emphasis on reliability, operational clarity, and measurable execution.</li>
+<li class="item" data-tags="enable lead">Improves team velocity through documentation, demos, diagrams, onboarding assets, and strong technical communication.</li>
+<li class="item" data-tags="ai enable">Uses approved GenAI tools to improve communication quality, speed up knowledge sharing, and reduce friction in engineering workflows.</li>
+</ul>
+<div class="sectionGroup" id="skillsDetails" style="margin-top:10px"><h4 class="sectionLabel">Skills</h4>
+<ul style="margin-top:8px">
+<li class="item" data-tags="cloud api">AWS: Lambda, API Gateway, Step Functions, Secrets Manager, DynamoDB, CloudWatch</li>
+<li class="item" data-tags="api">API design, OpenAPI, partner integrations, Auth0</li>
+<li class="item" data-tags="cloud data">Terraform (IaC), CI/CD, multi-environment deployments</li>
+<li class="item" data-tags="cloud data api">Python tooling, TypeScript / Node.js</li>
+<li class="item" data-tags="iot cloud">MQTT patterns, device provisioning, constrained-device optimization</li>
+<li class="item" data-tags="data">Data platforms, tagging systems, DocumentDB, migration and backfill scripting</li>
+<li class="item" data-tags="opex">Monitoring, dashboards, operational metrics, service readiness</li>
+<li class="item" data-tags="lead enable">Presentations, diagrams, docs, mentorship frameworks</li>
+</ul>
+</div>
+</section>
+<section aria-label="Experience" class="card">
+<h3>Professional Experience</h3>
+<div class="sub">Recent roles with bullets you can tailor toward backend, platform, cloud, data, and enablement work</div>
+<div class="roleBlock">
+<h4 class="roleTitle">Milwaukee Tool (Digital IoT Service) — Senior Software Engineer <span class="metaLine">2025–Present</span></h4>
+<ul>
+<li class="item" data-tags="iot cloud api data">Initiated and delivered a greenfield IoT provisioning capability (Python CLI + supporting APIs) for secure device registration, certificate generation, and bootstrapping across dev, test, and prod.</li>
+<li class="item" data-tags="iot cloud opex">Reduced provisioning time from ~10 minutes to under 1 minute per device, avoiding an estimated ~100 hours of manual work in a 100-device rollout.</li>
+<li class="item" data-tags="iot cloud api">Integrated AWS Secrets Manager, Auth0 patterns, and MQTT delta updates to strengthen security and cut constrained-device payload size by ~40%.</li>
+<li class="item" data-tags="opex lead">Worked across IoT, security, and cloud teams to align provisioning architecture with AWS IoT Core standards and enterprise security policies.</li>
+<li class="item" data-tags="enable lead">Created a comprehensive README, diagrams, and demo assets that made the workflow easier for other engineers to adopt safely and reduced repetitive support friction.</li>
+<li class="item" data-tags="cloud api enable">Served as the first implementer / pilot user, surfacing governance and cloud-permission blockers early and helping turn an ambiguous prototype into a repeatable process.</li>
+<li class="item" data-tags="lead enable">Shared reusable demos, interactive documentation, and technical guidance that improved cross-team knowledge transfer and reduced dependence on tribal knowledge.</li>
+<li class="item" data-tags="lead iot cloud">Led the TwinForge innovation sprint (2 software engineers + 2 QA engineers) in 3D modeling and AWS IoT TwinMaker, producing demo-able proof-of-concept outcomes.</li>
+<li class="item" data-tags="ai enable">Used approved GenAI tools to improve documentation quality, communication clarity, and the speed of knowledge-sharing workflows.</li>
+</ul>
+</div>
+<div class="roleBlock">
+<h4 class="roleTitle">Milwaukee Tool (Digital IoT Service) — Software Engineer II <span class="metaLine">2024</span></h4>
+<ul>
+<li class="item" data-tags="data api">Advanced Tool Data Foundations work by implementing a comprehensive tagging system and supporting tool-read integration into QuickLink.</li>
+<li class="item" data-tags="enable opex">Strengthened partner-team support with clearer documentation, better workflow visualization, and faster enablement around feature requests and data insights.</li>
+<li class="item" data-tags="api data">Expanded TypeScript reusability, OpenAPI documentation, and data-platform practices to improve maintainability and technical clarity.</li>
+</ul>
+</div>
+<div class="sectionGroup" id="earlierRoles" style="margin-top:10px"><h4 class="sectionLabel">Earlier roles (condensed)</h4>
+<div class="roleBlock">
+<ul style="margin-top:8px">
+<li class="item" data-tags="cloud api">Milwaukee Tool — One-Key Integrations (2021–2023): Oracle Unifier and partner integrations, AWS serverless integrations, Terraform IaC, API Gateway / Step Functions POCs, dynamic deep-link and PDF reliability fixes, onboarding docs, and live demos.</li>
+<li class="item" data-tags="cloud api data">Foundation Finance (2019–2021): full-stack development, AWS-hosted portals, CI/CD, automation, and SQL-backed product work.</li>
+<li class="item" data-tags="api data">Aqua Finance (2017–2019): full-stack engineering across .NET, Java, C#, and enterprise systems.</li>
+<li class="item" data-tags="data">Minnesota AG’s Office (2016–2017): internal application development, database work, tooling, and automation.</li>
+</ul>
+</div>
+</div>
+</section>
+<section aria-label="Projects and leadership signals" class="card">
+<h3>Selected Impact</h3>
+<div class="sub">Signals that reinforce scope, ownership, and technical range</div>
+<ul id="signalBullets">
+<li class="item" data-tags="cloud api data opex">$85M payment portal — shipped a full-stack AWS-hosted web application that processed ~250,000 payments across its lifetime.</li>
+<li class="item" data-tags="cloud api data opex">1,200-hour automation — built a Java + SQL Server automated data-entry program that eliminated an estimated $40K in annual manual work.</li>
+<li class="item" data-tags="cloud api opex">Serverless request-bus — prototyped an API Gateway → Step Functions → multi-Lambda pipeline that filtered, validated, transformed, and augmented requests end-to-end in seconds.</li>
+<li class="item" data-tags="cloud api opex">Greenfield provisioning automation — moved device onboarding from manual and error-prone to a secure, repeatable workflow with &lt;1 minute per-device execution.</li>
+<li class="item" data-tags="enable lead">README + demo assets — made complex workflows easier to adopt, improved setup consistency, and reduced repetitive support friction.</li>
+<li class="item" data-tags="lead enable opex">Reusable demos + interactive documentation — scaled knowledge sharing, improved clarity, and reinforced peer mentorship across teams.</li>
+<li class="item" data-tags="ai enable">AI-assisted drafting and analysis — used approved GenAI workflows to improve communication clarity and speed up internal knowledge-sharing materials.</li>
+</ul>
+<p class="screenNote hint">Use Copy ATS text after filtering to generate a simpler text version from the current view.</p>
+</section>
+<section aria-label="Education, credentials, and profiles" class="card">
+<h3>Education &amp; Credentials</h3>
+<div class="sub">Education, certifications, and relevant profile links</div><div class="sectionGroup" id="certDetails" style="margin-top:10px"><h4 class="sectionLabel">Certifications</h4>
+<ul style="margin-top:8px">
+<li class="item" data-tags="cloud">AWS Certified Solutions Architect – Associate (SAA-C03)</li>
+<li class="item" data-tags="cloud">AWS Certified Cloud Practitioner (CLF-C01)</li>
+</ul>
+</div><div class="sectionGroup" id="educationDetails" style="margin-top:10px"><h4 class="sectionLabel">Education</h4>
+<ul style="margin-top:8px">
+<li class="item" data-tags="enable"><b>University of Wisconsin–River Falls:</b> B.S. Finance, Minor in Computer Science</li>
+</ul>
+</div><h4 class="sectionLabel" id="profilesLabel">Profiles</h4><ul class="linkList" id="profilesList">
+<li class="item" data-tags="enable"><b>Email:</b> <a href="mailto:bsc_work@gmx.com">bsc_work@gmx.com</a></li>
+<li class="item" data-tags="enable"><b>GitHub:</b> <a href="https://github.com/NorthwoodsCode" rel="noopener noreferrer">github.com/NorthwoodsCode</a></li>
+<li class="item" data-tags="enable"><b>Portfolio:</b> <a href="https://northwoodscode.github.io/resume/" rel="noopener noreferrer">northwoodscode.github.io/resume/</a></li>
+<li class="item" data-tags="enable"><b>LinkedIn:</b> <a href="https://www.linkedin.com/in/brandon-c-it-industry" rel="noopener noreferrer">linkedin.com/in/brandon-c-it-industry</a></li>
+</ul>
+
+
+</section>
+</main>
+</div>
+<div aria-live="polite" class="toast" id="toast" role="status"></div>
+<script>
+    (function(){
+      const html = document.documentElement;
+      const chipLabels = Array.from(document.querySelectorAll('.chip[data-chip]'));
+      const chipInputs = Array.from(document.querySelectorAll('.chip input[type="checkbox"][value]'));
+      const onlyMatches = document.getElementById('onlyMatches');
+      const searchBox = document.getElementById('searchBox');
+      const clearSearch = document.getElementById('clearSearch');
+      const shareBtn = document.getElementById('shareBtn');
+      const copyTextBtn = document.getElementById('copyTextBtn');
+      const resetBtn = document.getElementById('resetBtn');
+      const themeBtn = document.getElementById('themeBtn');
+      const printBtn = document.getElementById('printBtn');
+      const toast = document.getElementById('toast');
+      const matchHint = document.getElementById('matchHint');
+      const printMeta = document.getElementById('printMeta');
+      const items = Array.from(document.querySelectorAll('.item'));
+
+      function toastMsg(msg){
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 1700);
+      }
+
+      function normalize(text){
+        return (text || '').replace(/\s+/g, ' ').trim();
+      }
+
+      function getPreferredTheme(){
+        const v = localStorage.getItem('bsc_theme');
+        if(v === 'light' || v === 'dark') return v;
+        return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+      }
+
+      function setTheme(theme){
+        html.dataset.theme = theme;
+        localStorage.setItem('bsc_theme', theme);
+      }
+
+      function getSelectedTags(){
+        return chipInputs.filter(i => i.checked).map(i => i.value);
+      }
+
+      function setChipsUI(){
+        chipLabels.forEach(lbl => {
+          const input = lbl.querySelector('input');
+          lbl.dataset.on = input && input.checked ? 'true' : 'false';
+        });
+      }
+
+      function matchesTags(itemTags, selected){
+        if(selected.length === 0) return true;
+        const set = new Set(itemTags);
+        return selected.some(t => set.has(t));
+      }
+
+      function filtersActive(){
+        return getSelectedTags().length > 0 || (searchBox.value || '').trim() !== '';
+      }
+
+      function applyFilters(){
+        const selected = getSelectedTags();
+        const q = normalize(searchBox.value).toLowerCase();
+        const only = !!onlyMatches.checked;
+        let matchCount = 0;
+
+        items.forEach(el => {
+          const tags = (el.dataset.tags || '').split(/\s+/).filter(Boolean);
+          const tagMatch = matchesTags(tags, selected);
+          const text = (el.textContent || '').toLowerCase();
+          const textMatch = q === '' ? true : text.includes(q);
+          const isMatch = tagMatch && textMatch;
+
+          el.dataset.match = isMatch ? 'true' : 'false';
+          el.dataset.hidden = (only && !isMatch) ? 'true' : 'false';
+          if(isMatch) matchCount++;
+        });
+
+        setChipsUI();
+
+        if(!filtersActive()){
+          matchHint.textContent = 'Tip: choose focus areas or search terms to highlight the strongest matching bullets.';
+        }else{
+          const parts = [];
+          if(selected.length) parts.push('Focus: ' + selected.join(', '));
+          if(q) parts.push('Search: “' + q + '”');
+          parts.push('Matches: ' + matchCount);
+          if(!only) parts.push('Non-matches stay visible for context');
+          matchHint.textContent = parts.join(' • ');
+        }
+
+        const printParts = [];
+        if(selected.length) printParts.push('Focus: ' + selected.join(', '));
+        if(q) printParts.push('Search: "' + q + '"');
+        printMeta.textContent = printParts.join(' • ');
+      }
+
+      function updateURL(push=false){
+        const selected = getSelectedTags();
+        const q = normalize(searchBox.value);
+        const params = new URLSearchParams(window.location.search);
+
+        if(selected.length) params.set('focus', selected.join(','));
+        else params.delete('focus');
+
+        if(q) params.set('q', q);
+        else params.delete('q');
+
+        if(onlyMatches.checked) params.set('only', '1');
+        else params.delete('only');
+
+        const newUrl = window.location.pathname + (params.toString() ? ('?' + params.toString()) : '');
+        if(push) history.pushState(null, '', newUrl);
+        else history.replaceState(null, '', newUrl);
+        return window.location.origin + newUrl;
+      }
+
+      async function copyToClipboard(text){
+        try{
+          await navigator.clipboard.writeText(text);
+          toastMsg('Copied!');
+        }catch(e){
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          ta.style.position = 'fixed';
+          ta.style.left = '-9999px';
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          toastMsg('Copied!');
+        }
+      }
+
+      function lineText(node){
+        return normalize(node.textContent || '');
+      }
+
+      function includeItemForCopy(el){
+        if(filtersActive()) return el.dataset.match === 'true';
+        return el.dataset.hidden !== 'true';
+      }
+
+      function pushBulletGroup(lines, heading, elements){
+        const chosen = elements.filter(includeItemForCopy);
+        if(!chosen.length) return;
+        lines.push(heading);
+        chosen.forEach(el => lines.push('- ' + lineText(el)));
+        lines.push('');
+      }
+
+      function buildAtsText(){
+        const lines = [];
+        lines.push('Brandon S. Clark — Senior Software Engineer (AWS Backend / Cloud Platform)');
+        lines.push('Location: Wisconsin (Remote)');
+        lines.push('Email: bsc_work@gmx.com');
+        lines.push('GitHub: https://github.com/NorthwoodsCode');
+        lines.push('LinkedIn: https://www.linkedin.com/in/brandon-c-it-industry');
+        lines.push('');
+
+        pushBulletGroup(lines, 'SUMMARY', Array.from(document.querySelectorAll('#summaryBullets .item')));
+        pushBulletGroup(lines, 'SKILLS', Array.from(document.querySelectorAll('#skillsDetails .item')));
+
+        const roleBlocks = Array.from(document.querySelectorAll('.roleBlock'));
+        let experienceHeaderAdded = false;
+        roleBlocks.forEach(block => {
+          const heading = block.querySelector('.roleTitle');
+          const roleItems = Array.from(block.querySelectorAll('.item'));
+          const chosen = roleItems.filter(includeItemForCopy);
+          if(!chosen.length) return;
+          if(!experienceHeaderAdded){
+            lines.push('EXPERIENCE');
+            experienceHeaderAdded = true;
+          }
+          lines.push(heading ? lineText(heading) : 'Earlier experience');
+          chosen.forEach(el => lines.push('- ' + lineText(el)));
+          lines.push('');
+        });
+
+        pushBulletGroup(lines, 'SELECTED IMPACT', Array.from(document.querySelectorAll('#signalBullets .item')));
+        pushBulletGroup(lines, 'CERTIFICATIONS', Array.from(document.querySelectorAll('#certDetails .item')));
+        pushBulletGroup(lines, 'EDUCATION', Array.from(document.querySelectorAll('#educationDetails .item')));
+
+        return lines.join('\n').replace(/\n{3,}/g, '\n\n').trim();
+      }
+
+      function initFromURL(){
+        const params = new URLSearchParams(window.location.search);
+        const focus = (params.get('focus') || '').split(',').map(s => s.trim()).filter(Boolean);
+        const q = params.get('q') || '';
+        const only = params.get('only') === '1';
+
+        chipInputs.forEach(i => i.checked = focus.includes(i.value));
+        searchBox.value = q;
+        onlyMatches.checked = only;
+      }
+
+      function resetFilters(){
+        chipInputs.forEach(i => i.checked = false);
+        searchBox.value = '';
+        onlyMatches.checked = false;
+        applyFilters();
+        updateURL(true);
+      }
+
+      setTheme(getPreferredTheme());
+      initFromURL();
+      applyFilters();
+      updateURL();
+
+      chipInputs.forEach(i => i.addEventListener('change', () => { applyFilters(); updateURL(); }));
+      onlyMatches.addEventListener('change', () => { applyFilters(); updateURL(); });
+      searchBox.addEventListener('input', () => { applyFilters(); updateURL(); });
+
+      clearSearch.addEventListener('click', () => {
+        searchBox.value = '';
+        applyFilters();
+        updateURL(true);
+      });
+
+      document.querySelectorAll('[data-preset-focus]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const values = (btn.getAttribute('data-preset-focus') || '').split(',').map(s => s.trim()).filter(Boolean);
+          chipInputs.forEach(i => i.checked = values.includes(i.value));
+          applyFilters();
+          updateURL(true);
+        });
+      });
+
+      shareBtn.addEventListener('click', async () => {
+        const url = updateURL(true);
+        await copyToClipboard(url);
+      });
+
+      copyTextBtn.addEventListener('click', async () => {
+        await copyToClipboard(buildAtsText());
+      });
+
+      resetBtn.addEventListener('click', () => {
+        resetFilters();
+        toastMsg('Filters reset');
+      });
+
+      themeBtn.addEventListener('click', () => setTheme(html.dataset.theme === 'dark' ? 'light' : 'dark'));
+      printBtn.addEventListener('click', () => window.print());
+    })();
+  </script>
+  <script>
+    (function(){
+      var bar = document.getElementById('read-progress');
+      if(!bar) return;
+      function update(){
+        var s = document.documentElement;
+        var pct = s.scrollTop / (s.scrollHeight - s.clientHeight) * 100;
+        bar.style.width = Math.min(pct, 100) + '%';
+      }
+      document.addEventListener('scroll', update, {passive:true});
+    })();
+  </script>
+
+  <!-- command palette -->
+  <div id="cmd-pal" role="dialog" aria-modal="true" aria-label="Command palette" hidden>
+    <div id="cmd-bg"></div>
+    <div id="cmd-box">
+      <div id="cmd-sr">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="cmd-q" type="text" placeholder="Search commands, navigate, jump to section…" autocomplete="off" spellcheck="false" aria-label="Command search" aria-controls="cmd-list" aria-autocomplete="list" />
+        <kbd id="cmd-esk">ESC</kbd>
+      </div>
+      <ul id="cmd-list" role="listbox" aria-label="Commands" aria-live="polite"></ul>
+      <div id="cmd-foot" aria-hidden="true">
+        <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
+        <span><kbd>↵</kbd> open</span>
+        <span><kbd>esc</kbd> close</span>
+      </div>
+    </div>
+  </div>
+  <script>
+  (function(){
+    var pal=document.getElementById('cmd-pal'),bg=document.getElementById('cmd-bg'),inp=document.getElementById('cmd-q'),lst=document.getElementById('cmd-list');
+    if(!pal||!bg||!inp||!lst) return;
+    var page=(location.pathname.split('/').pop()||'index.html').replace(/[?#].*/,'');
+    var NAV=[
+      {cat:'Navigate',label:'Home',desc:'Landing page',url:'index.html'},
+      {cat:'Navigate',label:'Atlas — Recruiter Resume',desc:'Clean PDF-ready',url:'resume-atlas.html'},
+      {cat:'Navigate',label:'Signal — Interactive Resume',desc:'Filters + search',url:'resume-signal.html'},
+      {cat:'Navigate',label:'Proof Hub — Case Studies',desc:'ATS export + evidence',url:'proof-hub.html'},
+      {cat:'Navigate',label:'Switchboard',desc:'Low-motion hub',url:'resume-switchboard.html'},
+    ];
+    var ACT=[
+      {cat:'Action',label:'Print / Download PDF',desc:'Open print dialog',action:'print'},
+      {cat:'Action',label:'Copy email address',desc:'bsc_work@gmx.com',action:'copy-email'},
+      {cat:'Action',label:'View GitHub',desc:'NorthwoodsCode',url:'https://github.com/NorthwoodsCode',ext:true},
+      {cat:'Action',label:'View LinkedIn',desc:'brandon-c-it-industry',url:'https://www.linkedin.com/in/brandon-c-it-industry',ext:true},
+    ];
+    var JMP={
+      'index.html':[
+        {cat:'Jump to',label:'Resume Modes',desc:'All format cards',anchor:'#formats'},
+        {cat:'Jump to',label:'Tailor Tools',desc:'Build a Signal link',anchor:'#tailorTools'},
+      ],
+      'resume-atlas.html':[
+        {cat:'Jump to',label:'Summary',desc:'Professional summary',anchor:'#summary'},
+        {cat:'Jump to',label:'Core Skills',desc:'Technology stack',anchor:'#skills'},
+        {cat:'Jump to',label:'Experience',desc:'Work history',anchor:'#experience'},
+        {cat:'Jump to',label:'Certifications',desc:'AWS + Terraform',anchor:'#certs'},
+        {cat:'Jump to',label:'Education',desc:'UWRF, Finance + CS',anchor:'#education'},
+      ],
+      'proof-hub.html':[
+        {cat:'Jump to',label:'Overview',desc:'Impact strip + metrics',anchor:'#start'},
+        {cat:'Jump to',label:'Timeline',desc:'Career timeline',anchor:'#timeline'},
+        {cat:'Jump to',label:'Turbo Pack',desc:'Bullet builder + export',anchor:'#turbo'},
+        {cat:'Jump to',label:'Case Studies',desc:'Project narratives',anchor:'#cases'},
+        {cat:'Jump to',label:'Credentials',desc:'Certs + education',anchor:'#cred'},
+      ],
+    };
+    var CMDS=NAV.concat(ACT).concat(JMP[page]||[]);
+    var activeIdx=-1,prevFocus=null,filtered=[];
+    function flt(q){q=(q||'').toLowerCase().trim();if(!q)return CMDS.slice();return CMDS.filter(function(c){return(c.label+' '+(c.desc||'')+' '+(c.cat||'')).toLowerCase().indexOf(q)>-1;});}
+    function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+    function mkItem(c,i){
+      var li=document.createElement('li');li.className='cpi';li.setAttribute('role','option');li.setAttribute('id','cpi-'+i);li.setAttribute('aria-selected','false');
+      li.innerHTML='<span class="cpi-lbl">'+esc(c.label)+'</span>'+(c.desc?'<span class="cpi-desc">'+esc(c.desc)+'</span>':'');
+      li.addEventListener('mousedown',function(e){e.preventDefault();execute(c);});
+      return li;
+    }
+    function render(q){
+      filtered=flt(q);lst.innerHTML='';var lastCat=null;
+      filtered.forEach(function(c,i){
+        if(c.cat!==lastCat){var h=document.createElement('li');h.className='cpcat';h.setAttribute('role','presentation');h.textContent=c.cat;lst.appendChild(h);lastCat=c.cat;}
+        lst.appendChild(mkItem(c,i));
+      });
+      setActive(-1);
+    }
+    function setActive(i){
+      activeIdx=i;
+      var items=lst.querySelectorAll('.cpi');
+      items.forEach(function(el,j){el.setAttribute('aria-selected',j===i?'true':'false');});
+      if(i>=0&&items[i])items[i].scrollIntoView({block:'nearest'});
+      inp.setAttribute('aria-activedescendant',i>=0?'cpi-'+i:'');
+    }
+    function execute(cmd){
+      closePal();
+      if(cmd.action==='print'){window.print();return;}
+      if(cmd.action==='copy-email'){
+        var t='bsc_work@gmx.com';
+        if(navigator.clipboard){navigator.clipboard.writeText(t);}
+        else{var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}
+        return;
+      }
+      if(cmd.anchor){var el=document.querySelector(cmd.anchor);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});return;}
+      if(cmd.url){if(cmd.ext){window.open(cmd.url,'_blank','noopener');}else{location.href=cmd.url;}}
+    }
+    function openPal(){prevFocus=document.activeElement;pal.hidden=false;render('');inp.value='';setTimeout(function(){inp.focus();},30);document.body.style.overflow='hidden';}
+    function closePal(){pal.hidden=true;document.body.style.overflow='';if(prevFocus)prevFocus.focus();}
+    inp.addEventListener('input',function(){render(inp.value);});
+    inp.addEventListener('keydown',function(e){
+      var items=lst.querySelectorAll('.cpi');
+      if(e.key==='ArrowDown'){e.preventDefault();setActive(Math.min(activeIdx+1,items.length-1));}
+      else if(e.key==='ArrowUp'){e.preventDefault();setActive(Math.max(activeIdx-1,0));}
+      else if(e.key==='Enter'){if(activeIdx>=0&&filtered[activeIdx])execute(filtered[activeIdx]);else if(filtered[0])execute(filtered[0]);}
+      else if(e.key==='Escape'){closePal();}
+    });
+    bg.addEventListener('mousedown',closePal);
+    document.getElementById('cmd-esk').addEventListener('click',closePal);
+    document.addEventListener('keydown',function(e){
+      if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();if(pal.hidden){openPal();}else{closePal();}}
+      if(!pal.hidden&&e.key==='Escape')closePal();
+    });
+  })();
+  </script>
+  <script src="shared-enhancements.js"></script>
+</body>
+</html>

@@ -1,0 +1,1361 @@
+<!doctype html>
+<html lang="en" data-theme="auto">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="favicon.ico" sizes="any" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <title>Brandon S. Clark — Resume Switchboard+</title>
+  <meta name="description" content="Audience-first resume switchboard for Brandon S. Clark. Routes recruiters, hiring managers, technical leaders, and proof-first reviewers into the right resume mode fast." />
+
+  <link rel="canonical" href="https://northwoodscode.github.io/resume/resume-switchboard.html" />
+  <meta property="og:title" content="Brandon S. Clark — Resume Switchboard+" />
+  <meta property="og:description" content="Audience-first resume switchboard. Routes recruiters, hiring managers, technical leaders, and proof-first reviewers into the right resume mode fast." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://northwoodscode.github.io/resume/resume-switchboard.html" />
+  <meta property="og:image" content="https://northwoodscode.github.io/resume/og-image.png" />
+  <meta property="og:image:alt" content="Brandon S. Clark — Senior Software Engineer (AWS Backend / Platform)" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Brandon S. Clark — Resume Switchboard+" />
+  <meta name="twitter:description" content="Audience-first resume switchboard for recruiters, hiring managers, technical leaders, and proof-first reviewers." />
+  <meta name="twitter:image" content="https://northwoodscode.github.io/resume/og-image.png" />
+
+  <style>
+    :root{
+      --bg:#ffffff;
+      --fg:#0f172a;
+      --muted:#475569;
+      --muted-2:#64748b;
+      --card:#f8fafc;
+      --card-2:#f1f5f9;
+      --border:#e2e8f0;
+      --accent:#7c3aed;
+      --accent-2:#2563eb;
+      --good:#059669;
+      --warn:#b45309;
+      --shadow:0 18px 40px rgba(2,6,23,.10);
+      --shadow-2:0 10px 24px rgba(2,6,23,.08);
+      --radius:22px;
+      --max:1180px;
+      --sans:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
+      --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+    }
+    html[data-theme="dark"]{
+      --bg:#070812;
+      --fg:#e5e7eb;
+      --muted:#9aa8bb;
+      --muted-2:#7f8da3;
+      --card:#0f1224;
+      --card-2:#131935;
+      --border:#242a45;
+      --accent:#a78bfa;
+      --accent-2:#60a5fa;
+      --good:#34d399;
+      --warn:#f59e0b;
+      --shadow:0 22px 48px rgba(0,0,0,.45);
+      --shadow-2:0 14px 30px rgba(0,0,0,.30);
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:var(--sans);
+      background:var(--bg);
+      color:var(--fg);
+      line-height:1.55;
+    }
+    a{color:var(--accent);text-decoration:none}
+    a:hover{text-decoration:underline}
+    button,input{font:inherit}
+
+    .skip{
+      position:absolute;
+      left:-999px;
+      top:12px;
+      background:var(--bg);
+      border:1px solid var(--border);
+      padding:.55rem .8rem;
+      border-radius:999px;
+      z-index:1000;
+    }
+    .skip:focus{left:12px}
+
+    .shell{
+      max-width:var(--max);
+      margin:0 auto;
+      padding:0 18px 80px;
+    }
+
+    header{
+      border-bottom:1px solid var(--border);
+      background:
+        radial-gradient(1000px 560px at 10% 0%, color-mix(in srgb, var(--accent) 20%, transparent), transparent 60%),
+        radial-gradient(820px 460px at 92% 16%, color-mix(in srgb, var(--accent-2) 20%, transparent), transparent 62%),
+        linear-gradient(180deg, color-mix(in srgb, var(--card) 55%, var(--bg)), var(--bg));
+    }
+
+    .hero{
+      max-width:var(--max);
+      margin:0 auto;
+      padding:24px 18px 28px;
+      display:grid;
+      grid-template-columns:minmax(0,1.45fr) minmax(320px, .95fr);
+      gap:18px;
+      align-items:stretch;
+    }
+    @media (max-width: 980px){
+      .hero{grid-template-columns:1fr}
+    }
+
+    .heroMain,
+    .heroSide,
+    .card,
+    .modeCard,
+    .proofCard,
+    .compareCard,
+    .summaryCard{
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      background:color-mix(in srgb, var(--bg) 58%, var(--card));
+      box-shadow:var(--shadow);
+    }
+
+    .heroMain{
+      padding:20px;
+      background:
+        linear-gradient(135deg,
+          color-mix(in srgb, var(--accent) 10%, var(--card)),
+          color-mix(in srgb, var(--accent-2) 10%, var(--card))
+        );
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:.5rem;
+      padding:.36rem .68rem;
+      border:1px solid color-mix(in srgb, var(--accent) 36%, var(--border));
+      border-radius:999px;
+      background:color-mix(in srgb, var(--bg) 70%, var(--card));
+      color:color-mix(in srgb, var(--fg) 84%, var(--muted));
+      font-weight:800;
+      font-size:.84rem;
+      letter-spacing:.02em;
+    }
+    .eyebrow .dot{width:9px;height:9px;border-radius:999px;background:var(--good)}
+
+    h1{
+      margin:.9rem 0 .45rem;
+      font-size:clamp(1.9rem, 4vw, 3.4rem);
+      line-height:1.03;
+      letter-spacing:-.045em;
+    }
+    .lede{
+      margin:0;
+      font-size:1.06rem;
+      color:var(--muted);
+      max-width:62ch;
+    }
+
+    .heroBullets{
+      margin:1rem 0 0;
+      padding:0;
+      list-style:none;
+      display:grid;
+      gap:.48rem;
+    }
+    .heroBullets li{
+      display:flex;
+      gap:.65rem;
+      align-items:flex-start;
+      color:color-mix(in srgb, var(--fg) 88%, var(--muted));
+    }
+    .heroBullets li::before{
+      content:"◆";
+      color:var(--accent);
+      font-size:.78rem;
+      margin-top:.28rem;
+      flex:0 0 auto;
+    }
+
+    .chipRow,
+    .metaRow,
+    .actionRow,
+    .modeActions,
+    .presetRow,
+    .builderActions,
+    .summaryActions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.65rem;
+      align-items:center;
+    }
+
+    .chipRow{margin-top:1rem}
+    .pill,
+    .metaPill{
+      display:inline-flex;
+      align-items:center;
+      gap:.45rem;
+      padding:.36rem .62rem;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:color-mix(in srgb, var(--bg) 74%, var(--card));
+      color:color-mix(in srgb, var(--fg) 86%, var(--muted));
+      font-weight:750;
+      font-size:.92rem;
+      white-space:nowrap;
+    }
+
+    .metaRow{margin-top:1rem}
+    .metaPill a{color:inherit}
+
+    .actionRow{margin-top:1.1rem}
+    .btn{
+      border:1px solid var(--border);
+      background:color-mix(in srgb, var(--bg) 66%, var(--card));
+      color:var(--fg);
+      padding:.7rem .96rem;
+      border-radius:999px;
+      font-weight:820;
+      cursor:pointer;
+      transition:transform .08s ease, box-shadow .18s ease, border-color .18s ease;
+      text-decoration:none !important;
+      display:inline-flex;
+      align-items:center;
+      gap:.45rem;
+    }
+    .btn:hover{box-shadow:var(--shadow-2)}
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{
+      border-color:color-mix(in srgb, var(--accent) 55%, var(--border));
+      background:linear-gradient(135deg,
+        color-mix(in srgb, var(--accent) 18%, var(--card)),
+        color-mix(in srgb, var(--accent-2) 18%, var(--card))
+      );
+    }
+    .btn.subtle{
+      color:var(--muted);
+      border-style:dashed;
+    }
+
+    .heroSide{
+      padding:18px;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+    .heroSide h2,
+    .card h2,
+    .sectionHead h2,
+    .compareCard h2,
+    .summaryCard h2{
+      margin:0;
+      font-size:1.08rem;
+      letter-spacing:-.02em;
+    }
+    .mini{
+      color:var(--muted-2);
+      font-size:.92rem;
+    }
+    .callout{
+      border:1px solid color-mix(in srgb, var(--accent) 36%, var(--border));
+      border-radius:18px;
+      background:linear-gradient(135deg,
+        color-mix(in srgb, var(--accent) 9%, var(--card)),
+        color-mix(in srgb, var(--accent-2) 9%, var(--card))
+      );
+      padding:14px;
+    }
+    .callout strong{display:block;font-size:1rem}
+    .callout p{margin:.38rem 0 0;color:var(--muted)}
+
+    .statsGrid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px;
+    }
+    .stat{
+      padding:12px;
+      border:1px solid var(--border);
+      border-radius:16px;
+      background:color-mix(in srgb, var(--bg) 66%, var(--card));
+    }
+    .stat .num{
+      font-size:1.28rem;
+      font-weight:900;
+      letter-spacing:-.03em;
+    }
+    .stat .label{
+      margin-top:.12rem;
+      color:var(--muted);
+      font-size:.9rem;
+      line-height:1.35;
+    }
+
+    .sections{
+      max-width:var(--max);
+      margin:0 auto;
+      padding-top:18px;
+    }
+
+    .sectionHead{
+      display:flex;
+      gap:12px;
+      align-items:flex-end;
+      justify-content:space-between;
+      margin:12px 0 10px;
+      flex-wrap:wrap;
+    }
+    .sectionHead p{margin:0;color:var(--muted)}
+
+    .modesGrid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:14px;
+    }
+    @media (max-width: 1100px){
+      .modesGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media (max-width: 760px){
+      .modesGrid{grid-template-columns:1fr}
+    }
+
+    .modeCard{
+      padding:16px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .modeTop{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:flex-start;
+    }
+    .modeName{
+      margin:0;
+      font-size:1.15rem;
+      letter-spacing:-.02em;
+    }
+    .modeSub{
+      margin:.18rem 0 0;
+      color:var(--muted);
+      font-weight:760;
+      font-size:.94rem;
+    }
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:.35rem;
+      padding:.3rem .55rem;
+      border:1px solid var(--border);
+      border-radius:999px;
+      background:color-mix(in srgb, var(--bg) 74%, var(--card));
+      font-size:.78rem;
+      font-weight:900;
+      color:color-mix(in srgb, var(--fg) 84%, var(--muted));
+      white-space:nowrap;
+    }
+    .modeList{
+      margin:0;
+      padding-left:1.08rem;
+      color:color-mix(in srgb, var(--fg) 90%, var(--muted));
+    }
+    .modeList li{margin:.36rem 0}
+    .modeActions{margin-top:auto;padding-top:6px}
+
+    .proofWrap{
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:12px;
+    }
+    @media (max-width: 1120px){
+      .proofWrap{grid-template-columns:repeat(3,minmax(0,1fr))}
+    }
+    @media (max-width: 760px){
+      .proofWrap{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media (max-width: 520px){
+      .proofWrap{grid-template-columns:1fr}
+    }
+
+    .proofCard{
+      padding:16px;
+      background:linear-gradient(180deg, color-mix(in srgb, var(--card) 84%, var(--bg)), color-mix(in srgb, var(--card-2) 92%, var(--bg)));
+    }
+    .proofCard .value{
+      font-size:1.52rem;
+      line-height:1;
+      font-weight:950;
+      letter-spacing:-.05em;
+      margin:0;
+    }
+    .proofCard h3{
+      margin:.52rem 0 .18rem;
+      font-size:1rem;
+      letter-spacing:-.01em;
+    }
+    .proofCard p{
+      margin:0;
+      color:var(--muted);
+      font-size:.93rem;
+    }
+
+    .compareGrid{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:14px;
+      margin-top:14px;
+    }
+    @media (max-width: 980px){
+      .compareGrid{grid-template-columns:1fr}
+    }
+
+    .compareCard,
+    .summaryCard,
+    .card{
+      padding:16px;
+    }
+    .compareTable{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      margin-top:10px;
+      overflow:hidden;
+      border:1px solid var(--border);
+      border-radius:18px;
+      background:color-mix(in srgb, var(--bg) 66%, var(--card));
+    }
+    .compareTable th,
+    .compareTable td{
+      padding:12px 13px;
+      text-align:left;
+      border-bottom:1px solid var(--border);
+      vertical-align:top;
+      font-size:.95rem;
+    }
+    .compareTable th{
+      background:color-mix(in srgb, var(--bg) 55%, var(--card-2));
+      color:color-mix(in srgb, var(--fg) 88%, var(--muted));
+      font-size:.84rem;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+    }
+    .compareTable tr:last-child td{border-bottom:none}
+    .mono{font-family:var(--mono)}
+
+    .builderGrid{
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:14px;
+      margin-top:14px;
+    }
+    @media (max-width: 980px){
+      .builderGrid{grid-template-columns:1fr}
+    }
+
+    .presetRow{margin-top:12px}
+    .presetBtn,
+    .tag{
+      border:1px solid var(--border);
+      background:color-mix(in srgb, var(--bg) 66%, var(--card));
+      color:var(--fg);
+      padding:.6rem .78rem;
+      border-radius:999px;
+      font-weight:810;
+      cursor:pointer;
+    }
+    .presetBtn:hover,
+    .tag:hover{box-shadow:var(--shadow-2)}
+
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.5rem;
+      margin-top:12px;
+    }
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:.45rem;
+      user-select:none;
+    }
+    .tag input{accent-color:var(--accent)}
+    .tag[data-on="true"]{
+      border-color:color-mix(in srgb, var(--accent) 55%, var(--border));
+      box-shadow:inset 0 0 0 2px color-mix(in srgb, var(--accent) 18%, transparent);
+    }
+
+    .searchRow{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.65rem;
+      margin-top:12px;
+      align-items:center;
+    }
+    .searchRow input[type="search"]{
+      flex:1 1 300px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      padding:.7rem .9rem;
+      background:color-mix(in srgb, var(--bg) 66%, var(--card));
+      color:var(--fg);
+    }
+
+    .preview{
+      margin-top:12px;
+      padding:12px 14px;
+      border:1px dashed var(--border);
+      border-radius:16px;
+      background:color-mix(in srgb, var(--bg) 74%, var(--card));
+      color:var(--muted);
+      overflow:auto;
+      white-space:nowrap;
+    }
+
+    .summaryCard textarea{
+      width:100%;
+      min-height:184px;
+      margin-top:12px;
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:14px;
+      resize:vertical;
+      background:color-mix(in srgb, var(--bg) 66%, var(--card));
+      color:var(--fg);
+      line-height:1.5;
+    }
+
+    .note{
+      margin-top:12px;
+      color:var(--muted);
+      font-size:.93rem;
+    }
+
+    footer{
+      margin-top:18px;
+      color:var(--muted);
+      font-size:.95rem;
+    }
+
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%);
+      background:color-mix(in srgb, var(--fg) 92%, var(--bg));
+      color:var(--bg);
+      padding:.62rem .95rem;
+      border-radius:999px;
+      font-weight:920;
+      box-shadow:var(--shadow);
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .18s ease, transform .18s ease;
+      z-index:9999;
+    }
+    .toast.show{
+      opacity:1;
+      transform:translateX(-50%) translateY(-6px);
+    }
+
+    .dock{
+      position:fixed;
+      right:16px;
+      bottom:16px;
+      z-index:999;
+    }
+    .dock summary{
+      list-style:none;
+      cursor:pointer;
+      user-select:none;
+      border:1px solid var(--border);
+      background:var(--card);
+      color:var(--fg);
+      padding:.66rem .92rem;
+      border-radius:999px;
+      font-weight:850;
+      box-shadow:var(--shadow-2);
+    }
+    .dock summary::-webkit-details-marker{display:none}
+    .dockPanel{
+      width:min(360px, calc(100vw - 32px));
+      margin-top:.55rem;
+      padding:12px;
+      border:1px solid var(--border);
+      border-radius:18px;
+      background:var(--card);
+      box-shadow:var(--shadow);
+    }
+    .dockGrid{display:grid;gap:8px}
+    .dockLink{
+      display:block;
+      padding:.74rem .82rem;
+      border:1px solid var(--border);
+      border-radius:14px;
+      background:color-mix(in srgb, var(--bg) 70%, var(--card));
+      color:inherit !important;
+      text-decoration:none !important;
+      transition:transform .08s ease, box-shadow .18s ease;
+    }
+    .dockLink:hover{transform:translateY(-1px);box-shadow:var(--shadow-2)}
+    .dockLink strong{display:block;font-size:.95rem;letter-spacing:-.01em}
+    .dockLink span{display:block;margin-top:2px;font-size:.82rem;color:var(--muted)}
+    .dockLink[aria-current="page"]{
+      border-color:color-mix(in srgb, var(--accent) 55%, var(--border));
+      box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--accent) 22%, transparent);
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *{transition:none !important;scroll-behavior:auto !important}
+    }
+    @media (max-width:640px){
+      .shell{padding:0 14px 74px}
+      .hero{padding:18px 14px 20px}
+      .dock{right:12px;bottom:12px}
+      .dockPanel{width:min(320px, calc(100vw - 24px))}
+      .statsGrid{grid-template-columns:1fr 1fr}
+    }
+    @media print{
+      header .actionRow,
+      .dock,
+      .toast,
+      #themeBtn,
+      #copySummary,
+      #copyBuilt,
+      #openBuilt,
+      #copyFastPitch{display:none !important}
+      body{background:#fff;color:#000}
+      header{background:#fff}
+      .hero,
+      .shell{max-width:8.5in;padding:0}
+      .heroMain,.heroSide,.card,.modeCard,.proofCard,.compareCard,.summaryCard{
+        box-shadow:none !important;
+        background:#fff !important;
+      }
+      a{color:#000;text-decoration:none}
+      a[href^="http"]:after{content:" (" attr(href) ")";font-size:9pt}
+    }
+  </style>
+  <style>
+    /* command palette */
+    #cmd-pal{position:fixed;inset:0;z-index:99998;display:flex;align-items:flex-start;justify-content:center;padding-top:clamp(48px,9vh,130px)}
+    #cmd-pal[hidden]{display:none !important}
+    #cmd-pal{--cp-bg:#fff;--cp-border:#e5e7eb;--cp-text:#111827;--cp-muted:#6b7280;--cp-sub:#f9fafb;--cp-hover:#eff6ff;--cp-cat:#9ca3af;--cp-bdrop:rgba(0,0,0,.48)}
+    html[data-theme="dark"] #cmd-pal{--cp-bg:#0f172a;--cp-border:#1e3a5f;--cp-text:#e2e8f0;--cp-muted:#64748b;--cp-sub:#071224;--cp-hover:rgba(37,99,235,.15);--cp-cat:#475569;--cp-bdrop:rgba(0,0,0,.72)}
+    @media(prefers-color-scheme:dark){html:not([data-theme="light"]) #cmd-pal{--cp-bg:#0f172a;--cp-border:#1e3a5f;--cp-text:#e2e8f0;--cp-muted:#64748b;--cp-sub:#071224;--cp-hover:rgba(37,99,235,.15);--cp-cat:#475569;--cp-bdrop:rgba(0,0,0,.72)}}
+    #cmd-bg{position:absolute;inset:0;background:var(--cp-bdrop);backdrop-filter:blur(4px)}
+    #cmd-box{position:relative;width:min(620px,92vw);background:var(--cp-bg);border-radius:16px;box-shadow:0 28px 70px rgba(0,0,0,.22);overflow:hidden;border:1px solid var(--cp-border)}
+    #cmd-sr{display:flex;align-items:center;gap:.65rem;padding:.9rem 1rem;border-bottom:1px solid var(--cp-border)}
+    #cmd-sr svg{flex-shrink:0;color:var(--cp-muted)}
+    #cmd-q{flex:1;border:none;outline:none;font-size:1rem;background:transparent;color:var(--cp-text);font-family:inherit}
+    #cmd-q::placeholder{color:var(--cp-cat)}
+    #cmd-esk{font-size:.7rem;padding:.18rem .42rem;border:1px solid var(--cp-border);border-radius:4px;color:var(--cp-cat);background:var(--cp-sub);font-family:inherit;white-space:nowrap;cursor:pointer}
+    #cmd-list{margin:0;padding:.3rem 0;list-style:none;max-height:min(380px,52vh);overflow-y:auto}
+    #cmd-list:empty::after{content:'No results';display:block;padding:.9rem 1.1rem;color:var(--cp-cat);font-size:.88rem}
+    .cpcat{padding:.5rem 1.1rem .15rem;font-size:.7rem;font-weight:760;letter-spacing:.1em;text-transform:uppercase;color:var(--cp-cat)}
+    .cpi{display:flex;align-items:center;gap:.65rem;padding:.58rem 1.1rem;cursor:pointer;user-select:none}
+    .cpi:hover,.cpi[aria-selected="true"]{background:var(--cp-hover)}
+    .cpi-lbl{font-size:.93rem;font-weight:560;color:var(--cp-text)}
+    .cpi-desc{font-size:.8rem;color:var(--cp-muted);margin-left:auto;white-space:nowrap;padding-left:.5rem}
+    #cmd-foot{display:flex;gap:1rem;padding:.5rem 1rem;border-top:1px solid var(--cp-border);background:var(--cp-sub)}
+    #cmd-foot span{font-size:.73rem;color:var(--cp-cat);display:flex;align-items:center;gap:.25rem}
+    #cmd-foot kbd{font-size:.69rem;padding:.12rem .32rem;border:1px solid var(--cp-border);border-radius:4px;background:var(--cp-bg);font-family:inherit}
+  </style>
+</head>
+<body>
+  <a class="skip" href="#start">Skip to resume routing</a>
+
+  <header>
+    <div class="hero">
+      <section class="heroMain" aria-label="Primary resume routing guidance">
+        <div class="eyebrow"><span class="dot" aria-hidden="true"></span>Audience-first resume routing</div>
+        <h1>Choose the Brandon S. Clark view that matches how you hire.</h1>
+        <p class="lede">
+          Best default for most technical reviewers: <strong>Signal</strong> with Cloud, Backend, and API focus.
+          Best default for recruiters and ATS uploads: <strong>Atlas</strong>. If you want proof before story,
+          open <strong>Proof Hub</strong> first.
+        </p>
+
+        <ul class="heroBullets" aria-label="Why this switchboard exists">
+          <li>Routes recruiters, hiring managers, and technical leaders into the right version quickly instead of making them guess.</li>
+          <li>Surfaces real proof points early: documented delivery, enablement impact, and concrete cloud and backend outcomes.</li>
+          <li>Keeps the low-motion, no-tracker behavior of the current switchboard while making the strongest paths more obvious.</li>
+        </ul>
+
+        <div class="chipRow" aria-label="Quick proof tags">
+          <span class="pill">Cloud + AWS</span>
+          <span class="pill">Serverless + APIs</span>
+          <span class="pill">Documentation + Enablement</span>
+          <span class="pill">Data + Platform Work</span>
+          <span class="pill">Low-motion / privacy-first</span>
+        </div>
+
+        <div class="metaRow" aria-label="Contact">
+          <span class="metaPill">Wisconsin (Remote)</span>
+          <span class="metaPill"><a href="mailto:bsc_work@gmx.com">bsc_work@gmx.com</a></span>
+          <span class="metaPill"><a href="https://github.com/NorthwoodsCode">GitHub</a></span>
+          <span class="metaPill"><a href="https://www.linkedin.com/in/brandon-c-it-industry">LinkedIn</a></span>
+        </div>
+
+        <div class="actionRow" aria-label="Primary actions">
+          <a class="btn primary" data-mode="signal-default" href="resume-signal.html?focus=cloud,api,data,enable">Open best default</a>
+          <a class="btn" data-mode="atlas" href="resume-atlas.html">Recruiter / PDF view</a>
+          <a class="btn" data-mode="proof" href="proof-hub.html">Open Proof Hub</a>
+          <button class="btn subtle" id="themeBtn" type="button">Toggle theme</button>
+        </div>
+      </section>
+
+      <aside class="heroSide" aria-label="Quick decision support">
+        <div class="callout">
+          <strong>Use this page as the new default hub.</strong>
+          <p>
+            It promotes <em>Proof Hub</em> to a first-class destination, adds audience-based routing,
+            and turns your strongest recent evidence into visible reasons to keep reading.
+          </p>
+        </div>
+
+        <div>
+          <h2>Quick read on fit</h2>
+          <p class="mini">Selected proof signals pulled from recent review materials and evidence docs.</p>
+        </div>
+
+        <div class="statsGrid" aria-label="Proof snapshot">
+          <div class="stat">
+            <div class="num">$85M</div>
+            <div class="label">processed through a full-stack AWS payment portal (~250K transactions)</div>
+          </div>
+          <div class="stat">
+            <div class="num">1,200+ hrs</div>
+            <div class="label">saved through automated Java + SQL data-entry tooling (~$40K annually)</div>
+          </div>
+          <div class="stat">
+            <div class="num">~30%</div>
+            <div class="label">estimated onboarding reduction from improved README + setup guidance</div>
+          </div>
+          <div class="stat">
+            <div class="num">2 AWS</div>
+            <div class="label">certifications in portfolio, including Solutions Architect Associate</div>
+          </div>
+        </div>
+
+        <p class="mini" id="lastUsed">Recently used mode: none saved yet.</p>
+      </aside>
+    </div>
+  </header>
+
+  <main class="shell sections" id="start">
+    <section aria-labelledby="route-heading">
+      <div class="sectionHead">
+        <div>
+          <h2 id="route-heading">Start with the reader, not the file format</h2>
+          <p>These are the fastest entry points depending on who is evaluating you and what they care about.</p>
+        </div>
+      </div>
+
+      <div class="modesGrid" aria-label="Audience-based routing cards">
+        <article class="modeCard">
+          <div class="modeTop">
+            <div>
+              <h3 class="modeName">Recruiter / ATS</h3>
+              <p class="modeSub">Start with Atlas</p>
+            </div>
+            <span class="kicker">Fastest scan</span>
+          </div>
+          <ul class="modeList">
+            <li>Classic resume structure for quick screening and PDF behavior.</li>
+            <li>Best when the reviewer wants a familiar, low-friction resume read.</li>
+            <li>Strongest when time is tight or the resume will be uploaded to an ATS.</li>
+          </ul>
+          <div class="modeActions">
+            <a class="btn primary" data-mode="atlas" href="resume-atlas.html">Open Atlas</a>
+            <button class="btn" type="button" id="openAtlasAndPrint">Open and print</button>
+          </div>
+        </article>
+
+        <article class="modeCard">
+          <div class="modeTop">
+            <div>
+              <h3 class="modeName">Hiring Manager</h3>
+              <p class="modeSub">Start with Signal (recommended default)</p>
+            </div>
+            <span class="kicker">Best overall</span>
+          </div>
+          <ul class="modeList">
+            <li>Highlights Cloud, Backend, APIs, and enablement immediately.</li>
+            <li>Lets the right bullets rise to the top instead of making the reader do the mapping work.</li>
+            <li>Best when the reviewer wants fit, range, and relevance in one pass.</li>
+          </ul>
+          <div class="modeActions">
+            <a class="btn primary" data-mode="signal-default" href="resume-signal.html?focus=cloud,api,data,enable">Open Signal default</a>
+            <a class="btn" data-mode="signal-platform" href="resume-signal.html?focus=cloud,api,data,opex">Platform preset</a>
+          </div>
+        </article>
+
+        <article class="modeCard">
+          <div class="modeTop">
+            <div>
+              <h3 class="modeName">Technical Lead / Staff+</h3>
+              <p class="modeSub">Start with Signal + a narrower preset</p>
+            </div>
+            <span class="kicker">Most targeted</span>
+          </div>
+          <ul class="modeList">
+            <li>Useful when a reviewer wants platform, integration, architecture, and ops emphasis.</li>
+            <li>Best for cloud, backend, APIs, data platform, or device-service roles.</li>
+            <li>Works well when the job description is specific and you want tailored emphasis quickly.</li>
+          </ul>
+          <div class="modeActions">
+            <a class="btn primary" data-mode="signal-backend" href="resume-signal.html?focus=cloud,api,data,opex">Backend / Platform preset</a>
+            <a class="btn" data-mode="signal-lead" href="resume-signal.html?focus=lead,enable,opex">Leadership preset</a>
+          </div>
+        </article>
+
+        <article class="modeCard">
+          <div class="modeTop">
+            <div>
+              <h3 class="modeName">Proof-first reviewer</h3>
+              <p class="modeSub">Start with Proof Hub</p>
+            </div>
+            <span class="kicker">Hard evidence</span>
+          </div>
+          <ul class="modeList">
+            <li>Best when a skeptical reader wants cases, examples, and supporting materials first.</li>
+            <li>Pairs especially well with the payment portal, automation, and serverless architecture evidence.</li>
+            <li>Lets you prove outcomes before asking anyone to trust summary bullets.</li>
+          </ul>
+          <div class="modeActions">
+            <a class="btn primary" data-mode="proof" href="proof-hub.html">Open Proof Hub</a>
+            <a class="btn" data-mode="signal-proof-pair" href="resume-signal.html?focus=cloud,api,data,enable">Open paired Signal view</a>
+          </div>
+        </article>
+
+        <article class="modeCard">
+          <div class="modeTop">
+            <div>
+              <h3 class="modeName">Branded landing page</h3>
+              <p class="modeSub">Open Home</p>
+            </div>
+            <span class="kicker">Experience-first</span>
+          </div>
+          <ul class="modeList">
+            <li>Useful when you want the fuller presentation layer around the resume system.</li>
+            <li>Best for direct outreach, portfolio-style sharing, or a more designed first impression.</li>
+            <li>Not the best first stop for ATS or fast recruiter scans.</li>
+          </ul>
+          <div class="modeActions">
+            <a class="btn primary" data-mode="home" href="index.html">Open Home</a>
+          </div>
+        </article>
+
+        <article class="modeCard">
+          <div class="modeTop">
+            <div>
+              <h3 class="modeName">Low-motion fallback</h3>
+              <p class="modeSub">Classic switchboard behavior</p>
+            </div>
+            <span class="kicker">Utility</span>
+          </div>
+          <ul class="modeList">
+            <li>Keep this option when you want the simplest no-surprises routing page.</li>
+            <li>Good fallback for constrained browsers or readers who just want a clean directory.</li>
+            <li>This new version is better as the default because it explains the choices more clearly.</li>
+          </ul>
+          <div class="modeActions">
+            <a class="btn primary" data-mode="switchboard-classic" href="resume-switchboard.html">Open classic switchboard</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section aria-labelledby="proof-heading">
+      <div class="sectionHead">
+        <div>
+          <h2 id="proof-heading">Selected proof the old switchboard did not surface early enough</h2>
+          <p>These are the kinds of signals that should appear before a reader has to choose where to click.</p>
+        </div>
+        <div class="actionRow">
+          <a class="btn" data-mode="proof" href="proof-hub.html">Open the evidence trail</a>
+        </div>
+      </div>
+
+      <div class="proofWrap" aria-label="Proof highlight cards">
+        <article class="proofCard">
+          <p class="value">&lt; 1 min</p>
+          <h3>Secure provisioning</h3>
+          <p>Recent evidence documents a Python-based IoT provisioning flow that cut one quantified onboarding path from about 10 minutes to under 1 minute per device.</p>
+        </article>
+        <article class="proofCard">
+          <p class="value">~40%</p>
+          <h3>Payload efficiency</h3>
+          <p>MQTT delta updates were documented as reducing payload size for constrained devices, with one example showing 476 bytes down to 15 bytes.</p>
+        </article>
+        <article class="proofCard">
+          <p class="value">~30%</p>
+          <h3>Onboarding reduction</h3>
+          <p>A provisioning README with install, CLI, and security guidance was documented as cutting onboarding time for new engineers by an estimated 30%.</p>
+        </article>
+        <article class="proofCard">
+          <p class="value">Exceeds</p>
+          <h3>Enablement signal</h3>
+          <p>The 2024 manager review specifically called out partner-team support, documentation, support efficiency, and cross-org collaboration as standout strengths.</p>
+        </article>
+        <article class="proofCard">
+          <p class="value">2 AWS</p>
+          <h3>Certification depth</h3>
+          <p>The 2022 self-evaluation states the portfolio includes both AWS Cloud Practitioner and AWS Solutions Architect Associate, with SAA-C03 completed on 08/25/2022.</p>
+        </article>
+      </div>
+      <p class="note">These proof cards are intentionally short. The goal is not to replace the resume; it is to earn the next click.</p>
+    </section>
+
+    <section aria-labelledby="compare-heading">
+      <div class="sectionHead">
+        <div>
+          <h2 id="compare-heading">How the modes differ</h2>
+          <p>The existing switchboard hints at this. This version makes it explicit.</p>
+        </div>
+      </div>
+
+      <div class="compareGrid">
+        <article class="compareCard">
+          <h2>Mode comparison</h2>
+          <table class="compareTable" aria-label="Resume mode comparison table">
+            <thead>
+              <tr>
+                <th>Mode</th>
+                <th>Best for</th>
+                <th>Why it exists</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Home</strong></td>
+                <td>Direct outreach and branded portfolio sharing</td>
+                <td>Most presentation-heavy entry point. Good first impression, less ideal for ATS.</td>
+              </tr>
+              <tr>
+                <td><strong>Atlas</strong></td>
+                <td>Recruiters, ATS uploads, print-to-PDF</td>
+                <td>Classic, linear, low-friction resume reading experience.</td>
+              </tr>
+              <tr>
+                <td><strong>Signal</strong></td>
+                <td>Hiring managers and technical reviewers</td>
+                <td>Tailorable, job-specific emphasis without rewriting the resume each time.</td>
+              </tr>
+              <tr>
+                <td><strong>Proof Hub</strong></td>
+                <td>Skeptical readers and deep evaluators</td>
+                <td>Turns claims into examples, cases, and supporting evidence.</td>
+              </tr>
+              <tr>
+                <td><strong>Switchboard</strong></td>
+                <td>Readers who just need routing help</td>
+                <td>A utility hub. Best when it explains the routes clearly and gets out of the way.</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="note">Your older switchboard already supported Atlas, Signal, presets, and a custom builder. Its main weakness was not capability. It was prioritization.</p>
+        </article>
+
+        <article class="summaryCard">
+          <h2>Fast recruiter summary</h2>
+          <p class="mini">A copy-ready summary you can paste into outreach, job applications, or cover-note fields.</p>
+          <textarea id="fastPitch">Senior Software Engineer focused on AWS backend/platform engineering, serverless APIs, and data workflows. Highlights include a payment portal processing $85M across ~250K transactions, a 1,200-hour automation saving ~$40K, and a multi-environment secure provisioning workflow. Strong enablement record: documentation, demos, and onboarding assets across every role. Best recruiter view: Atlas. Best technical view: Signal with Cloud + Backend + API focus. Best proof-first view: Proof Hub.</textarea>
+          <div class="summaryActions">
+            <button class="btn primary" id="copyFastPitch" type="button">Copy recruiter summary</button>
+            <a class="btn" data-mode="atlas" href="resume-atlas.html">Open Atlas</a>
+            <a class="btn" data-mode="signal-default" href="resume-signal.html?focus=cloud,api,data,enable">Open Signal</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section aria-labelledby="builder-heading">
+      <div class="sectionHead">
+        <div>
+          <h2 id="builder-heading">Build a tailored Signal link</h2>
+          <p>Keep the flexibility of the original switchboard, but make the recommended path easier to find.</p>
+        </div>
+      </div>
+
+      <div class="builderGrid">
+        <article class="card">
+          <h2>One-click presets</h2>
+          <p class="mini">These jump directly into Signal with useful combinations already selected.</p>
+
+          <div class="presetRow" role="group" aria-label="Preset Signal views">
+            <button class="presetBtn" type="button" data-open-focus="cloud,api,data,enable">Best default</button>
+            <button class="presetBtn" type="button" data-open-focus="cloud,api,opex">Cloud / Platform / AWS</button>
+            <button class="presetBtn" type="button" data-open-focus="api,cloud,opex">APIs / Integrations</button>
+            <button class="presetBtn" type="button" data-open-focus="iot,cloud,api,opex">IoT / Device Services</button>
+            <button class="presetBtn" type="button" data-open-focus="data,cloud,api">Data Platform / ETL</button>
+            <button class="presetBtn" type="button" data-open-focus="lead,enable,opex">Leadership / Enablement</button>
+            <button class="presetBtn" type="button" data-open-focus="ai,enable,lead">GenAI / Automation</button>
+          </div>
+
+          <div class="chips" id="chips">
+            <label class="tag" data-tag="cloud"><input type="checkbox" value="cloud" />Cloud &amp; AWS</label>
+            <label class="tag" data-tag="api"><input type="checkbox" value="api" />APIs &amp; Integrations</label>
+            <label class="tag" data-tag="iot"><input type="checkbox" value="iot" />IoT &amp; Devices</label>
+            <label class="tag" data-tag="data"><input type="checkbox" value="data" />Data Platforms</label>
+            <label class="tag" data-tag="opex"><input type="checkbox" value="opex" />SLAs / Ops</label>
+            <label class="tag" data-tag="lead"><input type="checkbox" value="lead" />Leadership</label>
+            <label class="tag" data-tag="enable"><input type="checkbox" value="enable" />Enablement</label>
+            <label class="tag" data-tag="ai"><input type="checkbox" value="ai" />GenAI</label>
+          </div>
+
+          <div class="searchRow">
+            <input id="q" type="search" placeholder="Optional search term (for example: Terraform, Auth0, Step Functions)" />
+            <label class="tag" style="cursor:default">
+              <input id="only" type="checkbox" />
+              Show only matches
+            </label>
+          </div>
+
+          <div class="builderActions" style="margin-top:12px">
+            <button class="btn primary" type="button" id="openBuilt">Open tailored view</button>
+            <button class="btn" type="button" id="copyBuilt">Copy tailored link</button>
+            <button class="btn" type="button" id="resetBuilt">Reset</button>
+          </div>
+
+          <div class="preview mono" id="preview">resume-signal.html?focus=iot,cloud,api,enable</div>
+        </article>
+
+        <article class="card">
+          <h2>Why this switchboard is better</h2>
+          <ul class="modeList">
+            <li>It treats <strong>Proof Hub</strong> as a first-class destination instead of hiding it in the dock.</li>
+            <li>It makes the <strong>recommended default</strong> obvious, so a good reader does not have to self-diagnose first.</li>
+            <li>It surfaces <strong>documented outcomes</strong> before the reader chooses a mode, which makes the click feel earned.</li>
+            <li>It explains the <strong>differences between the modes</strong> plainly, instead of assuming the reader already understands the system.</li>
+            <li>It keeps the original strengths: low motion, local theme storage, and Signal link-building.</li>
+          </ul>
+          <p class="note">If you deploy this, the cleanest production name is still <span class="mono">resume-switchboard.html</span>. This artifact uses a different filename so you can review it without overwriting the original.</p>
+        </article>
+      </div>
+    </section>
+
+    <footer>
+      <p style="margin:0">Private by default: no analytics, no cookies, no session replay, no ad tracking. Theme choice and last-used mode are stored locally in the browser only.</p>
+    </footer>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <details class="dock">
+    <summary>Resume modes</summary>
+    <div class="dockPanel">
+      <div class="mini" style="margin-bottom:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;">One story, better routing</div>
+      <div class="dockGrid">
+        <a class="dockLink" href="index.html" data-page="index.html"><strong>Home</strong><span>Branded landing page</span></a>
+        <a class="dockLink" href="resume-atlas.html" data-page="resume-atlas.html"><strong>Atlas</strong><span>Classic recruiter / PDF view</span></a>
+        <a class="dockLink" href="resume-signal.html" data-page="resume-signal.html"><strong>Signal</strong><span>Interactive tailored resume</span></a>
+        <a class="dockLink" href="proof-hub.html" data-page="proof-hub.html"><strong>Proof Hub</strong><span>Cases, bullets, and hard evidence</span></a>
+        <a class="dockLink" href="resume-switchboard.html" data-page="resume-switchboard.html"><strong>Classic Switchboard</strong><span>Original low-motion fallback hub</span></a>
+        <a class="dockLink" href="resume-switchboard-next.html" data-page="resume-switchboard-next.html"><strong>Switchboard+</strong><span>This improved audience-first version</span></a>
+        <a class="dockLink" href="now.html" data-page="now.html"><strong>Now</strong><span>What I'm building, learning, reading</span></a>
+      </div>
+    </div>
+  </details>
+
+  <script>
+    (function(){
+      const html = document.documentElement;
+      const toast = document.getElementById('toast');
+      const themeBtn = document.getElementById('themeBtn');
+      const lastUsed = document.getElementById('lastUsed');
+      const fastPitch = document.getElementById('fastPitch');
+      const copyFastPitch = document.getElementById('copyFastPitch');
+      const openAtlasAndPrint = document.getElementById('openAtlasAndPrint');
+
+      const PAGES = {
+        home: 'index.html',
+        atlas: 'resume-atlas.html',
+        signal: 'resume-signal.html',
+        proof: 'proof-hub.html',
+        switchboard: 'resume-switchboard.html',
+        switchboardNext: 'resume-switchboard-next.html'
+      };
+
+      const LABELS = {
+        'index.html': 'Home',
+        'resume-atlas.html': 'Atlas',
+        'resume-signal.html': 'Signal',
+        'proof-hub.html': 'Proof Hub',
+        'resume-switchboard.html': 'Classic Switchboard',
+        'resume-switchboard-next.html': 'Switchboard+'
+      };
+
+      function toastMsg(msg){
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 1600);
+      }
+
+      async function copyToClipboard(text){
+        try{
+          await navigator.clipboard.writeText(text);
+          toastMsg('Copied');
+        }catch(e){
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          ta.style.position = 'fixed';
+          ta.style.left = '-9999px';
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          toastMsg('Copied');
+        }
+      }
+
+      function getPreferredTheme(){
+        const v = localStorage.getItem('bsc_theme');
+        if(v === 'light' || v === 'dark') return v;
+        return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+      }
+
+      function setTheme(theme){
+        html.dataset.theme = theme;
+        localStorage.setItem('bsc_theme', theme);
+      }
+
+      function saveLastMode(href){
+        try{ localStorage.setItem('bsc_last_resume_mode', href); }catch(e){}
+        updateLastMode();
+      }
+
+      function updateLastMode(){
+        let href = null;
+        try{ href = localStorage.getItem('bsc_last_resume_mode'); }catch(e){}
+        if(!href){
+          lastUsed.textContent = 'Recently used mode: none saved yet.';
+          return;
+        }
+        const path = href.split('?')[0];
+        lastUsed.textContent = 'Recently used mode: ' + (LABELS[path] || href);
+      }
+
+      setTheme(getPreferredTheme());
+      themeBtn.addEventListener('click', () => setTheme(html.dataset.theme === 'dark' ? 'light' : 'dark'));
+      updateLastMode();
+
+      document.querySelectorAll('a[data-mode], .dockLink').forEach(link => {
+        link.addEventListener('click', () => saveLastMode(link.getAttribute('href') || ''));
+      });
+
+      const current = location.pathname.split('/').pop() || 'index.html';
+      document.querySelectorAll('.dockLink').forEach(link => {
+        const page = link.getAttribute('data-page');
+        if(page === current || (!current && page === 'index.html')){
+          link.setAttribute('aria-current', 'page');
+        }
+      });
+
+      copyFastPitch.addEventListener('click', async () => {
+        await copyToClipboard(fastPitch.value);
+      });
+
+      openAtlasAndPrint.addEventListener('click', () => {
+        saveLastMode(PAGES.atlas);
+        const w = window.open(PAGES.atlas, '_blank');
+        if(!w){
+          toastMsg('Popup blocked - opening Atlas here');
+          window.location.href = PAGES.atlas;
+          return;
+        }
+        w.addEventListener('load', () => w.print());
+      });
+
+      const tagLabels = Array.from(document.querySelectorAll('.tag[data-tag]'));
+      const tagInputs = Array.from(document.querySelectorAll('.tag input[type="checkbox"][value]'));
+      const q = document.getElementById('q');
+      const only = document.getElementById('only');
+      const preview = document.getElementById('preview');
+      const openBuilt = document.getElementById('openBuilt');
+      const copyBuilt = document.getElementById('copyBuilt');
+      const resetBuilt = document.getElementById('resetBuilt');
+
+      function getSelectedTags(){
+        return tagInputs.filter(i => i.checked).map(i => i.value);
+      }
+
+      function setTagsUI(){
+        tagLabels.forEach(label => {
+          const input = label.querySelector('input');
+          label.dataset.on = input && input.checked ? 'true' : 'false';
+        });
+      }
+
+      function buildSignalUrl(){
+        const selected = getSelectedTags();
+        const params = new URLSearchParams();
+        if(selected.length) params.set('focus', selected.join(','));
+        if((q.value || '').trim()) params.set('q', (q.value || '').trim());
+        if(only.checked) params.set('only', '1');
+        const qs = params.toString();
+        return PAGES.signal + (qs ? ('?' + qs) : '');
+      }
+
+      function updatePreview(){
+        preview.textContent = buildSignalUrl();
+        setTagsUI();
+      }
+
+      tagInputs.forEach(i => i.addEventListener('change', updatePreview));
+      q.addEventListener('input', updatePreview);
+      only.addEventListener('change', updatePreview);
+
+      document.querySelectorAll('[data-open-focus]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const focus = btn.getAttribute('data-open-focus') || '';
+          const params = new URLSearchParams();
+          if(focus) params.set('focus', focus);
+          const url = PAGES.signal + '?' + params.toString();
+          saveLastMode(PAGES.signal);
+          window.location.href = url;
+        });
+      });
+
+      openBuilt.addEventListener('click', () => {
+        const url = buildSignalUrl();
+        saveLastMode(PAGES.signal);
+        window.location.href = url;
+      });
+
+      copyBuilt.addEventListener('click', async () => {
+        const absolute = window.location.origin + window.location.pathname.replace(/[^/]*$/, '') + buildSignalUrl();
+        await copyToClipboard(absolute);
+      });
+
+      resetBuilt.addEventListener('click', () => {
+        tagInputs.forEach(i => i.checked = false);
+        q.value = '';
+        only.checked = false;
+        updatePreview();
+        toastMsg('Reset');
+      });
+
+      updatePreview();
+    })();
+  </script>
+
+  <!-- command palette -->
+  <div id="cmd-pal" role="dialog" aria-modal="true" aria-label="Command palette" hidden>
+    <div id="cmd-bg"></div>
+    <div id="cmd-box">
+      <div id="cmd-sr">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="cmd-q" type="text" placeholder="Search commands, navigate, jump to section…" autocomplete="off" spellcheck="false" aria-label="Command search" aria-controls="cmd-list" aria-autocomplete="list" />
+        <kbd id="cmd-esk">ESC</kbd>
+      </div>
+      <ul id="cmd-list" role="listbox" aria-label="Commands" aria-live="polite"></ul>
+      <div id="cmd-foot" aria-hidden="true">
+        <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
+        <span><kbd>↵</kbd> open</span>
+        <span><kbd>esc</kbd> close</span>
+      </div>
+    </div>
+  </div>
+  <script>
+  (function(){
+    var pal=document.getElementById('cmd-pal'),bg=document.getElementById('cmd-bg'),inp=document.getElementById('cmd-q'),lst=document.getElementById('cmd-list');
+    if(!pal||!bg||!inp||!lst) return;
+    var page=(location.pathname.split('/').pop()||'index.html').replace(/[?#].*/,'');
+    var NAV=[
+      {cat:'Navigate',label:'Home',desc:'Landing page',url:'index.html'},
+      {cat:'Navigate',label:'Atlas — Recruiter Resume',desc:'Clean PDF-ready',url:'resume-atlas.html'},
+      {cat:'Navigate',label:'Signal — Interactive Resume',desc:'Filters + search',url:'resume-signal.html'},
+      {cat:'Navigate',label:'Proof Hub — Case Studies',desc:'ATS export + evidence',url:'proof-hub.html'},
+      {cat:'Navigate',label:'Switchboard',desc:'Low-motion hub',url:'resume-switchboard.html'},
+    ];
+    var ACT=[
+      {cat:'Action',label:'Print / Download PDF',desc:'Open print dialog',action:'print'},
+      {cat:'Action',label:'Copy email address',desc:'bsc_work@gmx.com',action:'copy-email'},
+      {cat:'Action',label:'View GitHub',desc:'NorthwoodsCode',url:'https://github.com/NorthwoodsCode',ext:true},
+      {cat:'Action',label:'View LinkedIn',desc:'brandon-c-it-industry',url:'https://www.linkedin.com/in/brandon-c-it-industry',ext:true},
+    ];
+    var JMP={
+      'index.html':[
+        {cat:'Jump to',label:'Resume Modes',desc:'All format cards',anchor:'#formats'},
+        {cat:'Jump to',label:'Tailor Tools',desc:'Build a Signal link',anchor:'#tailorTools'},
+      ],
+      'resume-atlas.html':[
+        {cat:'Jump to',label:'Summary',desc:'Professional summary',anchor:'#summary'},
+        {cat:'Jump to',label:'Core Skills',desc:'Technology stack',anchor:'#skills'},
+        {cat:'Jump to',label:'Experience',desc:'Work history',anchor:'#experience'},
+        {cat:'Jump to',label:'Certifications',desc:'AWS + Terraform',anchor:'#certs'},
+        {cat:'Jump to',label:'Education',desc:'UWRF, Finance + CS',anchor:'#education'},
+      ],
+      'proof-hub.html':[
+        {cat:'Jump to',label:'Overview',desc:'Impact strip + metrics',anchor:'#start'},
+        {cat:'Jump to',label:'Timeline',desc:'Career timeline',anchor:'#timeline'},
+        {cat:'Jump to',label:'Turbo Pack',desc:'Bullet builder + export',anchor:'#turbo'},
+        {cat:'Jump to',label:'Case Studies',desc:'Project narratives',anchor:'#cases'},
+        {cat:'Jump to',label:'Credentials',desc:'Certs + education',anchor:'#cred'},
+      ],
+    };
+    var CMDS=NAV.concat(ACT).concat(JMP[page]||[]);
+    var activeIdx=-1,prevFocus=null,filtered=[];
+    function flt(q){q=(q||'').toLowerCase().trim();if(!q)return CMDS.slice();return CMDS.filter(function(c){return(c.label+' '+(c.desc||'')+' '+(c.cat||'')).toLowerCase().indexOf(q)>-1;});}
+    function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+    function mkItem(c,i){
+      var li=document.createElement('li');li.className='cpi';li.setAttribute('role','option');li.setAttribute('id','cpi-'+i);li.setAttribute('aria-selected','false');
+      li.innerHTML='<span class="cpi-lbl">'+esc(c.label)+'</span>'+(c.desc?'<span class="cpi-desc">'+esc(c.desc)+'</span>':'');
+      li.addEventListener('mousedown',function(e){e.preventDefault();execute(c);});
+      return li;
+    }
+    function render(q){
+      filtered=flt(q);lst.innerHTML='';var lastCat=null;
+      filtered.forEach(function(c,i){
+        if(c.cat!==lastCat){var h=document.createElement('li');h.className='cpcat';h.setAttribute('role','presentation');h.textContent=c.cat;lst.appendChild(h);lastCat=c.cat;}
+        lst.appendChild(mkItem(c,i));
+      });
+      setActive(-1);
+    }
+    function setActive(i){
+      activeIdx=i;
+      var items=lst.querySelectorAll('.cpi');
+      items.forEach(function(el,j){el.setAttribute('aria-selected',j===i?'true':'false');});
+      if(i>=0&&items[i])items[i].scrollIntoView({block:'nearest'});
+      inp.setAttribute('aria-activedescendant',i>=0?'cpi-'+i:'');
+    }
+    function execute(cmd){
+      closePal();
+      if(cmd.action==='print'){window.print();return;}
+      if(cmd.action==='copy-email'){
+        var t='bsc_work@gmx.com';
+        if(navigator.clipboard){navigator.clipboard.writeText(t);}
+        else{var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}
+        return;
+      }
+      if(cmd.anchor){var el=document.querySelector(cmd.anchor);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});return;}
+      if(cmd.url){if(cmd.ext){window.open(cmd.url,'_blank','noopener');}else{location.href=cmd.url;}}
+    }
+    function openPal(){prevFocus=document.activeElement;pal.hidden=false;render('');inp.value='';setTimeout(function(){inp.focus();},30);document.body.style.overflow='hidden';}
+    function closePal(){pal.hidden=true;document.body.style.overflow='';if(prevFocus)prevFocus.focus();}
+    inp.addEventListener('input',function(){render(inp.value);});
+    inp.addEventListener('keydown',function(e){
+      var items=lst.querySelectorAll('.cpi');
+      if(e.key==='ArrowDown'){e.preventDefault();setActive(Math.min(activeIdx+1,items.length-1));}
+      else if(e.key==='ArrowUp'){e.preventDefault();setActive(Math.max(activeIdx-1,0));}
+      else if(e.key==='Enter'){if(activeIdx>=0&&filtered[activeIdx])execute(filtered[activeIdx]);else if(filtered[0])execute(filtered[0]);}
+      else if(e.key==='Escape'){closePal();}
+    });
+    bg.addEventListener('mousedown',closePal);
+    document.getElementById('cmd-esk').addEventListener('click',closePal);
+    document.addEventListener('keydown',function(e){
+      if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();if(pal.hidden){openPal();}else{closePal();}}
+      if(!pal.hidden&&e.key==='Escape')closePal();
+    });
+  })();
+  </script>
+  <script src="shared-enhancements.js"></script>
+</body>
+</html>

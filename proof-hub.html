@@ -1,0 +1,3070 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="favicon.ico" sizes="any" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <title>Brandon S. Clark — Proof Hub (Resume + Case Studies)</title>
+  <meta name="description" content="Impact-focused resume bullet inventory with JD matching, role filters, skills pack, and ATS-friendly copy/export tools. Optimized for LinkedIn link previews (Open Graph).">
+
+  <!-- Open Graph tags (LinkedIn + others) -->
+  <meta property="og:title" content="Brandon S. Clark — Senior Software Engineer (AWS Backend / Platform)" />
+  <meta property="og:type" content="website" />
+  <meta property="og:description" content="Impact-focused accomplishments + resume bullets with JD match + copy tools (AWS, Terraform, serverless, APIs, data platforms)." />
+  <meta property="og:url" content="https://northwoodscode.github.io/resume/proof-hub.html" />
+  <meta property="og:image" content="https://northwoodscode.github.io/resume/og-image.png" />
+  <meta property="og:image:alt" content="Brandon S. Clark — Senior Software Engineer (AWS Backend / Platform)" />
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Brandon S. Clark — Senior Software Engineer (AWS Backend / Platform)" />
+  <meta name="twitter:description" content="Resume bullets + JD match + ATS copy tools. Cloud/backend/platform engineering impact." />
+  <meta name="twitter:image" content="https://northwoodscode.github.io/resume/og-image.png" />
+
+  <link rel="canonical" href="https://northwoodscode.github.io/resume/proof-hub.html" />
+  <!-- Schema.org structured data (helps search engines understand the page) -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Brandon S. Clark",
+  "jobTitle": "Senior Software Engineer",
+  "email": "mailto:bsc_work@gmx.com",
+  "url": "https://northwoodscode.github.io/resume/",
+  "knowsAbout": ["AWS","Lambda","API Gateway","Step Functions","DynamoDB","Terraform","TypeScript","Python","Node.js","Serverless","Auth0","OpenAPI","IoT"],
+  "hasOccupation": {
+    "@type": "Occupation",
+    "name": "Senior Software Engineer",
+    "occupationLocation": { "@type": "Country", "name": "United States" }
+  },
+  "address": { "@type": "PostalAddress", "addressRegion": "WI", "addressCountry": "US" },
+  "sameAs": [
+    "https://github.com/NorthwoodsCode",
+    "https://www.linkedin.com/in/brandon-c-it-industry"
+  ]
+}
+  </script>
+
+
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+      --shadow2: 0 10px 24px rgba(15, 23, 42, 0.08);
+      --accent: #2563eb; /* calm blue */
+      --accent2: #16a34a; /* calm green */
+      --warn: #f59e0b;
+      --danger: #ef4444;
+      --maxw: 980px;
+      --radius: 16px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    html[data-theme="dark"] {
+      --bg: #0b1220;
+      --card: #0f172a;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --border: #1e293b;
+      --shadow: 0 1px 2px rgba(0,0,0,0.35);
+      --shadow2: 0 14px 30px rgba(0,0,0,0.45);
+      --accent: #60a5fa;
+      --accent2: #34d399;
+      --warn: #fbbf24;
+      --danger: #fb7185;
+    }
+
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 16px;
+    }
+
+    a { color: inherit; }
+    a:focus-visible, button:focus-visible, input:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.25);
+      border-radius: 10px;
+    }
+
+    .wrap {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 22px 16px 72px;
+    }
+
+    header {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow2);
+      padding: 18px 18px 14px;
+    }
+
+    .topline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 12px;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 20px;
+      letter-spacing: 0.2px;
+    }
+
+    .badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .badge {
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 4px 8px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(148, 163, 184, 0.10);
+    }
+
+    .meta {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 12px;
+      align-items: center;
+    }
+
+    .meta a {
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(100,116,139,0.6);
+    }
+    .meta a:hover {
+      border-bottom-style: solid;
+    }
+
+    .controls {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    @media (min-width: 860px) {
+      .controls {
+        grid-template-columns: 1.4fr 1fr;
+        align-items: start;
+      }
+    }
+
+    .search {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px 12px;
+      background: rgba(148, 163, 184, 0.06);
+    }
+    .search input {
+      width: 100%;
+      border: 0;
+      outline: none;
+      font-size: 14px;
+      background: transparent;
+      color: inherit;
+    }
+    .search .hint {
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .control-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .btn {
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: inherit;
+      padding: 9px 12px;
+      border-radius: 12px;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+      user-select: none;
+    }
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow2);
+      border-color: rgba(37,99,235,0.35);
+    }
+    .btn:active {
+      transform: translateY(0px);
+    }
+    .btn.primary {
+      border-color: rgba(37,99,235,0.35);
+      background: rgba(37, 99, 235, 0.08);
+    }
+    .btn.tiny {
+      padding: 6px 10px;
+      font-size: 12px;
+      border-radius: 10px;
+    }
+
+    .stats {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 13px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 14px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .stats .mono {
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .year-nav {
+      margin: 14px 0 10px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      scrollbar-width: thin;
+    }
+    .chip {
+      flex: 0 0 auto;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 13px;
+      color: var(--muted);
+      background: rgba(148, 163, 184, 0.06);
+    }
+    .chip:hover {
+      color: var(--text);
+      border-color: rgba(37,99,235,0.35);
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow2);
+      padding: 16px;
+      margin: 14px 0;
+    }
+    .card h2 {
+      margin: 0 0 10px;
+      font-size: 16px;
+    }
+    .timeline {
+      margin: 0 0 0 18px;
+      padding: 0;
+    }
+    .timeline li {
+      margin: 8px 0;
+    }
+
+    details.year {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow2);
+      margin: 14px 0;
+      overflow: clip;
+    }
+
+    details.year summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+    details.year summary::-webkit-details-marker { display: none; }
+
+    .year-title {
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: 0.2px;
+    }
+    .pill {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 4px 8px;
+      background: rgba(148, 163, 184, 0.06);
+    }
+
+    .bullets {
+      list-style: none;
+      margin: 0;
+      padding: 12px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .bullet {
+      position: relative;
+      padding: 12px 88px 12px 12px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(148, 163, 184, 0.05);
+    }
+    html[data-theme="dark"] .bullet {
+      background: rgba(148, 163, 184, 0.07);
+    }
+
+    .bullet:hover {
+      border-color: rgba(37,99,235,0.35);
+      background: rgba(37, 99, 235, 0.06);
+    }
+
+    .bullet .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+
+    .bullet-text {
+      white-space: normal;
+      word-break: break-word;
+    }
+
+    .bullet.spotlight {
+      border-color: rgba(37,99,235,0.55);
+      background: rgba(37, 99, 235, 0.12);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.18);
+    }
+
+    .footer {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 10px 14px;
+      box-shadow: var(--shadow2);
+      font-size: 13px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 160ms ease, transform 160ms ease;
+      z-index: 1001;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-4px);
+    }
+
+    /* Confetti canvas */
+    #confetti {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    /* Print */
+    @media print {
+      header, .year-nav, .copy-btn, .controls, .stats, #confetti, .toast {
+        display: none !important;
+      }
+      body { background: #fff; color: #000; }
+      details.year { box-shadow: none; }
+      details.year summary { border-bottom: 1px solid #ddd; }
+      .bullet { border: 1px solid #ddd; background: #fff; }
+    }
+  
+    /* ------------------------------------------------------------
+       Turbo Tools (job-search accelerators)
+       ------------------------------------------------------------ */
+    .subgrid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    @media (min-width: 860px) {
+      .subgrid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .subcard {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      background: rgba(148, 163, 184, 0.05);
+    }
+
+    .subcard h3 {
+      margin: 0 0 8px;
+      font-size: 14px;
+      letter-spacing: 0.2px;
+    }
+
+    .small { font-size: 13px; }
+    .muted { color: var(--muted); }
+    .divider { height: 1px; background: var(--border); margin: 12px 0; }
+
+    .impact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .metric {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px 12px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+    .metric .k {
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .metric .v {
+      font-weight: 800;
+      font-size: 18px;
+      margin-top: 2px;
+      letter-spacing: 0.2px;
+    }
+    .metric .s {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .tag-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .chip-btn {
+      border: 1px solid var(--border);
+      background: rgba(148, 163, 184, 0.06);
+      color: var(--muted);
+      padding: 7px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 13px;
+      box-shadow: var(--shadow);
+      transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+      user-select: none;
+      white-space: nowrap;
+    }
+    .chip-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow2);
+      border-color: rgba(37,99,235,0.35);
+      color: var(--text);
+    }
+    .chip-btn.active {
+      background: rgba(37,99,235,0.10);
+      border-color: rgba(37,99,235,0.45);
+      color: var(--text);
+    }
+    .chip-btn .count {
+      font-family: var(--mono);
+      font-size: 12px;
+      opacity: 0.85;
+      margin-left: 6px;
+    }
+
+    .skills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .skill {
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: rgba(148, 163, 184, 0.06);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .skill-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .jd, .selected-out {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px 12px;
+      background: rgba(148, 163, 184, 0.06);
+      color: inherit;
+      font-size: 13px;
+      line-height: 1.45;
+      resize: vertical;
+    }
+
+    .jd-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+
+    .check {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--muted);
+      user-select: none;
+    }
+
+    .jd-btns {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .match-list {
+      margin: 10px 0 0 18px;
+      padding: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .match-list li { margin: 6px 0; }
+    .match-list a {
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(100,116,139,0.6);
+    }
+    .match-list a:hover { border-bottom-style: solid; }
+
+    .builder-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+
+    /* ------------------------------------------------------------
+       Bullet upgrades: Pick + JD match badge
+       ------------------------------------------------------------ */
+    .bullet { padding-right: 152px; }
+
+    .bullet .pick-btn {
+      position: absolute;
+      top: 42px;
+      right: 10px;
+    }
+
+    .bullet .match-badge {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-family: var(--mono);
+      font-size: 11px;
+      padding: 4px 7px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.10);
+      color: var(--muted);
+    }
+
+    .bullet.matched {
+      border-color: rgba(22, 163, 74, 0.45);
+      background: rgba(22, 163, 74, 0.06);
+    }
+
+    .bullet.picked {
+      border-color: rgba(37,99,235,0.55);
+      background: rgba(37,99,235,0.08);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.14);
+    }
+
+    @media print {
+      #turbo { display: none !important; }
+    }
+
+  
+    /* ------------------------------------------------------------
+       v8 additions — quick start, lanes, recruiter pack, case studies
+       ------------------------------------------------------------ */
+    a.btn { text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+
+    .quickgrid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 10px;
+    }
+    @media (min-width: 860px) {
+      .quickgrid { grid-template-columns: 1.2fr 0.8fr; }
+    }
+
+    .quick-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+      align-items: center;
+    }
+
+    .impact-strip {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    @media (min-width: 640px) {
+      .impact-strip { grid-template-columns: 1fr 1fr; }
+    }
+
+    .impact-mini {
+      border: 1px solid var(--border);
+      background: var(--card);
+      border-radius: 14px;
+      padding: 10px 12px;
+      box-shadow: var(--shadow);
+    }
+    .impact-mini .k { color: var(--muted); font-size: 12px; }
+    .impact-mini .v { font-weight: 800; font-size: 16px; margin-top: 2px; }
+    .impact-mini .s { color: var(--muted); font-size: 12px; margin-top: 4px; }
+
+    .lane-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+      align-items: center;
+    }
+    .lane-bar .label {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      padding: 4px 8px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.10);
+    }
+    .lane-btn {
+      border: 1px solid var(--border);
+      background: rgba(148, 163, 184, 0.06);
+      color: var(--muted);
+      padding: 7px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 13px;
+      box-shadow: var(--shadow);
+      transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+      user-select: none;
+      white-space: nowrap;
+    }
+    .lane-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow2);
+      border-color: rgba(37,99,235,0.35);
+      color: var(--text);
+    }
+    .lane-btn.active {
+      border-color: rgba(37,99,235,0.55);
+      color: var(--text);
+      background: rgba(37,99,235,0.10);
+    }
+
+    .lane-highlights {
+      margin-top: 10px;
+      border: 1px dashed rgba(100,116,139,0.55);
+      border-radius: 14px;
+      padding: 10px 12px;
+      background: rgba(148, 163, 184, 0.04);
+    }
+    .lane-highlights .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .lane-highlights ul { margin: 0 0 0 18px; }
+    .lane-highlights li { margin: 0 0 8px; }
+    .lane-highlights a { text-decoration: none; border-bottom: 1px dashed rgba(100,116,139,0.6); }
+    .lane-highlights a:hover { border-bottom-style: solid; }
+
+    .case-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    @media (min-width: 860px) {
+      .case-grid { grid-template-columns: 1fr 1fr; }
+    }
+    details.case {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(148, 163, 184, 0.05);
+      padding: 10px 12px;
+    }
+    details.case summary {
+      cursor: pointer;
+      font-weight: 700;
+      padding: 6px 2px;
+      list-style: none;
+    }
+    details.case summary::-webkit-details-marker { display: none; }
+    .case-body { color: var(--text); }
+    .case-body p { margin: 8px 0; }
+    .case-body .mini { color: var(--muted); font-size: 13px; }
+    .search-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .search-chip {
+      border: 1px solid var(--border);
+      background: rgba(148, 163, 184, 0.06);
+      color: var(--muted);
+      padding: 7px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 13px;
+      box-shadow: var(--shadow);
+      user-select: none;
+      white-space: nowrap;
+    }
+    .search-chip:hover { box-shadow: var(--shadow2); color: var(--text); border-color: rgba(37,99,235,0.35); }
+
+    .cred-list { margin: 0; padding-left: 18px; }
+    .cred-list li { margin: 0 0 8px; }
+
+  </style>
+
+<style id="bsc-resume-dock-style">
+  .bsc-dock{
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    z-index: 9999;
+    font-family: var(--sans, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif);
+  }
+  .bsc-dock summary{
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+    border: 1px solid var(--border, #dbe1ea);
+    background: var(--card, var(--bg, #ffffff));
+    color: var(--fg, var(--text, #0f172a));
+    padding: .62rem .9rem;
+    border-radius: 999px;
+    font-weight: 800;
+    box-shadow: var(--shadow, 0 12px 28px rgba(0,0,0,.14));
+  }
+  .bsc-dock summary::-webkit-details-marker{ display:none; }
+  .bsc-dock[open] summary{
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+  }
+  .bsc-dock-panel{
+    width: min(340px, calc(100vw - 32px));
+    margin-top: .55rem;
+    border: 1px solid var(--border, #dbe1ea);
+    border-radius: 18px;
+    background: var(--card, var(--bg, #ffffff));
+    color: var(--fg, var(--text, #0f172a));
+    box-shadow: var(--shadow, 0 16px 36px rgba(0,0,0,.18));
+    padding: 12px;
+    backdrop-filter: blur(12px);
+  }
+  .bsc-dock-kicker{
+    margin: 0 0 10px;
+    font-size: .8rem;
+    font-weight: 800;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--muted, #64748b);
+  }
+  .bsc-dock-grid{
+    display: grid;
+    gap: 8px;
+  }
+  .bsc-dock-link{
+    display: block;
+    padding: .72rem .8rem;
+    border: 1px solid var(--border, #dbe1ea);
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--bg, #ffffff) 70%, var(--card, #ffffff));
+    color: inherit !important;
+    text-decoration: none !important;
+    transition: transform .08s ease, box-shadow .2s ease, border-color .2s ease;
+  }
+  .bsc-dock-link:hover{
+    transform: translateY(-1px);
+    box-shadow: var(--shadow, 0 12px 28px rgba(0,0,0,.14));
+    text-decoration: none !important;
+  }
+  .bsc-dock-link strong{
+    display: block;
+    font-size: .95rem;
+    letter-spacing: -.01em;
+  }
+  .bsc-dock-link span{
+    display: block;
+    margin-top: 2px;
+    font-size: .82rem;
+    color: var(--muted, #64748b);
+  }
+  .bsc-dock-link[aria-current="page"]{
+    border-color: color-mix(in srgb, var(--accent, #2563eb) 55%, var(--border, #dbe1ea));
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent, #2563eb) 25%, transparent);
+  }
+  @media (max-width: 640px){
+    .bsc-dock{ right: 12px; bottom: 12px; }
+    .bsc-dock-panel{ width: min(320px, calc(100vw - 24px)); }
+  }
+  @media print{
+    .bsc-dock{ display: none !important; }
+  }
+</style>
+<style>
+  /* command palette */
+  #cmd-pal{position:fixed;inset:0;z-index:99998;display:flex;align-items:flex-start;justify-content:center;padding-top:clamp(48px,9vh,130px)}
+  #cmd-pal[hidden]{display:none !important}
+  #cmd-pal{--cp-bg:#fff;--cp-border:#e5e7eb;--cp-text:#111827;--cp-muted:#6b7280;--cp-sub:#f9fafb;--cp-hover:#eff6ff;--cp-cat:#9ca3af;--cp-bdrop:rgba(0,0,0,.48)}
+  html[data-theme="dark"] #cmd-pal{--cp-bg:#0f172a;--cp-border:#1e3a5f;--cp-text:#e2e8f0;--cp-muted:#64748b;--cp-sub:#071224;--cp-hover:rgba(37,99,235,.15);--cp-cat:#475569;--cp-bdrop:rgba(0,0,0,.72)}
+  @media(prefers-color-scheme:dark){html:not([data-theme="light"]) #cmd-pal{--cp-bg:#0f172a;--cp-border:#1e3a5f;--cp-text:#e2e8f0;--cp-muted:#64748b;--cp-sub:#071224;--cp-hover:rgba(37,99,235,.15);--cp-cat:#475569;--cp-bdrop:rgba(0,0,0,.72)}}
+  #cmd-bg{position:absolute;inset:0;background:var(--cp-bdrop);backdrop-filter:blur(4px)}
+  #cmd-box{position:relative;width:min(620px,92vw);background:var(--cp-bg);border-radius:16px;box-shadow:0 28px 70px rgba(0,0,0,.22);overflow:hidden;border:1px solid var(--cp-border)}
+  #cmd-sr{display:flex;align-items:center;gap:.65rem;padding:.9rem 1rem;border-bottom:1px solid var(--cp-border)}
+  #cmd-sr svg{flex-shrink:0;color:var(--cp-muted)}
+  #cmd-q{flex:1;border:none;outline:none;font-size:1rem;background:transparent;color:var(--cp-text);font-family:inherit}
+  #cmd-q::placeholder{color:var(--cp-cat)}
+  #cmd-esk{font-size:.7rem;padding:.18rem .42rem;border:1px solid var(--cp-border);border-radius:4px;color:var(--cp-cat);background:var(--cp-sub);font-family:inherit;white-space:nowrap;cursor:pointer}
+  #cmd-list{margin:0;padding:.3rem 0;list-style:none;max-height:min(380px,52vh);overflow-y:auto}
+  #cmd-list:empty::after{content:'No results';display:block;padding:.9rem 1.1rem;color:var(--cp-cat);font-size:.88rem}
+  .cpcat{padding:.5rem 1.1rem .15rem;font-size:.7rem;font-weight:760;letter-spacing:.1em;text-transform:uppercase;color:var(--cp-cat)}
+  .cpi{display:flex;align-items:center;gap:.65rem;padding:.58rem 1.1rem;cursor:pointer;user-select:none}
+  .cpi:hover,.cpi[aria-selected="true"]{background:var(--cp-hover)}
+  .cpi-lbl{font-size:.93rem;font-weight:560;color:var(--cp-text)}
+  .cpi-desc{font-size:.8rem;color:var(--cp-muted);margin-left:auto;white-space:nowrap;padding-left:.5rem}
+  #cmd-foot{display:flex;gap:1rem;padding:.5rem 1rem;border-top:1px solid var(--cp-border);background:var(--cp-sub)}
+  #cmd-foot span{font-size:.73rem;color:var(--cp-cat);display:flex;align-items:center;gap:.25rem}
+  #cmd-foot kbd{font-size:.69rem;padding:.12rem .32rem;border:1px solid var(--cp-border);border-radius:4px;background:var(--cp-bg);font-family:inherit}
+</style>
+</head>
+<body>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+
+  <div class="wrap">
+    <header>
+      <div class="topline">
+        <h1>Brandon S. Clark — Proof Hub (Resume + Case Studies)</h1>
+        <div class="badges">
+          <span class="badge">v8</span>
+          <span class="badge"><span id="totalCount">105</span> bullets</span>
+          <span class="badge">Wausau, WI friendly</span>
+        </div>
+      </div>
+
+      <div class="meta">
+        <span>Last updated: 2026-02-27</span>
+        <span>·</span>
+        <span>LinkedIn: <a href="https://www.linkedin.com/in/brandon-c-it-industry" target="_blank" rel="noopener">linkedin.com/in/brandon-c-it-industry</a></span>
+        <span>·</span>
+        <span class="mono">Shortcuts: <b>/</b> search · <b>C</b> celebrate · <b>S</b> spotlight · <b>T</b> theme · <b>P</b> public</span>
+      </div>
+
+      <div class="controls">
+        <div class="search" role="search">
+          <span aria-hidden="true">🔎</span>
+          <input id="search" type="search" placeholder="Filter bullets by keyword (AWS, Terraform, IoT, Step Functions…)" autocomplete="off">
+          <span class="hint">Tip: try “aws iot”</span>
+        </div>
+        <div class="control-row">
+          <button id="celebrateBtn" class="btn primary" type="button">🎉 Celebrate</button>
+          <button id="spotlightBtn" class="btn" type="button">✨ Spotlight a win</button>
+          <button id="expandBtn" class="btn" type="button">Expand all</button>
+          <button id="collapseBtn" class="btn" type="button">Collapse all</button>
+          <button id="themeBtn" class="btn" type="button">Theme: Auto</button>
+          <button id="publicBtn" class="btn" type="button">Public Mode: Off</button>
+        </div>
+      </div>
+
+      <div class="stats">
+        <span>Showing <b id="visibleCount">105</b> of <b>105</b> bullets</span>
+        <span class="mono" id="searchStatus">No filter</span>
+      </div>
+    </header>
+
+    <nav class="year-nav" aria-label="Jump to year">
+      <a class="chip" href="#start" title="Recruiter quick start">Start</a>
+      <a class="chip" href="#turbo" title="Job search turbo tools">Turbo</a>
+      <a class="chip" href="#cases" title="Architecture case studies">Cases</a>
+      <a class="chip" href="#cred" title="Credentials">Cred</a>
+      <a class="chip" href="#y2025" title="Jump to 2025">2025</a>
+<a class="chip" href="#y2024" title="Jump to 2024">2024</a>
+<a class="chip" href="#y2023" title="Jump to 2023">2023</a>
+<a class="chip" href="#y2022" title="Jump to 2022">2022</a>
+<a class="chip" href="#y2021" title="Jump to 2021">2021</a>
+<a class="chip" href="#y2020" title="Jump to 2020">2020</a>
+<a class="chip" href="#y2019" title="Jump to 2019">2019</a>
+<a class="chip" href="#y2018" title="Jump to 2018">2018</a>
+<a class="chip" href="#y2017" title="Jump to 2017">2017</a>
+<a class="chip" href="#y2016" title="Jump to 2016">2016</a>
+    </nav>
+
+
+    <section class="card" id="start">
+      <h2>Recruiter Quick Start</h2>
+
+      <div class="quickgrid">
+        <div>
+          <div class="small muted">
+            If you only read one thing: I build <b>secure</b>, <b>automation-heavy</b> backend/platform systems on AWS, and I communicate outcomes clearly (docs, demos, diagrams).
+          </div>
+
+          <ul class="timeline" style="margin-top:10px;">
+            <li><b>Target roles:</b> Senior Software Engineer — Backend / Platform / Cloud</li>
+            <li><b>Location:</b> Wausau, WI (Central Time) · Remote-friendly</li>
+            <li><b>Core themes:</b> AWS serverless · Terraform/IaC · API design · Data foundations/ETL · Security-first automation · Enablement</li>
+          </ul>
+
+          <div class="quick-actions" aria-label="Quick actions">
+            <a class="btn primary" href="https://www.linkedin.com/in/brandon-c-it-industry" target="_blank" rel="noopener">💬 Message on LinkedIn</a>
+            <button id="copyPackTopBtn" class="btn primary" type="button">📎 Copy Recruiter Pack</button>
+            <a class="btn" href="resume-atlas.html">📄 Open Atlas / Print PDF</a>
+            <a class="btn" href="resume-signal.html">🎯 Open Signal</a>
+          </div>
+
+          <div class="small muted" style="margin-top:10px;">
+            Sharing tip: Toggle <b>Public Mode</b> before sharing outside your current org (sanitizes internal team names).
+          </div>
+        </div>
+
+        <div>
+          <div class="small muted">Proof points (auto-generated from your bullets):</div>
+          <div id="impactStrip" class="impact-strip" aria-label="Proof points"></div>
+
+          <div class="divider" role="separator" aria-hidden="true"></div>
+
+          <div class="small muted">Role lanes (one click = smarter filtering + better highlights):</div>
+          <div id="laneBar" class="lane-bar" aria-label="Role lanes"></div>
+
+          <div id="laneHighlights" class="lane-highlights" aria-label="Lane highlights">
+            <div class="small muted">Pick a lane to see curated highlights.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="card" id="timeline">
+      <h2>Role Timeline (Milwaukee Tool)</h2>
+      <ul class="timeline">
+        <li>ONE‑KEY Integrations — Software Engineer II (through Jan 2023)</li>
+<li>JEDI — Data Engineering Team — Data Engineer II (Jan 2023–Mar 2024)</li>
+<li>JEDI — Data Engineering Team — Software Engineer II (Apr 2024–Dec 2024)</li>
+<li>JEDI — Digital IoT Services Team — Senior Software Engineer (Jan 2025–Dec 2025)</li>
+<li>JEDI — Telemetry Team — Senior Software Engineer (Jan 2026–Present)</li>
+      </ul>
+    </section>
+
+
+    <section class="card" id="turbo">
+      <h2>Turbo Tools (tailor faster + share better)</h2>
+
+      <div class="subgrid">
+
+        <div class="subcard">
+          <h3>Recruiter Pack (fast copy/paste)</h3>
+          <div class="small muted">One message you can paste into a LinkedIn DM, email, or recruiter intake form. Updates based on <b>lane</b> + <b>Public Mode</b>.</div>
+
+          <div class="builder-actions" style="margin-top:10px;">
+            <button id="copyPackBtn" class="btn tiny primary" type="button">Copy recruiter pack</button>
+            <button id="copyPitchBtn" class="btn tiny" type="button">Copy 60-sec pitch</button>
+          </div>
+
+          <textarea id="recruiterPackOut" class="selected-out" rows="12" readonly placeholder="Recruiter pack will appear here…"></textarea>
+
+          <div class="small muted">Next steps: <a class="btn tiny" href="resume-atlas.html">Atlas</a> <a class="btn tiny" href="resume-signal.html">Signal</a></div>
+        </div>
+
+        <div class="subcard">
+          <h3>Impact Snapshot</h3>
+          <div class="small muted">Fast-scan proof points recruiters love (pulled from your bullet inventory when possible).</div>
+          <div class="small muted">Sharing tip: validate your link preview with <a href="https://www.linkedin.com/post-inspector/" target="_blank" rel="noopener">LinkedIn Post Inspector</a>.</div>
+          <div id="impactGrid" class="impact-grid" aria-label="Impact metrics"></div>
+        </div>
+
+        <div class="subcard">
+          <h3>Focus Filters</h3>
+          <div class="small muted">Click a filter to jump straight to the most relevant bullets.</div>
+          <div id="tagFilters" class="tag-filters" aria-label="Category filters"></div>
+
+          <div class="divider" role="separator" aria-hidden="true"></div>
+
+          <h3>Top Skills Pack</h3>
+          <div class="small muted">Copy/paste into Skills sections (resume + LinkedIn).</div>
+          <div class="skill-row">
+            <button id="copySkillsBtn" class="btn tiny" type="button">Copy skills</button>
+            <span class="pill" id="skillsStatus">—</span>
+          </div>
+          <div id="skillsList" class="skills-list" aria-label="Skills list"></div>
+        </div>
+
+        <div class="subcard">
+          <h3>Job Description Match</h3>
+          <div class="small muted">Paste a job description to highlight the bullets that match the role’s keywords.</div>
+          <textarea id="jd" class="jd" rows="7" placeholder="Paste the job description here…"></textarea>
+
+          <div class="jd-actions">
+            <label class="check">
+              <input id="showMatchesOnly" type="checkbox">
+              <span>Show only JD matches</span>
+            </label>
+
+            <div class="jd-btns">
+              <button id="autoPickBtn" class="btn tiny primary" type="button">Auto-pick top matches</button>
+              <button id="clearJdBtn" class="btn tiny" type="button">Clear JD</button>
+            </div>
+          </div>
+
+          <div class="small mono" id="jdStatus">No job description yet.</div>
+          <ol id="matchList" class="match-list"></ol>
+        </div>
+
+        <div class="subcard">
+          <h3>Selected Bullets → Resume Paste</h3>
+          <div class="small muted">Use the <b>Pick</b> button on any bullet to build a tailored set. Then copy as ATS text or Markdown.</div>
+
+          <div class="builder-actions">
+            <span class="pill"><span id="selectedCount">0</span> selected</span>
+            <button id="copyATSBtn" class="btn tiny primary" type="button">Copy ATS text</button>
+            <button id="copyMdBtn" class="btn tiny" type="button">Copy Markdown</button>
+            <button id="clearSelectedBtn" class="btn tiny" type="button">Clear</button>
+            <button id="printBtn" class="btn tiny" type="button">Print / Save PDF</button>
+          </div>
+
+          <textarea id="selectedOut" class="selected-out" rows="10" readonly placeholder="Your selected bullets will appear here…"></textarea>
+
+          <div class="small muted">
+            ATS tip: Keep resumes simple (single-column, no tables/text boxes). Use <b>Copy ATS text</b> when pasting into applications.
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="card" id="cases">
+      <h2>Case Studies (architecture + outcomes)</h2>
+      <div class="small muted">These are intentionally written “public safe” (use <b>Public Mode</b> + avoid internal URLs when sharing externally).</div>
+
+      <div class="case-grid">
+        <details class="case" open id="case-payment-portal">
+          <summary>💳 $85M Payment Portal — Full-Stack AWS Web Application</summary>
+          <div class="case-body">
+            <p><b>Problem:</b> Needed a client-facing payment portal that was reliable, secure, and scalable enough to handle high-volume production traffic.</p>
+            <p><b>Approach:</b> Designed and delivered a full-stack AWS-hosted web application with CI/CD pipelines, role-based access, and secure payment processing. Built from scratch with maintainability and operational readiness in mind.</p>
+            <p><b>Results:</b> Processed ~250,000 payments totaling ~$85M. Zero reported payment failures attributable to the platform. Still in production after handoff.</p>
+            <p class="mini"><b>Use it when interviewing for:</b> full-stack or backend SWE, fintech, high-reliability systems, cloud-hosted web apps, CI/CD.</p>
+            <div class="search-chips" aria-label="Find related bullets">
+              <button class="search-chip" type="button" data-query="payment">🔎 Find bullets: payment portal</button>
+              <button class="search-chip" type="button" data-query="foundation finance">🔎 Find bullets: Foundation Finance</button>
+              <button class="search-chip" type="button" data-query="ci/cd">🔎 Find bullets: CI/CD</button>
+            </div>
+          </div>
+        </details>
+
+        <details class="case" id="case-java-etl">
+          <summary>⚙️ 1,200-Hour Automation — Java + SQL Server ETL Program</summary>
+          <div class="case-body">
+            <p><b>Problem:</b> A manual data-entry process consumed thousands of engineering hours per year and introduced error risk through repetition.</p>
+            <p><b>Approach:</b> Built an automated data-entry program using Java and MS SQL Server that handled the full ingestion pipeline — parsing, validation, transformation, and persistence — without human intervention.</p>
+            <p><b>Results:</b> Saved more than 1,200 hours of manual work and approximately $40K annually. Delivered as a standalone tool with zero ongoing support burden.</p>
+            <p class="mini"><b>Use it when interviewing for:</b> backend automation, ETL/data engineering, operational efficiency, enterprise tooling, cost reduction.</p>
+            <div class="search-chips" aria-label="Find related bullets">
+              <button class="search-chip" type="button" data-query="automation">🔎 Find bullets: automation</button>
+              <button class="search-chip" type="button" data-query="1200">🔎 Find bullets: 1,200 hours</button>
+              <button class="search-chip" type="button" data-query="sql server">🔎 Find bullets: SQL Server</button>
+            </div>
+          </div>
+        </details>
+
+        <details class="case" id="case-secure-provisioning">
+          <summary>🔐 Secure Provisioning Automation — Python CLI + AWS</summary>
+          <div class="case-body">
+            <p><b>Problem:</b> Onboarding new devices was slow (~10 min/device), manual, and inconsistent across dev, test, and prod environments.</p>
+            <p><b>Approach:</b> Built a Python CLI + supporting APIs that automated registration, certificate generation, credential handling, and multi-environment bootstrapping. Integrated Secrets Manager and Auth0 for security-first credential hygiene.</p>
+            <p><b>Results:</b> Reduced provisioning from ~10 minutes/manual to &lt;1 minute/device. Estimated ~100 hours saved in a 100-device rollout. Published a comprehensive README and demo assets that cut onboarding time for new engineers by ~30%.</p>
+            <p class="mini"><b>Use it when interviewing for:</b> cloud platform, backend tooling, security-minded automation, DevOps/platform engineering.</p>
+            <div class="search-chips" aria-label="Find related bullets">
+              <button class="search-chip" type="button" data-query="provisioning">🔎 Find bullets: provisioning</button>
+              <button class="search-chip" type="button" data-query="secrets manager">🔎 Find bullets: Secrets Manager</button>
+              <button class="search-chip" type="button" data-query="certificate">🔎 Find bullets: certificate</button>
+            </div>
+          </div>
+        </details>
+
+        <details class="case" id="case-serverless-bus">
+          <summary>🧩 Serverless Request Bus — API Gateway → Step Functions → Lambda</summary>
+          <div class="case-body">
+            <p><b>Problem:</b> Needed reliable, observable partner integrations with validation, flexible transformation, and auditability — without coupling to a single Lambda.</p>
+            <p><b>Approach:</b> Prototyped an end-to-end request bus: API Gateway → Step Functions → multiple Lambdas, each responsible for a single concern (filter, validate, transform, augment, respond). Each step was independently testable and the full workflow was observable via CloudWatch.</p>
+            <p><b>Results:</b> End-to-end requests completed in seconds. Packaged reusable state machine definitions, Postman collections, and runbooks — reducing tribal knowledge and enabling faster onboarding for the next engineer.</p>
+            <p class=”mini”><b>Use it when interviewing for:</b> distributed systems, serverless backend, integration platforms, API design, workflow orchestration, system design interviews.</p>
+            <div class="search-chips">
+              <button class="search-chip" type="button" data-query="api gateway">🔎 Find bullets: API Gateway</button>
+              <button class="search-chip" type="button" data-query="step functions">🔎 Find bullets: Step Functions</button>
+              <button class="search-chip" type="button" data-query="request bus">🔎 Find bullets: Request Bus</button>
+            </div>
+          </div>
+        </details>
+
+        <details class="case" id="case-data-foundations">
+          <summary>🗄️ Data Foundations — Parallel DB migration + ETL parity</summary>
+          <div class="case-body">
+            <p><b>Problem:</b> Modernizing a rigid legacy tool-data-reads storage system without disrupting critical operations.</p>
+            <p><b>Approach:</b> Designed a risk-managed “run in parallel” approach with ETL/backfill planning to maintain old vs new parity; implemented a flexible document database (DocumentDB) POC + schema design and integrated it into existing APIs/workflows.</p>
+            <p><b>Results:</b> Enabled safer migration, improved data flexibility, and strengthened long-term maintainability.</p>
+            <p class="mini"><b>Use it when interviewing for:</b> data platforms, migrations, reliability, system design, ETL/DB work.</p>
+            <div class="search-chips">
+              <button class="search-chip" type="button" data-query="documentdb">🔎 Find bullets: DocumentDB</button>
+              <button class="search-chip" type="button" data-query="etl">🔎 Find bullets: ETL</button>
+              <button class="search-chip" type="button" data-query="tagging system">🔎 Find bullets: tagging system</button>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="card" id="cred">
+      <h2>Credentials (quick verification signals)</h2>
+      <ul class="cred-list">
+        <li>AWS Certified Solutions Architect – Associate (SAA‑C03) — earned 08/25/2022</li>
+        <li>AWS Certified Cloud Practitioner (CLF‑C01)</li>
+        <li>Terraform Associate (003) — completed 12/27/2023</li>
+      </ul>
+      <div class="small muted">Tip: Put certs near the top of LinkedIn if the target roles are cloud/platform heavy.</div>
+    </section>
+
+
+    <main id="content">
+      
+    <details class="year" id="y2025" open>
+      <summary>
+        <span class="year-title">2025</span>
+        <span class="pill"><span class="count">20</span> bullets</span>
+      </summary>
+      <ul class="bullets">
+        <li class="bullet" data-text="milwaukee tool (jedi — digital iot services team) — senior software engineer — delivered a greenfield secure iot device provisioning solution (python cli + supporting apis) automating device registration, certificate generation, and secure bootstrapping aligned to aws iot core + enterprise security standards; cut provisioning from ~10 min/manual to &lt;1 min per device.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Milwaukee Tool (JEDI — Digital IoT Services Team) — Senior Software Engineer — Delivered a greenfield secure IoT device provisioning solution (Python CLI + supporting APIs) automating device registration, certificate generation, and secure bootstrapping aligned to AWS IoT Core + enterprise security standards; cut provisioning from ~10 min/manual to &lt;1 min per device.</div>
+    </li>
+<li class="bullet" data-text="implemented mqtt delta updates for constrained-device messaging, reducing payload size by ~40% overall and up to ~97% in an example (476b → 15b).">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Implemented MQTT delta updates for constrained-device messaging, reducing payload size by ~40% overall and up to ~97% in an example (476B → 15B).</div>
+    </li>
+<li class="bullet" data-text="integrated security-first patterns into provisioning workflows (aws secrets manager + auth0 credential handling + secure setup guidance) to enable scalable, multi-environment provisioning (dev/test/prod).">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Integrated security-first patterns into provisioning workflows (AWS Secrets Manager + Auth0 credential handling + secure setup guidance) to enable scalable, multi-environment provisioning (dev/test/prod).</div>
+    </li>
+<li class="bullet" data-text="served as the first implementer/pilot for the provisioning solution; surfaced systemic blockers (e.g., cloud governance permission constraints), partnered with governance/security to resolve them, and documented standards for future contributors.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Served as the first implementer/pilot for the provisioning solution; surfaced systemic blockers (e.g., cloud governance permission constraints), partnered with governance/security to resolve them, and documented standards for future contributors.</div>
+    </li>
+<li class="bullet" data-text="authored a comprehensive readme.md for the diots iot-testing repo / iot provisioning tool (install steps, cli examples, security guidance), reducing onboarding time for new engineers by an estimated ~30%.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Authored a comprehensive README.md for the DIoTS iot-testing repo / IoT provisioning tool (install steps, CLI examples, security guidance), reducing onboarding time for new engineers by an estimated ~30%.</div>
+    </li>
+<li class="bullet" data-text="authored diots service sla definitions documentation and performed sla gap identification, improving operational clarity and expectations.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Authored DIoTS service SLA definitions documentation and performed SLA gap identification, improving operational clarity and expectations.</div>
+    </li>
+<li class="bullet" data-text="supported implementation of an sla dashboard tracking three key metrics, enabling consistent measurement and incremental service improvement.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Supported implementation of an SLA dashboard tracking three key metrics, enabling consistent measurement and incremental service improvement.</div>
+    </li>
+<li class="bullet" data-text="built sr-feedback-workflow-v3 (slack workflow automation for structured sprint-review feedback), secured cross-pod volunteer support, and validated stakeholder interest for broader adoption.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Built SR-Feedback-Workflow-V3 (Slack workflow automation for structured sprint-review feedback), secured cross-pod volunteer support, and validated stakeholder interest for broader adoption.</div>
+    </li>
+<li class="bullet" data-text="designed and deployed an ai-assisted feedback collection + analytics pipeline using slack workflow forms + microsoft forms; enriched results via emotion detection; used copilot/genai to produce an executive-style pdf report and q4 2025 readout deck shared with leadership.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Designed and deployed an AI-assisted feedback collection + analytics pipeline using Slack Workflow forms + Microsoft Forms; enriched results via emotion detection; used Copilot/GenAI to produce an executive-style PDF report and Q4 2025 readout deck shared with leadership.</div>
+    </li>
+<li class="bullet" data-text="iterated and delivered an “intro to slack workflows” enablement session through multiple peer + cross-team dry runs, culminating in a refined delivery at platform cluster sync.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Iterated and delivered an “Intro to Slack Workflows” enablement session through multiple peer + cross-team dry runs, culminating in a refined delivery at Platform Cluster Sync.</div>
+    </li>
+<li class="bullet" data-text="established a repeatable practice of short demo/how-to videos to unblock peers across tools/workflows/processes, converting tribal knowledge into reusable learning assets that reduce meeting dependency and accelerate onboarding/troubleshooting.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Established a repeatable practice of short demo/how-to videos to unblock peers across tools/workflows/processes, converting tribal knowledge into reusable learning assets that reduce meeting dependency and accelerate onboarding/troubleshooting.</div>
+    </li>
+<li class="bullet" data-text="created and demoed interactive documentation using lucidchart advanced features (e.g., layered diagrams), improving clarity and influencing peers to adopt higher-quality visuals.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Created and demoed interactive documentation using Lucidchart advanced features (e.g., layered diagrams), improving clarity and influencing peers to adopt higher-quality visuals.</div>
+    </li>
+<li class="bullet" data-text="delivered a “memory maps” technical presentation using creative powerpoint animations to explain complex concepts (e.g., hex data parsing); received strong peer feedback and influence on presentation standards.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Delivered a “Memory Maps” technical presentation using creative PowerPoint animations to explain complex concepts (e.g., hex data parsing); received strong peer feedback and influence on presentation standards.</div>
+    </li>
+<li class="bullet" data-text="presented to cloud center of excellence stakeholders with clear visuals quantifying financial impact of reducing aws cloudtrail usage, enabling informed cost-optimization decisions.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Presented to Cloud Center of Excellence stakeholders with clear visuals quantifying financial impact of reducing AWS CloudTrail usage, enabling informed cost-optimization decisions.</div>
+    </li>
+<li class="bullet" data-text="in sprint reviews, communicated delivered results using data-driven before/after visuals showing reduced errors and increased success rates, strengthening stakeholder trust through transparency.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">In sprint reviews, communicated delivered results using data-driven before/after visuals showing reduced errors and increased success rates, strengthening stakeholder trust through transparency.</div>
+    </li>
+<li class="bullet" data-text="championed agile execution discipline by ensuring sprint retrospectives happened and advocating for explicit definition of done / “success looks like” criteria to reduce ambiguity and rework.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Championed agile execution discipline by ensuring sprint retrospectives happened and advocating for explicit Definition of Done / “success looks like” criteria to reduce ambiguity and rework.</div>
+    </li>
+<li class="bullet" data-text="initiated internal technical synchronization sessions to reduce knowledge silos on critical infra/security topics (aws iot device defender audit, awscc provider implications, terraform multi-env/multi-region deployment mechanics).">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Initiated internal Technical Synchronization sessions to reduce knowledge silos on critical infra/security topics (AWS IoT Device Defender audit, AWSCC provider implications, Terraform multi-env/multi-region deployment mechanics).</div>
+    </li>
+<li class="bullet" data-text="championed adoption of disc profiles within the pod by creating/shareable enablement assets (template, powerpoint, how-to video) and influencing leadership alignment—resulting in scheduled q1 2026 implementation.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Championed adoption of DiSC Profiles within the POD by creating/shareable enablement assets (template, PowerPoint, how-to video) and influencing leadership alignment—resulting in scheduled Q1 2026 implementation.</div>
+    </li>
+<li class="bullet" data-text="represented jedi/cpp &amp; diots in the extreme ownership challenge by setting a time-bound goal, tracking progress, and reporting outcomes—reinforcing accountability and continuous improvement.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Represented JEDI/CPP &amp; DIoTS in the Extreme Ownership Challenge by setting a time-bound goal, tracking progress, and reporting outcomes—reinforcing accountability and continuous improvement.</div>
+    </li>
+<li class="bullet" data-text="operationalized innovation and genai adoption by running monthly ai-assisted communication reviews, participating in 2+ innovation sprints, sharing learnings, and automating repetitive tasks.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Operationalized innovation and GenAI adoption by running monthly AI-assisted communication reviews, participating in 2+ innovation sprints, sharing learnings, and automating repetitive tasks.</div>
+    </li>
+      </ul>
+    </details>
+    
+    <details class="year" id="y2024" open>
+      <summary>
+        <span class="year-title">2024</span>
+        <span class="pill"><span class="count">9</span> bullets</span>
+      </summary>
+      <ul class="bullets">
+        <li class="bullet" data-text="milwaukee tool (jedi — data engineering team) — software engineer ii — advanced the tool data foundations project by delivering a comprehensive tool-data tagging system and collaborating on quicklink integrations with the eda team.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Milwaukee Tool (JEDI — Data Engineering Team) — Software Engineer II — Advanced the Tool Data Foundations Project by delivering a comprehensive tool-data tagging system and collaborating on QuickLink integrations with the EDA team.</div>
+    </li>
+<li class="bullet" data-text="improved delivery execution and organization by leveraging github to streamline task management and increase work clarity/trackability.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Improved delivery execution and organization by leveraging GitHub to streamline task management and increase work clarity/trackability.</div>
+    </li>
+<li class="bullet" data-text="incorporated peer feedback to improve design clarity, usability, and scalability of deliverables (as reflected in year-end feedback).">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Incorporated peer feedback to improve design clarity, usability, and scalability of deliverables (as reflected in year-end feedback).</div>
+    </li>
+<li class="bullet" data-text="exceeded expectations in partner-team enablement by refining documentation, improving support efficiency, and helping increase the rate of resolved partner feature requests.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Exceeded expectations in partner-team enablement by refining documentation, improving support efficiency, and helping increase the rate of resolved partner feature requests.</div>
+    </li>
+<li class="bullet" data-text="earned recognition for “one team mentality” through a collaborative and inclusive approach that strengthened team culture and cross-functional execution.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Earned recognition for “One Team Mentality” through a collaborative and inclusive approach that strengthened team culture and cross-functional execution.</div>
+    </li>
+<li class="bullet" data-text="built strong cross-functional relationships and was recognized as a trusted, positive-intent collaborator and enabler for partner teams.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Built strong cross-functional relationships and was recognized as a trusted, positive-intent collaborator and enabler for partner teams.</div>
+    </li>
+<li class="bullet" data-text="demonstrated proactive communication and problem-solving—addressed challenges effectively to maintain momentum toward shared objectives.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Demonstrated proactive communication and problem-solving—addressed challenges effectively to maintain momentum toward shared objectives.</div>
+    </li>
+<li class="bullet" data-text="received “exceeds expectations” manager ratings in key leadership behaviors, including candid communication, one team mentality, and build collaborative relationships.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Received “Exceeds Expectations” manager ratings in key leadership behaviors, including Candid communication, One Team Mentality, and Build Collaborative Relationships.</div>
+    </li>
+<li class="bullet" data-text="delivered consistently strong overall performance as a software engineer ii (meets expectations overall), with standout strengths in operational improvements, partner enablement, and collaboration.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Delivered consistently strong overall performance as a Software Engineer II (Meets Expectations overall), with standout strengths in operational improvements, partner enablement, and collaboration.</div>
+    </li>
+      </ul>
+    </details>
+    
+    <details class="year" id="y2023" open>
+      <summary>
+        <span class="year-title">2023</span>
+        <span class="pill"><span class="count">9</span> bullets</span>
+      </summary>
+      <ul class="bullets">
+        <li class="bullet" data-text="milwaukee tool (jedi — data engineering team) — data engineer ii — drove a risk-managed transition to stand up a new, more flexible tool-data-reads system in parallel with the legacy database, aiming to avoid disruption while ensuring old vs. new reads stayed in parity.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Milwaukee Tool (JEDI — Data Engineering Team) — Data Engineer II — Drove a risk-managed transition to stand up a new, more flexible tool-data-reads system in parallel with the legacy database, aiming to avoid disruption while ensuring old vs. new reads stayed in parity.</div>
+    </li>
+<li class="bullet" data-text="completed a deep ramp-up on the tool data domain being transferred into ownership, building a foundation to support long-term customer needs and future improvements.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Completed a deep ramp-up on the tool data domain being transferred into ownership, building a foundation to support long-term customer needs and future improvements.</div>
+    </li>
+<li class="bullet" data-text="researched and implemented a new database solution to store key data sets supporting the tool-data-reads modernization effort.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Researched and implemented a new database solution to store key data sets supporting the tool-data-reads modernization effort.</div>
+    </li>
+<li class="bullet" data-text="defined an etl-driven migration strategy to move historical tool data reads into the new database while preventing loss/corruption and maintaining consistency during transition.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Defined an ETL-driven migration strategy to move historical tool data reads into the new database while preventing loss/corruption and maintaining consistency during transition.</div>
+    </li>
+<li class="bullet" data-text="identified and planned use of amazon sagemaker studio notebooks to streamline backfill scripts/processes and support consistent data migration validation.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Identified and planned use of Amazon SageMaker Studio Notebooks to streamline backfill scripts/processes and support consistent data migration validation.</div>
+    </li>
+<li class="bullet" data-text="built extensive hands-on aws documentdb experience through research, proof-of-concepts, and schema design for a json document-style data model.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Built extensive hands-on AWS DocumentDB experience through research, proof-of-concepts, and schema design for a JSON document-style data model.</div>
+    </li>
+<li class="bullet" data-text="integrated aws documentdb into existing tooldata apis and workflows, expanding the platform’s data storage flexibility.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Integrated AWS DocumentDB into existing tooldata APIs and workflows, expanding the platform’s data storage flexibility.</div>
+    </li>
+<li class="bullet" data-text="transformed terraform/iac from a prior weakness into a strength; completed 2023 goal to improve understanding of terraform and terraform modules (completed 12/27/2023).">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Transformed Terraform/IaC from a prior weakness into a strength; completed 2023 goal to improve understanding of Terraform and Terraform Modules (completed 12/27/2023).</div>
+    </li>
+<li class="bullet" data-text="broadened data engineering capability (parsing, manipulation, storage) across multiple data systems, increasing readiness for higher-impact work.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Broadened data engineering capability (parsing, manipulation, storage) across multiple data systems, increasing readiness for higher-impact work.</div>
+    </li>
+      </ul>
+    </details>
+    
+    <details class="year" id="y2022">
+      <summary>
+        <span class="year-title">2022</span>
+        <span class="pill"><span class="count">19</span> bullets</span>
+      </summary>
+      <ul class="bullets">
+        <li class="bullet" data-text="milwaukee tool (one‑key integrations / spi) — software engineer ii — produced a formal security risk assessment of oracle authentication (basic auth), delivered as an executive-ready powerpoint and supporting written report.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Milwaukee Tool (ONE‑KEY Integrations / SPI) — Software Engineer II — Produced a formal Security Risk Assessment of Oracle authentication (Basic Auth), delivered as an executive-ready PowerPoint and supporting written report.</div>
+    </li>
+<li class="bullet" data-text="built and demo’d an aws step functions poc that retrieved items, extracted nested payload details, and generated environment-specific deep-link urls; shared demo videos and earned peer recognition.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Built and demo’d an AWS Step Functions POC that retrieved items, extracted nested payload details, and generated environment-specific deep-link URLs; shared demo videos and earned peer recognition.</div>
+    </li>
+<li class="bullet" data-text="implemented and verified a step functions state machine for inventory item create with request validation; packaged definition files and execution examples for reuse.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Implemented and verified a Step Functions state machine for Inventory Item Create with request validation; packaged definition files and execution examples for reuse.</div>
+    </li>
+<li class="bullet" data-text="researched and delivered the first set of inventory-model crud api endpoints using a serverless architecture (lambda + step functions), laying groundwork for the api gateway portion of the pipeline.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Researched and delivered the first set of Inventory-model CRUD API endpoints using a serverless architecture (Lambda + Step Functions), laying groundwork for the API Gateway portion of the pipeline.</div>
+    </li>
+<li class="bullet" data-text="produced a complete “reference pack” for the poc (postman collections, repo map by step, ci/cd + environment references) and was directly thanked for consolidating it.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Produced a complete “reference pack” for the POC (Postman collections, repo map by step, CI/CD + environment references) and was directly thanked for consolidating it.</div>
+    </li>
+<li class="bullet" data-text="enabled qa api automation by providing hands-on support and postman guidance; recognized via direct shout-out email.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Enabled QA API automation by providing hands-on support and Postman guidance; recognized via direct shout-out email.</div>
+    </li>
+<li class="bullet" data-text="developed and presented a reusable “request bus” pattern and introduced a complementary bus event pattern concept; called out explicitly in team shout-outs.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Developed and presented a reusable “Request Bus” pattern and introduced a complementary bus event pattern concept; called out explicitly in team shout-outs.</div>
+    </li>
+<li class="bullet" data-text="improved troubleshooting effectiveness for the procore transfer integration by adding targeted logging and deeper tracing; repeatedly recognized for fast debugging and increased visibility.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Improved troubleshooting effectiveness for the Procore transfer integration by adding targeted logging and deeper tracing; repeatedly recognized for fast debugging and increased visibility.</div>
+    </li>
+<li class="bullet" data-text="created architecture diagrams and kicked off data-mart documentation, updating diagrams live during stakeholder calls to improve shared understanding of the solution being co-created.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Created architecture diagrams and kicked off data-mart documentation, updating diagrams live during stakeholder calls to improve shared understanding of the solution being co-created.</div>
+    </li>
+<li class="bullet" data-text="performed deep-dive research on connecting swagger/openapi/codegen into aws (api gateway/lambda) and shared practical resources to enable future client sdk generation.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Performed deep-dive research on connecting Swagger/OpenAPI/CodeGen into AWS (API Gateway/Lambda) and shared practical resources to enable future client SDK generation.</div>
+    </li>
+<li class="bullet" data-text="jumped outside core responsibilities to assist pt4 in a time-boxed bug-fixing effort; ramped quickly in a new language/repo and resolved key hydraulic reports defects.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Jumped outside core responsibilities to assist PT4 in a time-boxed bug-fixing effort; ramped quickly in a new language/repo and resolved key Hydraulic Reports defects.</div>
+    </li>
+<li class="bullet" data-text="created visual solution designs/diagrams for the best approach to export the transfer report to an external integration partner (high-level aws flow + visio).">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Created visual solution designs/diagrams for the best approach to export the Transfer Report to an external integration partner (high-level AWS flow + Visio).</div>
+    </li>
+<li class="bullet" data-text="fixed a dynamodb throughput failure (“configured provisioned throughput exceeded”) by updating terraform table billing mode from provisioned → pay_per_request, improving operational stability.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Fixed a DynamoDB throughput failure (“configured provisioned throughput exceeded”) by updating Terraform table billing mode from PROVISIONED → PAY_PER_REQUEST, improving operational stability.</div>
+    </li>
+<li class="bullet" data-text="refactored transfer report pdf deep-link implementation by separating business logic from html templates and moving logic server-side; made deep-link url generation more dynamic.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Refactored Transfer Report PDF deep-link implementation by separating business logic from HTML templates and moving logic server-side; made deep-link URL generation more dynamic.</div>
+    </li>
+<li class="bullet" data-text="resolved a pdf not downloading issue caused by environment differences (staging base url missing “/app/”) with a dynamic fix that works across test/stage/prod.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Resolved a PDF not downloading issue caused by environment differences (staging base URL missing “/app/”) with a dynamic fix that works across test/stage/prod.</div>
+    </li>
+<li class="bullet" data-text="investigated and resolved a procore defect where the transfer report didn’t show in procore’s project daily log for unassigned tools, restoring expected integration behavior.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Investigated and resolved a Procore defect where the Transfer Report didn’t show in Procore’s Project Daily Log for unassigned tools, restoring expected integration behavior.</div>
+    </li>
+<li class="bullet" data-text="built an end-to-end external api gateway poc using aws api gateway → step functions → multi-lambda “request bus” pattern (filter/transform, validation, internal api calls, deep-link augmentation), returning results in seconds; expanded skills in terraform, jenkins, and vtl mapping templates.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Built an end-to-end external API gateway POC using AWS API Gateway → Step Functions → multi-Lambda “Request Bus” pattern (filter/transform, validation, internal API calls, deep-link augmentation), returning results in seconds; expanded skills in Terraform, Jenkins, and VTL mapping templates.</div>
+    </li>
+<li class="bullet" data-text="scaled team effectiveness by setting up teammates’ postman environments (dynamic variables, runner automation), sharing short how-to videos, and curating confluence documentation/research spikes to reduce tribal knowledge.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Scaled team effectiveness by setting up teammates’ Postman environments (dynamic variables, Runner automation), sharing short how-to videos, and curating Confluence documentation/research spikes to reduce tribal knowledge.</div>
+    </li>
+<li class="bullet" data-text="earned aws certified solutions architect – associate (saa‑c03) on 08/25/2022 (128 days early), received “exceeds expectations” for the goal, and proactively shared study resources with the broader one‑key engineering group.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Earned AWS Certified Solutions Architect – Associate (SAA‑C03) on 08/25/2022 (128 days early), received “Exceeds Expectations” for the goal, and proactively shared study resources with the broader ONE‑KEY engineering group.</div>
+    </li>
+      </ul>
+    </details>
+    
+    <details class="year" id="y2021">
+      <summary>
+        <span class="year-title">2021</span>
+        <span class="pill"><span class="count">10</span> bullets</span>
+      </summary>
+      <ul class="bullets">
+        <li class="bullet" data-text="milwaukee tool (one‑key integrations) — software engineer ii — built and deployed oracle unifier “people” integration apis (get/post) with a no-bugs release, outperforming comparable integrations that later had post-“done” defects.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Milwaukee Tool (ONE‑KEY Integrations) — Software Engineer II — Built and deployed Oracle Unifier “People” integration APIs (GET/POST) with a no-bugs release, outperforming comparable integrations that later had post-“done” defects.</div>
+    </li>
+<li class="bullet" data-text="delivered end-to-end dtw pdf report upload integration to oracle unifier, owning ui/ux front-end + back-end integration work; pushed through deployment in time for the next release cycle and earned “stepped up / rockstar” recognition.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Delivered end-to-end DTW PDF Report upload integration to Oracle Unifier, owning UI/UX front-end + back-end integration work; pushed through deployment in time for the next release cycle and earned “stepped up / Rockstar” recognition.</div>
+    </li>
+<li class="bullet" data-text="owned integration requirements gathering and documentation, producing high-quality ui/ux + api docs and uncovering where/how to update swagger/openapi docs for integration apis—then documenting the process.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Owned integration requirements gathering and documentation, producing high-quality UI/UX + API docs and uncovering where/how to update Swagger/OpenAPI docs for integration APIs—then documenting the process.</div>
+    </li>
+<li class="bullet" data-text="presented a live oracle unifier integration demo to the entire one‑key department as the only software developer presenting, translating complex integration work into a clear cross-team narrative.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Presented a live Oracle Unifier Integration demo to the entire ONE‑KEY department as the only software developer presenting, translating complex integration work into a clear cross-team narrative.</div>
+    </li>
+<li class="bullet" data-text="produced a backup demo video (risk mitigation for outages) shared internally and sent to oracle, improving stakeholder visibility and reducing delivery/demo risk.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Produced a backup demo video (risk mitigation for outages) shared internally and sent to Oracle, improving stakeholder visibility and reducing delivery/demo risk.</div>
+    </li>
+<li class="bullet" data-text="identified and clarified a security flaw/risk around linking integrator accounts; created a short demo video that made the issue easy to understand and faster to act on.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Identified and clarified a security flaw/risk around linking integrator accounts; created a short demo video that made the issue easy to understand and faster to act on.</div>
+    </li>
+<li class="bullet" data-text="improved agile execution by proposing to keep the sprint retro board open throughout the sprint, enabling continuous capture of ideas/issues instead of last-minute recollection.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Improved agile execution by proposing to keep the Sprint Retro board open throughout the sprint, enabling continuous capture of ideas/issues instead of last-minute recollection.</div>
+    </li>
+<li class="bullet" data-text="reduced “tribal knowledge” risk by creating confluence pages establishing shared standards for documentation expectations, code-commenting best practices, and practical how-tos (e.g., postman guidance).">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Reduced “tribal knowledge” risk by creating Confluence pages establishing shared standards for documentation expectations, code-commenting best practices, and practical how-tos (e.g., Postman guidance).</div>
+    </li>
+<li class="bullet" data-text="onboarded/mentored a new developer (environment setup + git/source control) and delivered detailed qa-ready test documentation (ui steps + postman examples + screenshots), improving handoffs and reducing back-and-forth.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Onboarded/mentored a new developer (environment setup + git/source control) and delivered detailed QA-ready test documentation (UI steps + Postman examples + screenshots), improving handoffs and reducing back-and-forth.</div>
+    </li>
+<li class="bullet" data-text="discovered and shared a solution for the autodesk bim 360 integration account-linking error (“need to install one‑key app bim 360 error”), unblocking integration workflows for the team.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Discovered and shared a solution for the Autodesk BIM 360 integration account-linking error (“Need to Install ONE‑KEY App BIM 360 Error”), unblocking integration workflows for the team.</div>
+    </li>
+      </ul>
+    </details>
+    
+    <details class="year" id="y2020">
+      <summary>
+        <span class="year-title">2020</span>
+        <span class="pill"><span class="count">10</span> bullets</span>
+      </summary>
+      <ul class="bullets">
+        <li class="bullet" data-text="foundation finance — developed and deployed a client-facing payment portal that processed ~250,000 payments totaling ~$85,000,000.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Foundation Finance — Developed and deployed a client-facing payment portal that processed ~250,000 payments totaling ~$85,000,000.</div>
+    </li>
+<li class="bullet" data-text="integrated ci/cd pipelines using bitbucket pipelines to automatically build, run qa tests, and deploy web applications.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Integrated CI/CD pipelines using Bitbucket Pipelines to automatically build, run QA tests, and deploy web applications.</div>
+    </li>
+<li class="bullet" data-text="assisted with the design and implementation of web applications hosted in aws.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Assisted with the design and implementation of web applications hosted in AWS.</div>
+    </li>
+<li class="bullet" data-text="collaborated with project managers to scope milestones, resource use, and delivery estimates; reported project progress to executives.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Collaborated with project managers to scope milestones, resource use, and delivery estimates; reported project progress to executives.</div>
+    </li>
+<li class="bullet" data-text="led teams toward technical solutions and reinforced best practices for maintainable delivery.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Led teams toward technical solutions and reinforced best practices for maintainable delivery.</div>
+    </li>
+<li class="bullet" data-text="created internal coding standards (nomenclature, comment styling, api versioning, unit test script design).">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Created internal coding standards (nomenclature, comment styling, API versioning, unit test script design).</div>
+    </li>
+<li class="bullet" data-text="designed, developed, and implemented a role-based security model for end users.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Designed, developed, and implemented a role-based security model for end users.</div>
+    </li>
+<li class="bullet" data-text="built custom sql server functions and stored procedures to support platform needs.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Built custom SQL Server functions and stored procedures to support platform needs.</div>
+    </li>
+<li class="bullet" data-text="researched machine learning approaches using javascript and python to improve and automate work processes.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Researched machine learning approaches using JavaScript and Python to improve and automate work processes.</div>
+    </li>
+<li class="bullet" data-text="delivered ui/ux web experiences using react.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Delivered UI/UX web experiences using React.</div>
+    </li>
+      </ul>
+    </details>
+    
+    <details class="year" id="y2019">
+      <summary>
+        <span class="year-title">2019</span>
+        <span class="pill"><span class="count">9</span> bullets</span>
+      </summary>
+      <ul class="bullets">
+        <li class="bullet" data-text="foundation finance — built an automated data-entry program (java + ms sql server), saving 1,200+ human hours and ~$40,000.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Foundation Finance — Built an automated data-entry program (Java + MS SQL Server), saving 1,200+ human hours and ~$40,000.</div>
+    </li>
+<li class="bullet" data-text="developed a new client portal from scratch using the mern stack (mongodb, express, react, node.js) with features such as dependency injection, driver’s license scanning, passport-jwt authentication, and more.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Developed a new client portal from scratch using the MERN stack (MongoDB, Express, React, Node.js) with features such as dependency injection, driver’s license scanning, Passport-JWT authentication, and more.</div>
+    </li>
+<li class="bullet" data-text="developed a client-facing payment portal using node.js, express, and sql.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Developed a client-facing payment portal using Node.js, Express, and SQL.</div>
+    </li>
+<li class="bullet" data-text="researched and built proof-of-concepts prior to production adoption (id scanning vendors, mongodb tooling, mern stack standardization).">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Researched and built proof-of-concepts prior to production adoption (ID scanning vendors, MongoDB tooling, MERN stack standardization).</div>
+    </li>
+<li class="bullet" data-text="automated active directory administration via powershell scripts to extract user information and create new users with default parameters.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Automated Active Directory administration via PowerShell scripts to extract user information and create new users with default parameters.</div>
+    </li>
+<li class="bullet" data-text="implemented visualcron server and automated scheduled jobs to reduce manual work and improve operational consistency.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Implemented VisualCron Server and automated scheduled jobs to reduce manual work and improve operational consistency.</div>
+    </li>
+<li class="bullet" data-text="implemented mongodb atlas cloud for centralized data storage.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Implemented MongoDB Atlas Cloud for centralized data storage.</div>
+    </li>
+<li class="bullet" data-text="created technical documentation for both it and end users to improve clarity and onboarding.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Created technical documentation for both IT and end users to improve clarity and onboarding.</div>
+    </li>
+<li class="bullet" data-text="researched, vetted, selected, and implemented a 3rd-party identification scanning solution into the custom portal platform.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Researched, vetted, selected, and implemented a 3rd-party identification scanning solution into the custom portal platform.</div>
+    </li>
+      </ul>
+    </details>
+    
+    <details class="year" id="y2018">
+      <summary>
+        <span class="year-title">2018</span>
+        <span class="pill"><span class="count">6</span> bullets</span>
+      </summary>
+      <ul class="bullets">
+        <li class="bullet" data-text="aqua finance — promoted within four months for exceeding senior executive expectations.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Aqua Finance — Promoted within four months for exceeding senior executive expectations.</div>
+    </li>
+<li class="bullet" data-text="increased scope and responsibility by moving into full-stack development ownership.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Increased scope and responsibility by moving into full-stack development ownership.</div>
+    </li>
+<li class="bullet" data-text="wrote new .net software solutions supporting web-based dealer and consumer systems.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Wrote new .NET software solutions supporting web-based dealer and consumer systems.</div>
+    </li>
+<li class="bullet" data-text="developed java spring apis and custom jsp login pages.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Developed Java Spring APIs and custom JSP login pages.</div>
+    </li>
+<li class="bullet" data-text="expanded contributions across c#, jsp, java, and salesforce development areas.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Expanded contributions across C#, JSP, Java, and Salesforce development areas.</div>
+    </li>
+<li class="bullet" data-text="strengthened troubleshooting capability across internal systems and production issues.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Strengthened troubleshooting capability across internal systems and production issues.</div>
+    </li>
+      </ul>
+    </details>
+    
+    <details class="year" id="y2017">
+      <summary>
+        <span class="year-title">2017</span>
+        <span class="pill"><span class="count">7</span> bullets</span>
+      </summary>
+      <ul class="bullets">
+        <li class="bullet" data-text="aqua finance — developed solutions in afi’s proprietary software using alaska xbase++ and express++.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Aqua Finance — Developed solutions in AFI’s proprietary software using Alaska Xbase++ and Express++.</div>
+    </li>
+<li class="bullet" data-text="assisted with designing, deploying, and migrating to a new modernized environment.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Assisted with designing, deploying, and migrating to a new modernized environment.</div>
+    </li>
+<li class="bullet" data-text="worked across enterprise tooling including sles (suse linux enterprise server), windows 10, groupwise 2012, advantage database server, and unitrends backup software.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Worked across enterprise tooling including SLES (Suse Linux Enterprise Server), Windows 10, GroupWise 2012, Advantage Database Server, and UNITRENDS backup software.</div>
+    </li>
+<li class="bullet" data-text="delivered features using xbase++, express++, c#, and java based on evolving business needs.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Delivered features using Xbase++, Express++, C#, and Java based on evolving business needs.</div>
+    </li>
+<li class="bullet" data-text="documented releases through structured release notes, code comments, and user manual updates.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Documented releases through structured release notes, code comments, and user manual updates.</div>
+    </li>
+<li class="bullet" data-text="applied accounting and finance concepts to implement solutions aligned to business rules.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Applied accounting and finance concepts to implement solutions aligned to business rules.</div>
+    </li>
+<li class="bullet" data-text="consistently introduced new ideas and reasoning into program code to improve outcomes.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Consistently introduced new ideas and reasoning into program code to improve outcomes.</div>
+    </li>
+      </ul>
+    </details>
+    
+    <details class="year" id="y2016">
+      <summary>
+        <span class="year-title">2016</span>
+        <span class="pill"><span class="count">6</span> bullets</span>
+      </summary>
+      <ul class="bullets">
+        <li class="bullet" data-text="minnesota attorney general’s office — supported and administered system applications used by the office and its attorneys.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Minnesota Attorney General’s Office — Supported and administered system applications used by the office and its attorneys.</div>
+    </li>
+<li class="bullet" data-text="partnered with internal stakeholders to determine application needs and database design approaches.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Partnered with internal stakeholders to determine application needs and database design approaches.</div>
+    </li>
+<li class="bullet" data-text="managed an office-wide retention project by applying retention policies to case dockets prior to purging.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Managed an office-wide retention project by applying retention policies to case dockets prior to purging.</div>
+    </li>
+<li class="bullet" data-text="designed and implemented a custom ms access global error handler to track database errors and increase team efficiency.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Designed and implemented a custom MS Access global error handler to track database errors and increase team efficiency.</div>
+    </li>
+<li class="bullet" data-text="worked across a wide variety of tools and languages including ms office, relativity, regular expressions, vba, sql server/t‑sql, visual studio, asp.net, html, and python.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Worked across a wide variety of tools and languages including MS Office, Relativity, Regular Expressions, VBA, SQL Server/T‑SQL, Visual Studio, ASP.NET, HTML, and Python.</div>
+    </li>
+<li class="bullet" data-text="performed database and application testing—from os security patch verification through finalization tests prior to deployment.">
+      <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
+      <div class="bullet-text">Performed database and application testing—from OS security patch verification through finalization tests prior to deployment.</div>
+    </li>
+      </ul>
+    </details>
+    
+    </main>
+
+    <div class="footer">Tip: Use this as your master inventory. Copy the strongest bullets into your ATS resume + LinkedIn Experience.</div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  
+  <script>
+    (function() {
+      /* ------------------------------------------------------------
+         Theme (Auto default)
+         ------------------------------------------------------------ */
+      const root = document.documentElement;
+      const themeBtn = document.getElementById('themeBtn');
+
+      // mr_theme stores proof-hub's 3-state pick ('light' | 'dark' | 'auto').
+      // bsc_theme is the cross-page shared key written by the other resume pages.
+      let theme = localStorage.getItem('mr_theme');
+      if(theme !== 'auto' && theme !== 'light' && theme !== 'dark'){
+        const bsc = localStorage.getItem('bsc_theme');
+        theme = (bsc === 'light' || bsc === 'dark') ? bsc : 'auto';
+      }
+
+      function applyTheme() {
+        let t = theme;
+        if (t === 'auto') {
+          t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+        }
+        root.setAttribute('data-theme', t);
+        try{ localStorage.setItem('bsc_theme', t); }catch(e){}
+        const label = (theme === 'auto') ? 'Auto' : (theme === 'dark' ? 'Dark' : 'Light');
+        themeBtn.textContent = 'Theme: ' + label;
+      }
+
+      function cycleTheme() {
+        theme = (theme === 'auto') ? 'light' : (theme === 'light' ? 'dark' : 'auto');
+        localStorage.setItem('mr_theme', theme);
+        applyTheme();
+        toast('Theme set to ' + (theme === 'auto' ? 'Auto (system)' : theme));
+      }
+
+      themeBtn.addEventListener('click', cycleTheme);
+      applyTheme();
+
+      /* ------------------------------------------------------------
+         Toast
+         ------------------------------------------------------------ */
+      const toastEl = document.getElementById('toast');
+      let toastTimer = null;
+      function toast(msg) {
+        toastEl.textContent = msg;
+        toastEl.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1400);
+      }
+
+      /* ------------------------------------------------------------
+         Copy helper
+         ------------------------------------------------------------ */
+      function copyText(text) {
+        if (!text) return Promise.resolve();
+        if (navigator.clipboard && window.isSecureContext) {
+          return navigator.clipboard.writeText(text);
+        }
+        return new Promise((resolve, reject) => {
+          try {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.left = '-9999px';
+            ta.style.top = '-9999px';
+            document.body.appendChild(ta);
+            ta.focus();
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            resolve();
+          } catch (e) {
+            reject(e);
+          }
+        });
+      }
+
+      function debounce(fn, wait) {
+        let t = null;
+        return function(...args) {
+          clearTimeout(t);
+          t = setTimeout(() => fn.apply(this, args), wait);
+        };
+      }
+
+      /* ------------------------------------------------------------
+         Core DOM
+         ------------------------------------------------------------ */
+      const search = document.getElementById('search');
+      const visibleCountEl = document.getElementById('visibleCount');
+      const searchStatus = document.getElementById('searchStatus');
+      const totalCountEl = document.getElementById('totalCount');
+
+      const yearDetails = Array.from(document.querySelectorAll('details.year'));
+      const bullets = Array.from(document.querySelectorAll('.bullet'));
+
+      // make counts dynamic (so you can keep editing the HTML without updating numbers)
+      if (totalCountEl) totalCountEl.textContent = String(bullets.length);
+
+      // Ensure each bullet has stable raw text + id
+      bullets.forEach((b, i) => {
+        if (!b.id) b.id = 'b' + (i + 1);
+        const textEl = b.querySelector('.bullet-text');
+        b.dataset.raw = (textEl ? textEl.textContent : b.textContent).trim();
+      });
+
+      /* ------------------------------------------------------------
+         v8: Bullet metadata + Public Mode (sanitize internal names)
+         ------------------------------------------------------------ */
+      // attach year to each bullet (from its parent <details id="yYYYY">)
+      bullets.forEach(b => {
+        const yearDetails = b.closest('details.year');
+        if (yearDetails && yearDetails.id && /^y\d{4}$/.test(yearDetails.id)) {
+          b.dataset.year = yearDetails.id.slice(1);
+        }
+      });
+
+      let publicMode = false;
+      const publicBtn = document.getElementById('publicBtn');
+
+      const SANITIZE_MAP = [
+        [/\bJEDI\b/gi, 'Platform Org'],
+        [/\bDIoTS\b/gi, 'Digital IoT Services'],
+        [/\bONE[-‑]KEY\b/gi, 'Enterprise IoT Platform'],
+        [/\bQuickLink\b/gi, 'internal integration'],
+        [/\bCCOE\b/gi, 'cloud governance'],
+        [/\bPlatform Cluster Sync\b/gi, 'Platform Sync'],
+        [/\bSR-Feedback-Workflow-V3\b/gi, 'Slack feedback workflow automation']
+      ];
+
+      function sanitizeText(text) {
+        let t = text || '';
+        for (const [re, rep] of SANITIZE_MAP) t = t.replace(re, rep);
+        return t;
+      }
+
+      function getActiveText(b) {
+        if (!b) return '';
+        const raw = (b.dataset.raw || '').trim();
+        if (!publicMode) return raw;
+        return ((b.dataset.public || sanitizeText(raw)) || '').trim();
+      }
+
+      function getActiveLower(b) {
+        if (!b) return '';
+        return publicMode ? (b.dataset.publicLower || '') : (b.dataset.rawLower || '');
+      }
+
+      // precompute public-safe versions (so toggling is instant)
+      bullets.forEach(b => {
+        b.dataset.public = sanitizeText(b.dataset.raw || '');
+        b.dataset.rawLower = (b.dataset.raw || '').toLowerCase();
+        b.dataset.publicLower = (b.dataset.public || '').toLowerCase();
+      });
+
+      function applyPublicMode(on) {
+        publicMode = !!on;
+
+        bullets.forEach(b => {
+          const textEl = b.querySelector('.bullet-text');
+          if (textEl) textEl.textContent = getActiveText(b);
+        });
+
+        // keep Selected output consistent with current mode
+        if (typeof selected !== 'undefined' && selected && selected.size) {
+          for (const id of Array.from(selected.keys())) {
+            const el = document.getElementById(id);
+            if (el) selected.set(id, getActiveText(el));
+          }
+          if (typeof updateSelectedUI === 'function') updateSelectedUI();
+        }
+
+        if (typeof renderRecruiterPack === 'function') renderRecruiterPack();
+        if (typeof renderLaneHighlights === 'function') renderLaneHighlights();
+        if (typeof applyFilters === 'function') applyFilters();
+
+        if (publicBtn) publicBtn.textContent = publicMode ? 'Public Mode: On' : 'Public Mode: Off';
+        toast(publicMode ? 'Public Mode ON' : 'Public Mode OFF');
+      }
+
+      if (publicBtn) {
+        publicBtn.addEventListener('click', () => applyPublicMode(!publicMode));
+      }
+
+
+      /* ------------------------------------------------------------
+         Turbo Tools: Tags (category filters)
+         ------------------------------------------------------------ */
+      const TAG_DEFS = [
+        { key: 'cloud', label: '☁️ Cloud/AWS', re: /\b(aws|lambda|step functions|api gateway|cloudtrail|sagemaker|secrets manager|well-architected|documentdb|dynamodb)\b/i },
+        { key: 'iot', label: '📡 IoT/MQTT', re: /\b(iot|mqtt|device provisioning|provisioning|telemetry|certificate|bootstrapp)\b/i },
+        { key: 'data', label: '🗄️ Data/ETL/DB', re: /\b(etl|database|documentdb|dynamodb|mongodb|sql server|t-?sql|schema|backfill|parsing|data pipeline)\b/i },
+        { key: 'devops', label: '🛠️ DevOps/IaC', re: /\b(terraform|iac|infrastructure as code|ci\/cd|pipelines|jenkins)\b/i },
+        { key: 'security', label: '🔐 Security', re: /\b(security|risk assessment|auth0|secrets manager|secure|jwt|basic auth|certificate)\b/i },
+        { key: 'apis', label: '🔌 APIs/Integration', re: /\b(api|openapi|swagger|integration|gateway|oracle|procore|postman)\b/i },
+        { key: 'leadership', label: '🤝 Leadership/Enablement', re: /\b(documentation|onboarding|mentored|presented|enablement|workshop|session|stakeholder|leadership|one team|shout-?out|demo)\b/i },
+        { key: 'frontend', label: '🖥️ Frontend', re: /\b(react|ui\/ux|frontend|jsp|html|css)\b/i },
+      ];
+
+      function assignTags(text) {
+        const tags = [];
+        for (const t of TAG_DEFS) {
+          if (t.re.test(text)) tags.push(t.key);
+        }
+        return tags;
+      }
+
+      const tagCounts = Object.create(null);
+      bullets.forEach(b => {
+        const t = getActiveLower(b);
+        const tags = assignTags(t);
+        b.dataset.tags = tags.join(' ');
+        for (const k of tags) tagCounts[k] = (tagCounts[k] || 0) + 1;
+      });
+
+      const tagFiltersEl = document.getElementById('tagFilters');
+      const activeTags = new Set();
+
+      function renderTagFilters() {
+        if (!tagFiltersEl) return;
+        tagFiltersEl.innerHTML = '';
+        TAG_DEFS.forEach(def => {
+          const count = tagCounts[def.key] || 0;
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'chip-btn';
+          btn.dataset.tag = def.key;
+          btn.innerHTML = def.label + ' <span class="count">' + count + '</span>';
+          btn.addEventListener('click', () => {
+            if (activeTags.has(def.key)) activeTags.delete(def.key);
+            else activeTags.add(def.key);
+            updateTagButtons();
+            applyFilters();
+          });
+          tagFiltersEl.appendChild(btn);
+        });
+
+        // quick clear (double click anywhere on tag bar)
+        tagFiltersEl.addEventListener('dblclick', () => {
+          activeTags.clear();
+          updateTagButtons();
+          applyFilters();
+          toast('Cleared category filters');
+        });
+      }
+
+      function updateTagButtons() {
+        if (!tagFiltersEl) return;
+        Array.from(tagFiltersEl.querySelectorAll('.chip-btn')).forEach(btn => {
+          const k = btn.dataset.tag;
+          btn.classList.toggle('active', activeTags.has(k));
+        });
+      }
+
+      renderTagFilters();
+      updateTagButtons();
+
+      /* ------------------------------------------------------------
+         Turbo Tools: Skills pack
+         ------------------------------------------------------------ */
+      const SKILLS = [
+        { term: 'AWS', v: ['aws', 'amazon web services'] },
+        { term: 'AWS IoT Core', v: ['aws iot core', 'iot core'] },
+        { term: 'Lambda', v: ['lambda', 'aws lambda'] },
+        { term: 'Step Functions', v: ['step functions', 'state machine'] },
+        { term: 'API Gateway', v: ['api gateway'] },
+        { term: 'Terraform', v: ['terraform', 'iac', 'infrastructure as code'] },
+        { term: 'TypeScript', v: ['typescript'] },
+        { term: 'Python', v: ['python'] },
+        { term: 'Node.js', v: ['node.js', 'nodejs'] },
+        { term: 'React', v: ['react'] },
+        { term: 'SQL Server', v: ['sql server', 't-sql', 'tsql'] },
+        { term: 'DynamoDB', v: ['dynamodb'] },
+        { term: 'DocumentDB', v: ['documentdb'] },
+        { term: 'MongoDB', v: ['mongodb', 'mongo'] },
+        { term: 'Jenkins', v: ['jenkins'] },
+        { term: 'CI/CD', v: ['ci/cd', 'pipelines', 'continuous integration', 'continuous delivery'] },
+        { term: 'Postman', v: ['postman'] },
+        { term: 'OpenAPI', v: ['openapi', 'swagger'] },
+        { term: 'MQTT', v: ['mqtt'] },
+        { term: 'Auth0', v: ['auth0'] },
+        { term: 'Secrets Manager', v: ['secrets manager'] },
+        { term: 'SageMaker', v: ['sagemaker'] },
+        { term: 'CloudTrail', v: ['cloudtrail'] },
+        { term: 'Serverless', v: ['serverless'] },
+      ];
+
+      const skillsListEl = document.getElementById('skillsList');
+      const skillsStatusEl = document.getElementById('skillsStatus');
+      const copySkillsBtn = document.getElementById('copySkillsBtn');
+
+      function computeSkills() {
+        const counts = SKILLS.map(s => ({ term: s.term, count: 0 }));
+        const texts = bullets.map(b => (b.dataset.text || b.dataset.raw || '').toLowerCase());
+
+        counts.forEach((c, idx) => {
+          const variants = SKILLS[idx].v;
+          for (const t of texts) {
+            for (const vv of variants) {
+              if (t.includes(vv)) {
+                c.count += 1;
+                break;
+              }
+            }
+          }
+        });
+
+        // keep only skills that show up at least once, sort by count desc
+        const filtered = counts.filter(x => x.count > 0).sort((a,b) => b.count - a.count);
+
+        if (skillsListEl) {
+          skillsListEl.innerHTML = '';
+          filtered.slice(0, 18).forEach(s => {
+            const chip = document.createElement('span');
+            chip.className = 'skill';
+            chip.innerHTML = '<b>' + s.term + '</b> · ' + s.count;
+            skillsListEl.appendChild(chip);
+          });
+        }
+
+        if (skillsStatusEl) {
+          skillsStatusEl.textContent = filtered.length ? ('Top ' + Math.min(18, filtered.length) + ' shown') : 'No skills detected';
+        }
+
+        return filtered;
+      }
+
+      let skillsComputed = computeSkills();
+
+      if (copySkillsBtn) {
+        copySkillsBtn.addEventListener('click', () => {
+          const top = skillsComputed.slice(0, 16).map(s => s.term).join(', ');
+          copyText(top).then(() => toast('Copied skills ✔')).catch(() => toast('Copy failed'));
+        });
+      }
+
+      /* ------------------------------------------------------------
+         Turbo Tools: Impact snapshot
+         ------------------------------------------------------------ */
+      const impactGrid = document.getElementById('impactGrid');
+
+      let impactMetrics = [];
+
+      function findFirstText(re) {
+        for (const b of bullets) {
+          const raw = (b.dataset.raw || '').replace(/\s+/g,' ');
+          if (re.test(raw)) return raw;
+        }
+        return '';
+      }
+
+      function renderImpact() {
+        if (!impactGrid) return;
+
+        impactMetrics = [];
+        const metrics = impactMetrics;
+
+        // payments + $ processed
+        const pay = findFirstText(/processed\s*~?\s*\d[\d,]*\s*payments/i);
+        if (pay) {
+          const m1 = pay.match(/processed\s*~?\s*([\d,]+)\s*payments/i);
+          const m2 = pay.match(/\$\s*([\d,]+)\s*/);
+          const v = (m1 ? (m1[1] + ' payments') : 'Payments') + (m2 ? (' · $' + m2[1]) : '');
+          metrics.push({ k: 'Customer payments', v, s: 'End-to-end portal impact' });
+        }
+
+        const save = findFirstText(/saving\s*\d[\d,]*\+?\s*human hours/i);
+        if (save) {
+          const h = save.match(/saving\s*([\d,]+\+?)\s*human hours/i);
+          const m = save.match(/\$\s*([\d,]+)\s*/);
+          metrics.push({ k: 'Automation savings', v: (h ? h[1] + ' hrs' : 'Hours') + (m ? (' · $' + m[1]) : ''), s: 'Eliminated manual work' });
+        }
+
+        const prov = findFirstText(/cut provisioning from/i);
+        if (prov) {
+          const m = prov.match(/from\s*~?(\d+)\s*min.*to\s*([<\d–\- ]+)\s*min/i);
+          metrics.push({ k: 'Provisioning speed', v: m ? (m[1] + ' min → ' + m[2].trim() + ' min') : 'Faster provisioning', s: 'Secure automation workflow' });
+        }
+
+        const mqtt = findFirstText(/mqtt delta updates/i);
+        if (mqtt) {
+          const m = mqtt.match(/reducing payload size by\s*~?(\d+)%.*up to\s*~?(\d+)%/i);
+          metrics.push({ k: 'Payload reduction', v: m ? ('−' + m[1] + '% / −' + m[2] + '%') : 'Reduced payload', s: 'Constrained-device messaging' });
+        }
+
+        const onboard = findFirstText(/onboarding time/i);
+        if (onboard) {
+          const m = onboard.match(/~?(\d+)%/);
+          metrics.push({ k: 'Onboarding reduction', v: m ? ('~' + m[1] + '% faster') : 'Faster onboarding', s: 'Docs + enablement' });
+        }
+
+        const cert = findFirstText(/AWS Certified Solutions Architect/i);
+        if (cert) {
+          metrics.push({ k: 'AWS certs', v: 'SAA-C03 + CLF', s: 'Validated cloud fundamentals' });
+        }
+
+        impactGrid.innerHTML = '';
+        (metrics.length ? metrics : [{k:'Add metrics', v:'(edit bullets)', s:'Your snapshot auto-updates'}]).slice(0, 8).forEach(m => {
+          const el = document.createElement('div');
+          el.className = 'metric';
+          el.innerHTML = '<div class="k">' + m.k + '</div><div class="v">' + m.v + '</div><div class="s">' + m.s + '</div>';
+          impactGrid.appendChild(el);
+        });
+      }
+
+      renderImpact();
+
+
+      /* ------------------------------------------------------------
+         v8: Impact strip + Role lanes + Recruiter pack generator
+         ------------------------------------------------------------ */
+      const impactStrip = document.getElementById('impactStrip');
+
+      function renderImpactStrip() {
+        if (!impactStrip) return;
+        const items = (impactMetrics && impactMetrics.length) ? impactMetrics.slice(0, 4) : [];
+        impactStrip.innerHTML = '';
+        (items.length ? items : [{k:'Proof', v:'(auto)', s:'Add metrics in bullets'}]).forEach(m => {
+          const el = document.createElement('div');
+          el.className = 'impact-mini';
+          el.innerHTML = '<div class="k">' + m.k + '</div><div class="v">' + m.v + '</div><div class="s">' + m.s + '</div>';
+          impactStrip.appendChild(el);
+        });
+      }
+
+      // Role lanes: one-click focus (sets tag filters + shows curated highlights)
+      const LANES = [
+        { key: 'cloud', label: '☁️ Cloud / Platform', tags: ['cloud','devops','security'], terms: ['aws','terraform','serverless','well-architected','api gateway','step functions'] },
+        { key: 'iot', label: '📡 IoT / Backend', tags: ['iot','cloud','security'], terms: ['iot','mqtt','provisioning','certificate','telemetry'] },
+        { key: 'data', label: '🗄️ Data Foundations', tags: ['data','cloud','devops'], terms: ['etl','documentdb','database','backfill','tagging','schema'] },
+        { key: 'integrations', label: '🔌 Integrations', tags: ['apis','cloud','security'], terms: ['api','openapi','swagger','postman','oracle','procore'] },
+        { key: 'leadership', label: '🤝 Enablement', tags: ['leadership'], terms: ['documentation','presented','enablement','workshop','demo'] },
+      ];
+
+      const laneBar = document.getElementById('laneBar');
+      const laneHighlightsEl = document.getElementById('laneHighlights');
+      let activeLane = null;
+
+      function setLane(key) {
+        activeLane = key;
+
+        // update lane buttons
+        if (laneBar) {
+          Array.from(laneBar.querySelectorAll('button.lane-btn')).forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.lane === activeLane);
+          });
+        }
+
+        // apply tag filters based on lane tags
+        if (key) {
+          const lane = LANES.find(x => x.key === key);
+          if (lane) {
+            activeTags.clear();
+            lane.tags.forEach(t => activeTags.add(t));
+          }
+        } else {
+          activeTags.clear();
+        }
+        updateTagButtons();
+        applyFilters();
+        renderLaneHighlights();
+        renderRecruiterPack();
+      }
+
+      function renderLaneBar() {
+        if (!laneBar) return;
+        laneBar.innerHTML = '';
+
+        const label = document.createElement('span');
+        label.className = 'label';
+        label.textContent = 'Lane';
+        laneBar.appendChild(label);
+
+        LANES.forEach(l => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'lane-btn';
+          btn.dataset.lane = l.key;
+          btn.textContent = l.label;
+          btn.addEventListener('click', () => setLane(l.key));
+          laneBar.appendChild(btn);
+        });
+
+        const clear = document.createElement('button');
+        clear.type = 'button';
+        clear.className = 'lane-btn';
+        clear.dataset.lane = '';
+        clear.textContent = 'Clear';
+        clear.addEventListener('click', () => setLane(null));
+        laneBar.appendChild(clear);
+      }
+
+      function bulletHasNumbers(text) {
+        return /\d/.test(text || '');
+      }
+
+      function laneScore(b, lane) {
+        const tags = (b.dataset.tags || '').split(/\s+/).filter(Boolean);
+        const t = getActiveLower(b);
+
+        let score = 0;
+
+        // tag overlap
+        for (const k of lane.tags) if (tags.includes(k)) score += 3;
+
+        // term overlap
+        for (const term of lane.terms) if (t.includes(term)) score += 1;
+
+        // prefer recent years
+        const y = Number(b.dataset.year || '0');
+        if (y >= 2025) score += 2;
+        else if (y >= 2023) score += 1;
+
+        // prefer quantified bullets
+        if (bulletHasNumbers(getActiveText(b))) score += 1;
+
+        return score;
+      }
+
+      function topBulletsForLane(lane, n) {
+        const scored = bullets
+          .map(b => ({ b, score: laneScore(b, lane) }))
+          .filter(x => x.score > 0)
+          .sort((a,b) => b.score - a.score)
+          .slice(0, n);
+
+        return scored.map(x => x.b);
+      }
+
+      function renderLaneHighlights() {
+        if (!laneHighlightsEl) return;
+
+        if (!activeLane) {
+          laneHighlightsEl.innerHTML = '<div class="small muted">Pick a lane to see curated highlights. (This will also set the category filters automatically.)</div>';
+          return;
+        }
+
+        const lane = LANES.find(x => x.key === activeLane);
+        if (!lane) return;
+
+        const picks = topBulletsForLane(lane, 7);
+
+        const header = document.createElement('div');
+        header.className = 'row';
+        header.innerHTML = '<span class="pill">Highlights: ' + lane.label + '</span>';
+
+        const pickAll = document.createElement('button');
+        pickAll.type = 'button';
+        pickAll.className = 'btn tiny primary';
+        pickAll.textContent = 'Pick all highlights';
+        pickAll.addEventListener('click', () => {
+          picks.forEach(b => {
+            if (!selected.has(b.id)) {
+              selected.set(b.id, getActiveText(b));
+              setPicked(b, true);
+            }
+          });
+          updateSelectedUI();
+          toast('Picked lane highlights');
+        });
+
+        header.appendChild(pickAll);
+
+        const ul = document.createElement('ul');
+        picks.forEach(b => {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.href = '#' + b.id;
+          a.textContent = getActiveText(b);
+          a.addEventListener('click', () => {
+            const parent = b.closest('details.year');
+            if (parent) parent.open = true;
+            b.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
+          });
+          li.appendChild(a);
+          ul.appendChild(li);
+        });
+
+        laneHighlightsEl.innerHTML = '';
+        laneHighlightsEl.appendChild(header);
+        laneHighlightsEl.appendChild(ul);
+      }
+
+      // Recruiter pack output
+      const recruiterPackOutEl = document.getElementById('recruiterPackOut');
+      const copyPackBtn = document.getElementById('copyPackBtn');
+      const copyPitchBtn = document.getElementById('copyPitchBtn');
+      const copyPackTopBtn = document.getElementById('copyPackTopBtn');
+
+      function buildPitch() {
+        const laneLabel = activeLane ? (LANES.find(x => x.key === activeLane)?.label || '') : '';
+        const laneLine = laneLabel ? ('Focus lane: ' + laneLabel) : 'Focus lane: (pick one for tailored highlights)';
+        const proof = (impactMetrics && impactMetrics.length) ? impactMetrics.slice(0, 2) : [];
+        const proofLine = proof.length ? ('Proof: ' + proof.map(p => p.k + ' ' + p.v).join(' | ')) : '';
+        return [
+          'Senior Software Engineer (AWS Backend / Platform) — Wausau, WI (Central) · Remote-friendly',
+          laneLine,
+          'I build secure, automation-heavy backend/platform systems on AWS, and I scale teams through docs/demos/enablement.',
+          proofLine
+        ].filter(Boolean).join('\n');
+      }
+
+      function buildRecruiterPack() {
+        const lines = [];
+        lines.push('Brandon S. Clark — Senior Software Engineer (AWS Backend / Platform)');
+        lines.push('Wausau, WI (Central Time) · Remote-friendly');
+        lines.push('LinkedIn: https://www.linkedin.com/in/brandon-c-it-industry');
+        lines.push('');
+
+        if (activeLane) {
+          const lane = LANES.find(x => x.key === activeLane);
+          if (lane) lines.push('Focus: ' + lane.label);
+          lines.push('');
+        }
+
+        if (impactMetrics && impactMetrics.length) {
+          lines.push('Proof points:');
+          impactMetrics.slice(0, 5).forEach(m => lines.push('- ' + m.k + ': ' + m.v));
+          lines.push('');
+        }
+
+        if (skillsComputed && skillsComputed.length) {
+          lines.push('Top skills: ' + skillsComputed.slice(0, 14).map(s => s.term).join(', '));
+          lines.push('');
+        }
+
+        // Best bullets: use lane picks if set, else use most recent quantified bullets
+        let picks = [];
+        if (activeLane) {
+          const lane = LANES.find(x => x.key === activeLane);
+          if (lane) picks = topBulletsForLane(lane, 6);
+        } else {
+          picks = bullets
+            .filter(b => Number(b.dataset.year || '0') >= 2023)
+            .sort((a,b) => Number(b.dataset.year||0) - Number(a.dataset.year||0))
+            .filter(b => bulletHasNumbers(getActiveText(b)))
+            .slice(0, 6);
+        }
+
+        if (picks.length) {
+          lines.push('Relevant wins:');
+          picks.forEach(b => lines.push('- ' + getActiveText(b)));
+        }
+
+        return lines.join('\n');
+      }
+
+      function renderRecruiterPack() {
+        const txt = buildRecruiterPack();
+        if (recruiterPackOutEl) recruiterPackOutEl.value = txt;
+        return txt;
+      }
+
+      function copyRecruiterPack() {
+        const txt = renderRecruiterPack();
+        copyText(txt).then(() => toast('Copied recruiter pack ✔')).catch(() => toast('Copy failed'));
+      }
+
+      function copyPitch() {
+        const txt = buildPitch();
+        copyText(txt).then(() => toast('Copied pitch ✔')).catch(() => toast('Copy failed'));
+      }
+
+      if (copyPackBtn) copyPackBtn.addEventListener('click', copyRecruiterPack);
+      if (copyPackTopBtn) copyPackTopBtn.addEventListener('click', copyRecruiterPack);
+      if (copyPitchBtn) copyPitchBtn.addEventListener('click', copyPitch);
+
+      // Search chips (case studies)
+      document.querySelectorAll('button.search-chip[data-query]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const q = btn.dataset.query || '';
+          search.value = q;
+          activeTags.clear();
+          updateTagButtons();
+          applyFilters();
+          search.focus();
+          toast('Search: ' + q);
+        });
+      });
+
+      // Render lane bar + initial outputs
+      renderLaneBar();
+      renderImpactStrip();
+      renderLaneHighlights();
+      renderRecruiterPack();
+
+
+      /* ------------------------------------------------------------
+         Turbo Tools: JD match + selection builder
+         ------------------------------------------------------------ */
+      const jdEl = document.getElementById('jd');
+      const jdStatusEl = document.getElementById('jdStatus');
+      const matchListEl = document.getElementById('matchList');
+      const showMatchesOnlyEl = document.getElementById('showMatchesOnly');
+      const autoPickBtn = document.getElementById('autoPickBtn');
+      const clearJdBtn = document.getElementById('clearJdBtn');
+
+      const selectedCountEl = document.getElementById('selectedCount');
+      const selectedOutEl = document.getElementById('selectedOut');
+      const copyATSBtn = document.getElementById('copyATSBtn');
+      const copyMdBtn = document.getElementById('copyMdBtn');
+      const clearSelectedBtn = document.getElementById('clearSelectedBtn');
+      const printBtn = document.getElementById('printBtn');
+
+      // selection state
+      const selected = new Map(); // bulletId -> text
+
+      function setPicked(b, on) {
+        b.classList.toggle('picked', on);
+        const pickBtn = b.querySelector('.pick-btn');
+        if (pickBtn) {
+          pickBtn.textContent = on ? 'Picked' : 'Pick';
+          pickBtn.classList.toggle('primary', on);
+        }
+      }
+
+      function updateSelectedUI() {
+        if (selectedCountEl) selectedCountEl.textContent = String(selected.size);
+        if (!selectedOutEl) return;
+
+        const lines = Array.from(selected.values());
+        selectedOutEl.value = lines.join('\n');
+      }
+
+      function togglePick(b) {
+        const id = b.id;
+        const text = getActiveText(b);
+
+        if (selected.has(id)) {
+          selected.delete(id);
+          setPicked(b, false);
+        } else {
+          selected.set(id, text);
+          setPicked(b, true);
+        }
+        updateSelectedUI();
+      }
+
+      // Add a "Pick" button + match badge placeholder to each bullet
+      bullets.forEach(b => {
+        // Pick button
+        const pickBtn = document.createElement('button');
+        pickBtn.type = 'button';
+        pickBtn.className = 'btn tiny pick-btn';
+        pickBtn.textContent = 'Pick';
+        pickBtn.title = 'Add/remove this bullet from Selected';
+        pickBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          togglePick(b);
+        });
+        b.appendChild(pickBtn);
+
+        // Match badge
+        const mb = document.createElement('span');
+        mb.className = 'match-badge';
+        mb.textContent = '';
+        mb.style.display = 'none';
+        b.appendChild(mb);
+      });
+
+      // Copy bullet (use raw text only)
+      document.querySelectorAll('.bullet .copy-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const li = btn.closest('.bullet');
+          const text = li ? getActiveText(li) : '';
+          copyText(text).then(() => toast('Copied bullet ✔')).catch(() => toast('Copy failed'));
+        });
+      });
+
+      // ATS / Markdown export
+      function selectedAsATS() {
+        const lines = Array.from(selected.values());
+        if (!lines.length) return '';
+        // very ATS-safe: plain text bullets, one per line
+        return lines.map(l => '- ' + l).join('\n');
+      }
+
+      function selectedAsMarkdown() {
+        const lines = Array.from(selected.values());
+        if (!lines.length) return '';
+        return lines.map(l => '* ' + l).join('\n');
+      }
+
+      if (copyATSBtn) {
+        copyATSBtn.addEventListener('click', () => {
+          const txt = selectedAsATS();
+          copyText(txt).then(() => toast('Copied ATS text ✔')).catch(() => toast('Copy failed'));
+        });
+      }
+
+      if (copyMdBtn) {
+        copyMdBtn.addEventListener('click', () => {
+          const txt = selectedAsMarkdown();
+          copyText(txt).then(() => toast('Copied Markdown ✔')).catch(() => toast('Copy failed'));
+        });
+      }
+
+      if (clearSelectedBtn) {
+        clearSelectedBtn.addEventListener('click', () => {
+          selected.clear();
+          bullets.forEach(b => setPicked(b, false));
+          updateSelectedUI();
+          toast('Cleared selected');
+        });
+      }
+
+      if (printBtn) {
+        printBtn.addEventListener('click', () => window.print());
+      }
+
+      // JD terms extraction (prefer skills list; fallback to keywords)
+      const STOP = new Set([
+        'a','an','and','are','as','at','be','but','by','for','from','has','have','in','is','it','its',
+        'of','on','or','our','to','with','you','your','we','they','their','the','this','that','these','those',
+        'will','can','may','must','should','not','all','any','into','over','per','plus'
+      ]);
+
+      function extractTerms(jdText) {
+        const t = (jdText || '').toLowerCase();
+        if (!t.trim()) return [];
+
+        // 1) detect known skills in the JD
+        const hits = [];
+        for (const s of SKILLS) {
+          for (const vv of s.v) {
+            if (t.includes(vv)) { hits.push(s.term.toLowerCase()); break; }
+          }
+        }
+
+        // 2) fallback keywords if we found nothing
+        if (hits.length) return Array.from(new Set(hits)).slice(0, 18);
+
+        const words = t
+          .replace(/[^a-z0-9+\/\-\s]/g, ' ')
+          .split(/\s+/)
+          .map(w => w.trim())
+          .filter(w => w.length >= 3 && !STOP.has(w));
+
+        const freq = Object.create(null);
+        for (const w of words) freq[w] = (freq[w] || 0) + 1;
+
+        return Object.entries(freq)
+          .sort((a,b) => b[1] - a[1])
+          .slice(0, 12)
+          .map(([w]) => w);
+      }
+
+      let jdTerms = [];
+
+      function scoreBullet(textLower) {
+        if (!jdTerms.length) return 0;
+        let score = 0;
+        for (const term of jdTerms) {
+          // handle terms with spaces like "step functions"
+          if (textLower.includes(term)) score += 1;
+        }
+        return score;
+      }
+
+      function updateMatchBadges() {
+        bullets.forEach(b => {
+          const score = Number(b.dataset.match || '0');
+          const badge = b.querySelector('.match-badge');
+          if (!badge) return;
+          if (jdTerms.length && score > 0) {
+            badge.textContent = 'Match: ' + score;
+            badge.style.display = '';
+          } else {
+            badge.textContent = '';
+            badge.style.display = 'none';
+          }
+        });
+      }
+
+      function renderMatchList() {
+        if (!matchListEl) return;
+        matchListEl.innerHTML = '';
+
+        if (!jdTerms.length) {
+          if (jdStatusEl) jdStatusEl.textContent = 'No job description yet.';
+          return;
+        }
+
+        const scored = bullets
+          .map(b => ({ b, score: Number(b.dataset.match || '0') }))
+          .filter(x => x.score > 0)
+          .sort((a,b) => b.score - a.score)
+          .slice(0, 10);
+
+        if (jdStatusEl) {
+          jdStatusEl.textContent = 'Detected terms: ' + jdTerms.join(', ') + (scored.length ? ' · Top matches below' : ' · No matching bullets found');
+        }
+
+        scored.forEach(({b, score}) => {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.href = '#' + b.id;
+          const snip = getActiveText(b);
+          a.textContent = snip.slice(0, 110) + (snip.length > 110 ? '…' : '');
+          a.addEventListener('click', () => {
+            const parent = b.closest('details.year');
+            if (parent) parent.open = true;
+            b.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          });
+
+          const small = document.createElement('span');
+          small.className = 'pill';
+          small.style.marginLeft = '8px';
+          small.textContent = 'score ' + score;
+
+          const pick = document.createElement('button');
+          pick.type = 'button';
+          pick.className = 'btn tiny';
+          pick.style.marginLeft = '8px';
+          pick.textContent = selected.has(b.id) ? 'Unpick' : 'Pick';
+          pick.addEventListener('click', (e) => {
+            e.preventDefault();
+            togglePick(b);
+            pick.textContent = selected.has(b.id) ? 'Unpick' : 'Pick';
+          });
+
+          li.appendChild(a);
+          li.appendChild(small);
+          li.appendChild(pick);
+          matchListEl.appendChild(li);
+        });
+      }
+
+      function computeJdMatches() {
+        const jdText = jdEl ? jdEl.value : '';
+        jdTerms = extractTerms(jdText);
+
+        bullets.forEach(b => {
+          const t = getActiveLower(b);
+          const s = scoreBullet(t);
+          b.dataset.match = String(s);
+          b.classList.toggle('matched', jdTerms.length && s > 0);
+        });
+
+        updateMatchBadges();
+        renderMatchList();
+        applyFilters();
+      }
+
+      const computeJdMatchesDebounced = debounce(computeJdMatches, 250);
+
+      if (jdEl) {
+        jdEl.addEventListener('input', computeJdMatchesDebounced);
+      }
+      if (showMatchesOnlyEl) showMatchesOnlyEl.addEventListener('change', applyFilters);
+
+      if (clearJdBtn) {
+        clearJdBtn.addEventListener('click', () => {
+          if (jdEl) jdEl.value = '';
+          jdTerms = [];
+          bullets.forEach(b => {
+            b.dataset.match = '0';
+            b.classList.remove('matched');
+          });
+          updateMatchBadges();
+          renderMatchList();
+          applyFilters();
+          toast('Cleared JD');
+        });
+      }
+
+      function autoPickTopMatches(n) {
+        if (!jdTerms.length) {
+          toast('Paste a JD first');
+          return;
+        }
+        const scored = bullets
+          .map(b => ({ b, score: Number(b.dataset.match || '0') }))
+          .filter(x => x.score > 0)
+          .sort((a,b) => b.score - a.score)
+          .slice(0, n);
+
+        scored.forEach(({b}) => {
+          if (!selected.has(b.id)) {
+            selected.set(b.id, getActiveText(b));
+            setPicked(b, true);
+          }
+        });
+        updateSelectedUI();
+        toast('Auto-picked top matches');
+      }
+
+      if (autoPickBtn) {
+        autoPickBtn.addEventListener('click', () => autoPickTopMatches(10));
+      }
+
+      /* ------------------------------------------------------------
+         Unified filters (search + tags + matches-only)
+         ------------------------------------------------------------ */
+      function updateVisibleCount() {
+        const visible = bullets.filter(b => b.style.display !== 'none').length;
+        visibleCountEl.textContent = String(visible);
+      }
+
+      function applyFilters() {
+        const q = (search.value || '').trim().toLowerCase();
+        const parts = q ? q.split(/\s+/).filter(Boolean) : [];
+
+        bullets.forEach(b => {
+          const t = getActiveLower(b);
+
+          // text search
+          const textOk = !parts.length || parts.every(p => t.includes(p));
+
+          // tag match: OR semantics (any selected tag)
+          const tags = (b.dataset.tags || '').split(/\s+/).filter(Boolean);
+          const tagOk = !activeTags.size || tags.some(k => activeTags.has(k));
+
+          // matches-only
+          const matchScore = Number(b.dataset.match || '0');
+          const jdOk = !(showMatchesOnlyEl && showMatchesOnlyEl.checked) || !jdTerms.length || matchScore > 0;
+
+          const show = textOk && tagOk && jdOk;
+          b.style.display = show ? '' : 'none';
+        });
+
+        yearDetails.forEach(d => {
+          const anyVisible = Array.from(d.querySelectorAll('.bullet')).some(b => b.style.display !== 'none');
+          d.style.display = anyVisible ? '' : 'none';
+          if (anyVisible && (parts.length || activeTags.size || (showMatchesOnlyEl && showMatchesOnlyEl.checked))) d.open = true;
+        });
+
+        const bits = [];
+        if (q) bits.push('Text: ' + q);
+        if (activeTags.size) bits.push('Tags: ' + Array.from(activeTags).join(', '));
+        if (showMatchesOnlyEl && showMatchesOnlyEl.checked && jdTerms.length) bits.push('JD matches only');
+        searchStatus.textContent = bits.length ? bits.join(' · ') : 'No filter';
+
+        updateVisibleCount();
+      }
+
+      search.addEventListener('input', applyFilters);
+
+      /* ------------------------------------------------------------
+         Expand / collapse
+         ------------------------------------------------------------ */
+      document.getElementById('expandBtn').addEventListener('click', () => {
+        yearDetails.forEach(d => d.open = true);
+        toast('Expanded all');
+      });
+      document.getElementById('collapseBtn').addEventListener('click', () => {
+        yearDetails.forEach(d => d.open = false);
+        toast('Collapsed all');
+      });
+
+      /* ------------------------------------------------------------
+         Confetti (burst style)
+         ------------------------------------------------------------ */
+      const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const canvas = document.getElementById('confetti');
+      const ctx = canvas.getContext('2d');
+      let pieces = [];
+      let anim = null;
+      let lastTime = 0;
+
+      function resize() {
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = Math.floor(window.innerWidth * dpr);
+        canvas.height = Math.floor(window.innerHeight * dpr);
+        canvas.style.width = window.innerWidth + 'px';
+        canvas.style.height = window.innerHeight + 'px';
+        ctx.setTransform(dpr,0,0,dpr,0,0);
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      function rand(min, max) { return Math.random() * (max - min) + min; }
+
+      function burst(x, y) {
+        if (reduceMotion) { toast('🎉 Nice.'); return; }
+
+        const colors = [
+          getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#2563eb',
+          getComputedStyle(document.documentElement).getPropertyValue('--accent2').trim() || '#16a34a',
+          '#f59e0b', '#ef4444', '#a855f7'
+        ];
+
+        const count = 120;
+        pieces = [];
+        for (let i=0;i<count;i++) {
+          const angle = rand(-Math.PI, 0); // upward semicircle
+          const speed = rand(4, 12);
+          pieces.push({
+            x, y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            g: rand(0.18, 0.30),
+            rot: rand(0, Math.PI*2),
+            vr: rand(-0.18, 0.18),
+            w: rand(6, 10),
+            h: rand(3, 6),
+            color: colors[Math.floor(Math.random()*colors.length)],
+            life: rand(900, 1400),
+            age: 0,
+            alpha: 1
+          });
+        }
+
+        lastTime = performance.now();
+        if (anim) cancelAnimationFrame(anim);
+        anim = requestAnimationFrame(tick);
+      }
+
+      function tick(now) {
+        const dt = Math.min(32, now - lastTime);
+        lastTime = now;
+
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        let alive = 0;
+
+        for (const p of pieces) {
+          p.age += dt;
+          if (p.age > p.life) continue;
+          alive++;
+
+          p.vy += p.g;
+          p.x += p.vx;
+          p.y += p.vy;
+          p.rot += p.vr;
+
+          const t = p.age / p.life;
+          p.alpha = t < 0.75 ? 1 : (1 - (t - 0.75) / 0.25);
+
+          ctx.save();
+          ctx.globalAlpha = p.alpha;
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rot);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+          ctx.restore();
+        }
+
+        if (alive > 0) anim = requestAnimationFrame(tick);
+        else ctx.clearRect(0,0,canvas.width,canvas.height);
+      }
+
+      document.getElementById('celebrateBtn').addEventListener('click', () => {
+        burst(window.innerWidth * 0.5, window.innerHeight * 0.18);
+        toast('🎉 Celebrate!');
+      });
+
+      /* ------------------------------------------------------------
+         Spotlight
+         ------------------------------------------------------------ */
+      function clearSpotlights() {
+        document.querySelectorAll('.bullet.spotlight').forEach(b => b.classList.remove('spotlight'));
+      }
+
+      document.getElementById('spotlightBtn').addEventListener('click', () => {
+        const visible = bullets.filter(b => b.style.display !== 'none' && b.offsetParent !== null);
+        if (!visible.length) { toast('No visible bullets to spotlight'); return; }
+        clearSpotlights();
+        const pick = visible[Math.floor(Math.random()*visible.length)];
+        pick.classList.add('spotlight');
+        const parentDetails = pick.closest('details.year');
+        if (parentDetails) parentDetails.open = true;
+        pick.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
+        const r = pick.getBoundingClientRect();
+        burst(r.left + r.width/2, r.top + r.height/2);
+        toast('✨ Spotlight!');
+      });
+
+      /* ------------------------------------------------------------
+         Keyboard shortcuts
+         ------------------------------------------------------------ */
+      document.addEventListener('keydown', (e) => {
+        if (e.key === '/' && document.activeElement !== search) {
+          e.preventDefault();
+          search.focus();
+        }
+        if (e.key === 'c' || e.key === 'C') {
+          burst(window.innerWidth * 0.5, window.innerHeight * 0.18);
+          toast('🎉 Celebrate!');
+        }
+        if (e.key === 's' || e.key === 'S') document.getElementById('spotlightBtn').click();
+        if (e.key === 't' || e.key === 'T') cycleTheme();
+        if (e.key === 'p' || e.key === 'P') applyPublicMode(!publicMode);
+      });
+
+      // Initial state
+      updateSelectedUI();
+      applyFilters();
+      updateVisibleCount();
+    })();
+  </script>
+
+
+<details class="bsc-dock">
+  <summary>Resume modes</summary>
+  <div class="bsc-dock-panel">
+    <div class="bsc-dock-kicker">One story, five entry points</div>
+    <div class="bsc-dock-grid">
+      <a class="bsc-dock-link" href="index.html" data-page="index.html">
+        <strong>Home</strong>
+        <span>Vanta fog landing page</span>
+      </a>
+      <a class="bsc-dock-link" href="resume-atlas.html" data-page="resume-atlas.html">
+        <strong>Atlas</strong>
+        <span>Classic recruiter / PDF view</span>
+      </a>
+      <a class="bsc-dock-link" href="resume-signal.html" data-page="resume-signal.html">
+        <strong>Signal</strong>
+        <span>Interactive tailored resume</span>
+      </a>
+      <a class="bsc-dock-link" href="proof-hub.html" data-page="proof-hub.html">
+        <strong>Proof Hub</strong>
+        <span>Bullets, cases, and hard evidence</span>
+      </a>
+      <a class="bsc-dock-link" href="resume-switchboard.html" data-page="resume-switchboard.html">
+        <strong>Switchboard</strong>
+        <span>Low-motion fallback hub</span>
+      </a>
+    </div>
+  </div>
+</details>
+<script id="bsc-resume-dock-script">
+  (function(){
+    const current = location.pathname.split('/').pop() || 'index.html';
+    document.querySelectorAll('.bsc-dock-link').forEach(function(link){
+      const page = link.getAttribute('data-page');
+      if(page === current || (!current && page === 'index.html')){
+        link.setAttribute('aria-current', 'page');
+      }
+      link.addEventListener('click', function(){
+        try{ localStorage.setItem('bsc_last_resume_mode', page || link.getAttribute('href')); }catch(e){}
+      });
+    });
+  })();
+</script>
+
+<!-- command palette -->
+<div id="cmd-pal" role="dialog" aria-modal="true" aria-label="Command palette" hidden>
+  <div id="cmd-bg"></div>
+  <div id="cmd-box">
+    <div id="cmd-sr">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="cmd-q" type="text" placeholder="Search commands, navigate, jump to section…" autocomplete="off" spellcheck="false" aria-label="Command search" aria-controls="cmd-list" aria-autocomplete="list" />
+      <kbd id="cmd-esk">ESC</kbd>
+    </div>
+    <ul id="cmd-list" role="listbox" aria-label="Commands" aria-live="polite"></ul>
+    <div id="cmd-foot" aria-hidden="true">
+      <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
+      <span><kbd>↵</kbd> open</span>
+      <span><kbd>esc</kbd> close</span>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var pal=document.getElementById('cmd-pal'),bg=document.getElementById('cmd-bg'),inp=document.getElementById('cmd-q'),lst=document.getElementById('cmd-list');
+  if(!pal||!bg||!inp||!lst) return;
+  var page=(location.pathname.split('/').pop()||'index.html').replace(/[?#].*/,'');
+  var NAV=[
+    {cat:'Navigate',label:'Home',desc:'Landing page',url:'index.html'},
+    {cat:'Navigate',label:'Atlas — Recruiter Resume',desc:'Clean PDF-ready',url:'resume-atlas.html'},
+    {cat:'Navigate',label:'Signal — Interactive Resume',desc:'Filters + search',url:'resume-signal.html'},
+    {cat:'Navigate',label:'Proof Hub — Case Studies',desc:'ATS export + evidence',url:'proof-hub.html'},
+    {cat:'Navigate',label:'Switchboard',desc:'Low-motion hub',url:'resume-switchboard.html'},
+  ];
+  var ACT=[
+    {cat:'Action',label:'Print / Download PDF',desc:'Open print dialog',action:'print'},
+    {cat:'Action',label:'Copy email address',desc:'bsc_work@gmx.com',action:'copy-email'},
+    {cat:'Action',label:'View GitHub',desc:'NorthwoodsCode',url:'https://github.com/NorthwoodsCode',ext:true},
+    {cat:'Action',label:'View LinkedIn',desc:'brandon-c-it-industry',url:'https://www.linkedin.com/in/brandon-c-it-industry',ext:true},
+  ];
+  var JMP={
+    'index.html':[
+      {cat:'Jump to',label:'Resume Modes',desc:'All format cards',anchor:'#formats'},
+      {cat:'Jump to',label:'Tailor Tools',desc:'Build a Signal link',anchor:'#tailorTools'},
+    ],
+    'resume-atlas.html':[
+      {cat:'Jump to',label:'Summary',desc:'Professional summary',anchor:'#summary'},
+      {cat:'Jump to',label:'Core Skills',desc:'Technology stack',anchor:'#skills'},
+      {cat:'Jump to',label:'Experience',desc:'Work history',anchor:'#experience'},
+      {cat:'Jump to',label:'Certifications',desc:'AWS + Terraform',anchor:'#certs'},
+      {cat:'Jump to',label:'Education',desc:'UWRF, Finance + CS',anchor:'#education'},
+    ],
+    'proof-hub.html':[
+      {cat:'Jump to',label:'Overview',desc:'Impact strip + metrics',anchor:'#start'},
+      {cat:'Jump to',label:'Timeline',desc:'Career timeline',anchor:'#timeline'},
+      {cat:'Jump to',label:'Turbo Pack',desc:'Bullet builder + export',anchor:'#turbo'},
+      {cat:'Jump to',label:'Case Studies',desc:'Project narratives',anchor:'#cases'},
+      {cat:'Jump to',label:'Credentials',desc:'Certs + education',anchor:'#cred'},
+    ],
+  };
+  var CMDS=NAV.concat(ACT).concat(JMP[page]||[]);
+  var activeIdx=-1,prevFocus=null,filtered=[];
+  function flt(q){q=(q||'').toLowerCase().trim();if(!q)return CMDS.slice();return CMDS.filter(function(c){return(c.label+' '+(c.desc||'')+' '+(c.cat||'')).toLowerCase().indexOf(q)>-1;});}
+  function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function mkItem(c,i){
+    var li=document.createElement('li');li.className='cpi';li.setAttribute('role','option');li.setAttribute('id','cpi-'+i);li.setAttribute('aria-selected','false');
+    li.innerHTML='<span class="cpi-lbl">'+esc(c.label)+'</span>'+(c.desc?'<span class="cpi-desc">'+esc(c.desc)+'</span>':'');
+    li.addEventListener('mousedown',function(e){e.preventDefault();execute(c);});
+    return li;
+  }
+  function render(q){
+    filtered=flt(q);lst.innerHTML='';var lastCat=null;
+    filtered.forEach(function(c,i){
+      if(c.cat!==lastCat){var h=document.createElement('li');h.className='cpcat';h.setAttribute('role','presentation');h.textContent=c.cat;lst.appendChild(h);lastCat=c.cat;}
+      lst.appendChild(mkItem(c,i));
+    });
+    setActive(-1);
+  }
+  function setActive(i){
+    activeIdx=i;
+    var items=lst.querySelectorAll('.cpi');
+    items.forEach(function(el,j){el.setAttribute('aria-selected',j===i?'true':'false');});
+    if(i>=0&&items[i])items[i].scrollIntoView({block:'nearest'});
+    inp.setAttribute('aria-activedescendant',i>=0?'cpi-'+i:'');
+  }
+  function execute(cmd){
+    closePal();
+    if(cmd.action==='print'){window.print();return;}
+    if(cmd.action==='copy-email'){
+      var t='bsc_work@gmx.com';
+      if(navigator.clipboard){navigator.clipboard.writeText(t);}
+      else{var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}
+      return;
+    }
+    if(cmd.anchor){var el=document.querySelector(cmd.anchor);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});return;}
+    if(cmd.url){if(cmd.ext){window.open(cmd.url,'_blank','noopener');}else{location.href=cmd.url;}}
+  }
+  function openPal(){prevFocus=document.activeElement;pal.hidden=false;render('');inp.value='';setTimeout(function(){inp.focus();},30);document.body.style.overflow='hidden';}
+  function closePal(){pal.hidden=true;document.body.style.overflow='';if(prevFocus)prevFocus.focus();}
+  inp.addEventListener('input',function(){render(inp.value);});
+  inp.addEventListener('keydown',function(e){
+    var items=lst.querySelectorAll('.cpi');
+    if(e.key==='ArrowDown'){e.preventDefault();setActive(Math.min(activeIdx+1,items.length-1));}
+    else if(e.key==='ArrowUp'){e.preventDefault();setActive(Math.max(activeIdx-1,0));}
+    else if(e.key==='Enter'){if(activeIdx>=0&&filtered[activeIdx])execute(filtered[activeIdx]);else if(filtered[0])execute(filtered[0]);}
+    else if(e.key==='Escape'){closePal();}
+  });
+  bg.addEventListener('mousedown',closePal);
+  document.getElementById('cmd-esk').addEventListener('click',closePal);
+  document.addEventListener('keydown',function(e){
+    if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();if(pal.hidden){openPal();}else{closePal();}}
+    if(!pal.hidden&&e.key==='Escape')closePal();
+  });
+})();
+</script>
+<script src="shared-enhancements.js"></script>
+</body>
+</html>
+

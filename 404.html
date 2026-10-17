@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>Redirecting — Brandon S. Clark</title>
+  <script>
+    /* GitHub Pages has no server-side redirects, so pretty per-recipient
+       links (/for/<company>) land here. Rewrite to the query-string form the
+       home page's personalization handler already understands.
+       Mirrors the old Cloudflare _redirects rule:
+         /for/:slug  ->  /?for=:slug  */
+    (function () {
+      var p = location.pathname;
+      var m = p.match(/^(.*?)\/for\/([^\/?#]+)\/?$/);
+      if (m) {
+        location.replace((m[1] || '') + '/?for=' + encodeURIComponent(decodeURIComponent(m[2])) + location.hash);
+        return;
+      }
+      /* Plain 404: point "back" at the site root (project-pages path or domain root). */
+      var base = p.indexOf('/resume/') === 0 ? '/resume/' : '/';
+      document.addEventListener('DOMContentLoaded', function () {
+        var a = document.getElementById('home');
+        if (a) a.setAttribute('href', base);
+      });
+    })();
+  </script>
+  <style>
+    body{margin:0;min-height:100vh;display:grid;place-items:center;font:16px/1.5 system-ui,sans-serif;background:#0b0d12;color:#e6e8ee}
+    a{color:#8ab4ff}
+    main{text-align:center;padding:2rem}
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Not found</h1>
+    <p>That page doesn't exist. <a id="home" href="/resume/">Back to the resume</a>.</p>
+  </main>
+</body>
+</html>

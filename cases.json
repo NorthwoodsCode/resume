@@ -1,0 +1,47 @@
+[
+  {
+    "slug": "payment-portal",
+    "name": "$85M Payment Portal",
+    "title": "Full-stack AWS web application",
+    "strap": "~250k payments · zero platform failures",
+    "tags": ["AWS", "React", "Node.js", "CI/CD", "IAM"],
+    "accent":  "69,227,164",
+    "accent2": "47,100,255"
+  },
+  {
+    "slug": "java-etl",
+    "name": "1,200-Hour Automation",
+    "title": "Java + SQL Server ETL program",
+    "strap": "Saved ~$40K/yr · zero ongoing support",
+    "tags": ["Java", "SQL Server", "ETL", "Automation"],
+    "accent":  "176,79,255",
+    "accent2": "103,232,200"
+  },
+  {
+    "slug": "secure-provisioning",
+    "name": "Secure Provisioning",
+    "title": "Python CLI + AWS automation",
+    "strap": "10 min → <1 min per device · ~100 hrs saved",
+    "tags": ["Python", "AWS", "Secrets Manager", "Auth0"],
+    "accent":  "178,135,255",
+    "accent2": "103,232,200"
+  },
+  {
+    "slug": "serverless-bus",
+    "name": "Serverless Request Bus",
+    "title": "API Gateway → Step Functions → Lambda",
+    "strap": "Reusable state machines · observable end-to-end",
+    "tags": ["API Gateway", "Step Functions", "Lambda", "CloudWatch"],
+    "accent":  "134,166,255",
+    "accent2": "103,232,200"
+  },
+  {
+    "slug": "data-foundations",
+    "name": "Data Foundations",
+    "title": "Parallel DB migration + ETL parity",
+    "strap": "Risk-managed cutover · DocumentDB POC",
+    "tags": ["DocumentDB", "ETL", "Migration", "API"],
+    "accent":  "255,107,142",
+    "accent2": "103,232,200"
+  }
+]

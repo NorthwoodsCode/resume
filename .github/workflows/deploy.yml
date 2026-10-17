@@ -1,0 +1,82 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python test dependencies
+        run: pip install --quiet "websockets>=10,<13"
+
+      - name: Verify Chrome is available
+        run: google-chrome --version
+
+      - name: Run UI test suite (headless Chrome via CDP)
+        run: python3 tests/test_home.py
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Pillow for OG generation
+        run: pip install --quiet Pillow
+
+      - name: Generate per-case OG images and stub pages
+        run: python3 scripts/gen_cases.py
+
+      - name: Assemble site
+        run: |
+          mkdir -p _site
+          tar --exclude='./.git' --exclude='./.github' --exclude='./tests' \
+              --exclude='./scripts' --exclude='./_site' --exclude='__pycache__' \
+              -cf - . | tar -xf - -C _site
+          touch _site/.nojekyll
+          find _site -maxdepth 2 -type f | sort
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

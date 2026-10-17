@@ -1,0 +1,58 @@
+Brandon S. Clark
+Senior Software Engineer | Backend Engineer | Platform Engineer | Cloud Engineer
+Wisconsin (Remote) | bsc_work@gmx.com | linkedin.com/in/brandon-c-it-industry | github.com/NorthwoodsCode | northwoodscode.github.io/resume/
+
+SUMMARY
+Senior Software Engineer focused on AWS backend/platform engineering, API integrations, serverless architecture, and data workflows. Builds secure, multi-environment automation, serverless services, and operationally reliable tooling that reduces friction and improves scalability. Known for pairing hands-on engineering with documentation, diagrams, demos, and enablement that accelerate onboarding and cross-team execution.
+
+TECHNICAL SKILLS
+- Cloud / Platform: AWS Lambda, API Gateway, Step Functions, Secrets Manager, DynamoDB, DocumentDB, CloudWatch, IoT Core
+- Languages: Python, TypeScript, JavaScript / Node.js, SQL / T-SQL, Java, C#
+- Infrastructure: Terraform, Infrastructure as Code, CI/CD, serverless architectures, multi-environment automation
+- APIs / Integrations: REST APIs, OpenAPI / Swagger, Auth0, Postman, partner integrations
+- Data / Messaging: MQTT, tagging systems, ETL / backfill scripting, JSON / document storage, payload optimization
+- Engineering: security-first design, SLAs, monitoring, operational metrics, system design, diagrams, documentation, demos, mentorship
+
+CERTIFICATIONS
+- AWS Certified Solutions Architect - Associate (SAA-C03) | HashiCorp Terraform Associate (003) | AWS Certified Cloud Practitioner (CLF-C01)
+
+EXPERIENCE
+Milwaukee Tool - Senior Software Engineer | IoT Platform | 2025-Present | Remote, WI
+- Delivered a greenfield secure IoT device-provisioning solution (Python CLI plus supporting APIs) that automated device registration, certificate generation, and bootstrapping across dev, test, and prod.
+- Cut provisioning from roughly 10 minutes manual to under 1 minute per device by replacing console-driven onboarding with a repeatable workflow aligned to AWS IoT Core and enterprise security practices.
+- Integrated AWS Secrets Manager and Auth0-based credential handling into provisioning workflows; implemented MQTT delta updates that reduced constrained-device payload size by about 40%, with one example dropping from 476 bytes to 15 bytes.
+- Authored a comprehensive README, CLI examples, diagrams, and demo assets that reduced onboarding time for new engineers by an estimated 30%.
+- Partnered with leadership on service SLAs, monitoring gaps, and operational metrics to strengthen reliability baselines and roadmap execution.
+- Acted as an early implementer and pilot user, surfacing governance and permission blockers, validating workflows, and helping turn an ambiguous prototype into a scalable process.
+
+Milwaukee Tool - Software Engineer II | Tool Data Foundations | 2024 | Remote, WI
+- Delivered core Tool Data Foundations capabilities by implementing a comprehensive tagging system and supporting QuickLink / tool-read integration work.
+- Strengthened partner-team support through clearer documentation, workflow visualization, and faster response to feature requests and data-insight needs.
+- Improved TypeScript reusability and OpenAPI documentation quality to make APIs and related workflows easier to maintain and consume.
+- Supported data-foundation modernization through AWS DocumentDB research, data scripting, and planning for cleaner migration / parity across legacy and new data flows.
+
+Milwaukee Tool - Software Engineer | Integrations / Serverless | 2021-2023 | Remote, WI
+- Built and supported AWS serverless partner integrations using API Gateway, Step Functions, Lambda, DynamoDB, and Terraform.
+- Prototyped an external API gateway and request-bus flow that filtered, transformed, validated, and augmented requests through API Gateway -> Step Functions -> multi-Lambda orchestration, returning results in seconds.
+- Produced a formal security risk assessment of Oracle authentication, including an executive-ready PowerPoint and written report for stakeholders.
+- Refactored deep-link generation and resolved environment-specific PDF / report failures by moving logic server-side and handling dynamic base URLs across environments.
+- Improved troubleshooting and team ramp-up through targeted logging, Postman how-tos, design diagrams, demos, and onboarding documentation.
+
+Foundation Finance Company - Full-Stack Developer | 2020-2021
+- Designed and delivered AWS-hosted web applications, CI/CD pipelines, and client-facing portals.
+- Shipped a payment portal that processed roughly 250,000 payments totaling about $85M.
+- Authored internal coding standards and API documentation to improve consistency and maintainability.
+
+Foundation Finance Company - Software Developer | 2019-2020
+- Built an automated data-entry program using Java and MS SQL Server that saved more than 1,200 hours of manual work and about $40K.
+- Developed a new client portal from scratch using the MERN stack and implemented role-based security and JWT authentication.
+
+EARLIER EXPERIENCE
+Aqua Finance - Web / Software Developer | 2017-2019
+- Delivered full-stack solutions across .NET, Java, C#, and enterprise systems while expanding scope and responsibility across multiple applications.
+
+Minnesota Attorney General's Office - Application Developer | 2016-2017
+- Built and supported internal applications and databases, improving team tooling, reliability, and error handling.
+
+EDUCATION
+University of Wisconsin-River Falls - B.S. Finance | Minor: Computer Science

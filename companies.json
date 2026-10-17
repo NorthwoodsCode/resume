@@ -1,0 +1,37 @@
+{
+  "stripe": {
+    "name": "Stripe",
+    "focus": "api,cloud,data",
+    "atmosphere": "emerald"
+  },
+  "datadog": {
+    "name": "Datadog",
+    "focus": "cloud,opex,data",
+    "atmosphere": "violet"
+  },
+  "cloudflare": {
+    "name": "Cloudflare",
+    "focus": "cloud,api,opex",
+    "atmosphere": "autumn"
+  },
+  "aws": {
+    "name": "AWS",
+    "focus": "cloud,iot,opex",
+    "atmosphere": "amethyst"
+  },
+  "databricks": {
+    "name": "Databricks",
+    "focus": "data,cloud,ai",
+    "atmosphere": "crimson"
+  },
+  "vercel": {
+    "name": "Vercel",
+    "focus": "api,cloud,opex",
+    "atmosphere": "graphite"
+  },
+  "snowflake": {
+    "name": "Snowflake",
+    "focus": "data,cloud,enable",
+    "atmosphere": "blue"
+  }
+}

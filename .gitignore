@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+
+# Per-case OG art + stub pages — generated at deploy from cases.json
+og-case-*.png
+case/
+
+# Local tool state
+.claude/
+_site/

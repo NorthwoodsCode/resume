@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en" data-theme="auto">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="favicon.ico" sizes="any" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <title>Brandon S. Clark — Now</title>
+  <meta name="description" content="What I'm currently building, learning, and reading. A /now page in the Derek Sivers tradition — proof the site is alive." />
+  <link rel="canonical" href="https://northwoodscode.github.io/resume/now.html" />
+  <meta property="og:title" content="Brandon S. Clark — Now" />
+  <meta property="og:description" content="What I'm currently building, learning, and reading." />
+  <meta property="og:type" content="profile" />
+  <meta property="og:url" content="https://northwoodscode.github.io/resume/now.html" />
+  <meta property="og:image" content="https://northwoodscode.github.io/resume/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Brandon S. Clark — Now" />
+  <meta name="twitter:description" content="What I'm currently building, learning, and reading." />
+  <meta name="twitter:image" content="https://northwoodscode.github.io/resume/og-image.png" />
+  <style>
+    :root{
+      --bg:#ffffff; --fg:#111827; --muted:#4b5563;
+      --card:#f3f4f6; --border:#e5e7eb;
+      --accent:#2563eb; --accent2:#10b981;
+      --shadow:0 10px 25px rgba(0,0,0,.08);
+      --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+      --sans:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
+      --radius:14px; --max:880px;
+    }
+    html[data-theme="dark"]{
+      --bg:#0b1220; --fg:#e5e7eb; --muted:#a8b4d8;
+      --card:#101a31; --border:#233156;
+      --accent:#60a5fa; --accent2:#34d399;
+      --shadow:0 10px 30px rgba(0,0,0,.45);
+    }
+    @media (prefers-color-scheme: dark){
+      html[data-theme="auto"]{
+        --bg:#0b1220; --fg:#e5e7eb; --muted:#a8b4d8;
+        --card:#101a31; --border:#233156;
+        --accent:#60a5fa; --accent2:#34d399;
+        --shadow:0 10px 30px rgba(0,0,0,.45);
+      }
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);line-height:1.55}
+    a{color:var(--accent);text-decoration:none}
+    a:hover{text-decoration:underline}
+    a:focus-visible,button:focus-visible{outline:3px solid color-mix(in srgb,var(--accent) 55%,white);outline-offset:3px}
+    .skip{position:absolute;left:-999px;top:10px;background:var(--bg);border:1px solid var(--border);padding:.5rem .75rem;border-radius:10px;z-index:1000}
+    .skip:focus{left:10px}
+    header{position:sticky;top:0;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);z-index:20}
+    .head{max-width:var(--max);margin:0 auto;padding:18px 18px 16px;display:flex;align-items:center;gap:18px;justify-content:space-between}
+    .head h1{margin:0;font-size:clamp(1.2rem,2.6vw,1.7rem);letter-spacing:-.02em}
+    .head .nav{display:flex;gap:18px;font-size:.92rem;color:var(--muted)}
+    .wrap{max-width:var(--max);margin:0 auto;padding:30px 18px 80px}
+    .lede{color:var(--muted);font-size:1.02rem;margin:0 0 28px;max-width:62ch}
+    .lede a{font-weight:600}
+    .stamp{display:inline-flex;align-items:center;gap:8px;padding:4px 10px;border:1px solid var(--border);border-radius:999px;font-family:var(--mono);font-size:.74rem;color:var(--muted);margin:0 0 28px}
+    .stamp .dot{width:7px;height:7px;border-radius:50%;background:var(--accent2);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent2) 18%,transparent)}
+    section.card{
+      background:var(--card);border:1px solid var(--border);
+      border-radius:var(--radius);padding:22px 24px;margin:0 0 18px;
+      box-shadow:var(--shadow);
+    }
+    section.card h2{
+      margin:0 0 12px;font-size:1.08rem;letter-spacing:.02em;
+      text-transform:uppercase;color:var(--accent);
+    }
+    section.card p{margin:0 0 10px}
+    section.card p:last-child{margin-bottom:0}
+    section.card ul{margin:6px 0 0;padding-left:20px}
+    section.card li{margin:4px 0}
+    .fine{color:var(--muted);font-size:.86rem;margin-top:30px;text-align:center;line-height:1.7}
+    .fine a{color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+    code{font-family:var(--mono);font-size:.92em;padding:1px 6px;border-radius:4px;background:color-mix(in srgb,var(--accent) 10%,transparent)}
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header>
+    <div class="head">
+      <h1>Now</h1>
+      <nav class="nav" aria-label="Primary">
+        <a href="./">Home</a>
+        <a href="resume-atlas.html">Resume</a>
+        <a href="proof-hub.html">Proof</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="wrap">
+    <p class="stamp"><span class="dot" aria-hidden="true"></span> Last refreshed 2026-05-28</p>
+
+    <p class="lede">
+      Inspired by Derek Sivers's <a href="https://nownownow.com/about" rel="noopener" target="_blank">/now page</a> convention — a snapshot of focus, not a journal. If you stumbled here from my resume, this is the proof the site (and the person) is alive.
+    </p>
+
+    <section class="card" aria-labelledby="building">
+      <h2 id="building">Currently building</h2>
+      <ul>
+        <li><strong>This site</strong> — multi-mode static resume with five entry points, FX panel, and headless-Chrome UI tests gating GitHub Pages deploys. Source on <a href="https://github.com/NorthwoodsCode/resume" rel="noopener" target="_blank">GitHub</a>.</li>
+        <li><strong>mint-internet-speed</strong> — bash collector + matplotlib viz tracking ISP delivered-vs-promised speed over time. The chart is the headline; the rest is plumbing.</li>
+      </ul>
+    </section>
+
+    <section class="card" aria-labelledby="learning">
+      <h2 id="learning">Currently learning</h2>
+      <ul>
+        <li>Production patterns for AI agents — eval harnesses, prompt caching, tool-use over MCP, cost optimization.</li>
+        <li>The 2026 portfolio landscape — bento layouts, spatial design, where AI chat earns its place and where it doesn't.</li>
+      </ul>
+    </section>
+
+    <section class="card" aria-labelledby="reading">
+      <h2 id="reading">Currently reading</h2>
+      <ul>
+        <li>Posts and field notes from <a href="https://rauno.me" rel="noopener" target="_blank">Rauno Freiberg</a> and <a href="https://www.joshwcomeau.com" rel="noopener" target="_blank">Josh Comeau</a> — restraint as a design language.</li>
+        <li>Anthropic's docs on prompt caching, computer use, and Claude SDK patterns.</li>
+      </ul>
+    </section>
+
+    <section class="card" aria-labelledby="open">
+      <h2 id="open">Open to</h2>
+      <p>Senior IC roles on AWS-flavored platform / API / data teams. Remote-first. Bias toward small teams shipping fast. Drop a note: <a href="mailto:bsc_work@gmx.com">bsc_work@gmx.com</a>.</p>
+    </section>
+
+    <p class="fine">
+      A /now page is meant to drift out of date. If it has, that's also a signal.
+    </p>
+  </main>
+
+  <script src="shared-enhancements.js"></script>
+</body>
+</html>
