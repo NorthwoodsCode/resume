@@ -697,7 +697,7 @@
 
         <div class="metaRow" aria-label="Contact">
           <span class="metaPill">Wisconsin (Remote)</span>
-          <span class="metaPill"><a href="mailto:bsc_work@gmx.com">bsc_work@gmx.com</a></span>
+          <span class="metaPill"><a href="mailto:bsc_pro@protonmail.com">bsc_pro@protonmail.com</a></span>
           <span class="metaPill"><a href="https://github.com/NorthwoodsCode">GitHub</a></span>
           <span class="metaPill"><a href="https://www.linkedin.com/in/brandon-c-it-industry">LinkedIn</a></span>
         </div>
@@ -1277,7 +1277,7 @@
     ];
     var ACT=[
       {cat:'Action',label:'Print / Download PDF',desc:'Open print dialog',action:'print'},
-      {cat:'Action',label:'Copy email address',desc:'bsc_work@gmx.com',action:'copy-email'},
+      {cat:'Action',label:'Copy email address',desc:'bsc_pro@protonmail.com',action:'copy-email'},
       {cat:'Action',label:'View GitHub',desc:'NorthwoodsCode',url:'https://github.com/NorthwoodsCode',ext:true},
       {cat:'Action',label:'View LinkedIn',desc:'brandon-c-it-industry',url:'https://www.linkedin.com/in/brandon-c-it-industry',ext:true},
     ];
@@ -1330,7 +1330,7 @@
       closePal();
       if(cmd.action==='print'){window.print();return;}
       if(cmd.action==='copy-email'){
-        var t='bsc_work@gmx.com';
+        var t='bsc_pro@protonmail.com';
         if(navigator.clipboard){navigator.clipboard.writeText(t);}
         else{var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}
         return;

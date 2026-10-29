@@ -1,6 +1,6 @@
 Brandon S. Clark
 Senior Software Engineer | Backend Engineer | Platform Engineer | Cloud Engineer
-Wisconsin (Remote) | bsc_work@gmx.com | linkedin.com/in/brandon-c-it-industry | github.com/NorthwoodsCode | northwoodscode.github.io/resume/
+Wisconsin (Remote) | bsc_pro@protonmail.com | linkedin.com/in/brandon-c-it-industry | github.com/NorthwoodsCode | northwoodscode.github.io/resume/
 
 SUMMARY
 Senior Software Engineer focused on AWS backend/platform engineering, API integrations, serverless architecture, and data workflows. Builds secure, multi-environment automation, serverless services, and operationally reliable tooling that reduces friction and improves scalability. Known for pairing hands-on engineering with documentation, diagrams, demos, and enablement that accelerate onboarding and cross-team execution.
