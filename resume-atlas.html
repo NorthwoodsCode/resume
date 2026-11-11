@@ -253,13 +253,25 @@
       *{transition:none !important; scroll-behavior:auto !important}
     }
     @media print{
-      header,.actions,.skip{display:none !important}
+      html, html[data-theme="dark"]{
+        --bg:#fff; --fg:#000; --muted:#333; --card:#fff; --border:#bbb;
+        --accent:#000; --accent2:#000; --shadow:none;
+      }
+      .actions,.skip,#read-progress{display:none !important}
+      header{position:static; background:#fff; backdrop-filter:none; border-bottom:1px solid #000}
+      .head{padding:0 0 10px}
+      .contact,.role,.meta,h2,summary,.kpi small{color:#000}
       body{background:#fff;color:#000}
       .wrap{max-width:8.5in;padding:0}
-      .card,details{box-shadow:none !important;background:#fff !important}
+      main{padding-top:10px}
+      section{margin-top:16px}
+      .card,details,.kpi{box-shadow:none !important;background:#fff !important;color:#000 !important}
+      .kpi{border:1px solid #999}
+      .chips li{background:#fff;border:1px solid #bbb;color:#000}
+      .rolehead,.kpi,.chips li,.summary > .card{break-inside:avoid;page-break-inside:avoid}
+      h2,h3{break-after:avoid;page-break-after:avoid}
       a{color:#000;text-decoration:none}
       a[href^="http"]:after{content:" (" attr(href) ")";font-size:9pt}
-      .chips li{border:1px solid #ddd}
       details{border:1px solid #ddd}
       summary:before{content:""}
     }
@@ -303,31 +315,6 @@
     }
   }
   </script>
-  <style>
-    /* command palette */
-    #cmd-pal{position:fixed;inset:0;z-index:99998;display:flex;align-items:flex-start;justify-content:center;padding-top:clamp(48px,9vh,130px)}
-    #cmd-pal[hidden]{display:none !important}
-    #cmd-pal{--cp-bg:#fff;--cp-border:#e5e7eb;--cp-text:#111827;--cp-muted:#6b7280;--cp-sub:#f9fafb;--cp-hover:#eff6ff;--cp-cat:#9ca3af;--cp-bdrop:rgba(0,0,0,.48)}
-    html[data-theme="dark"] #cmd-pal{--cp-bg:#0f172a;--cp-border:#1e3a5f;--cp-text:#e2e8f0;--cp-muted:#64748b;--cp-sub:#071224;--cp-hover:rgba(37,99,235,.15);--cp-cat:#475569;--cp-bdrop:rgba(0,0,0,.72)}
-    @media(prefers-color-scheme:dark){html:not([data-theme="light"]) #cmd-pal{--cp-bg:#0f172a;--cp-border:#1e3a5f;--cp-text:#e2e8f0;--cp-muted:#64748b;--cp-sub:#071224;--cp-hover:rgba(37,99,235,.15);--cp-cat:#475569;--cp-bdrop:rgba(0,0,0,.72)}}
-    #cmd-bg{position:absolute;inset:0;background:var(--cp-bdrop);backdrop-filter:blur(4px)}
-    #cmd-box{position:relative;width:min(620px,92vw);background:var(--cp-bg);border-radius:16px;box-shadow:0 28px 70px rgba(0,0,0,.22);overflow:hidden;border:1px solid var(--cp-border)}
-    #cmd-sr{display:flex;align-items:center;gap:.65rem;padding:.9rem 1rem;border-bottom:1px solid var(--cp-border)}
-    #cmd-sr svg{flex-shrink:0;color:var(--cp-muted)}
-    #cmd-q{flex:1;border:none;outline:none;font-size:1rem;background:transparent;color:var(--cp-text);font-family:inherit}
-    #cmd-q::placeholder{color:var(--cp-cat)}
-    #cmd-esk{font-size:.7rem;padding:.18rem .42rem;border:1px solid var(--cp-border);border-radius:4px;color:var(--cp-cat);background:var(--cp-sub);font-family:inherit;white-space:nowrap;cursor:pointer}
-    #cmd-list{margin:0;padding:.3rem 0;list-style:none;max-height:min(380px,52vh);overflow-y:auto}
-    #cmd-list:empty::after{content:'No results';display:block;padding:.9rem 1.1rem;color:var(--cp-cat);font-size:.88rem}
-    .cpcat{padding:.5rem 1.1rem .15rem;font-size:.7rem;font-weight:760;letter-spacing:.1em;text-transform:uppercase;color:var(--cp-cat)}
-    .cpi{display:flex;align-items:center;gap:.65rem;padding:.58rem 1.1rem;cursor:pointer;user-select:none}
-    .cpi:hover,.cpi[aria-selected="true"]{background:var(--cp-hover)}
-    .cpi-lbl{font-size:.93rem;font-weight:560;color:var(--cp-text)}
-    .cpi-desc{font-size:.8rem;color:var(--cp-muted);margin-left:auto;white-space:nowrap;padding-left:.5rem}
-    #cmd-foot{display:flex;gap:1rem;padding:.5rem 1rem;border-top:1px solid var(--cp-border);background:var(--cp-sub)}
-    #cmd-foot span{font-size:.73rem;color:var(--cp-cat);display:flex;align-items:center;gap:.25rem}
-    #cmd-foot kbd{font-size:.69rem;padding:.12rem .32rem;border:1px solid var(--cp-border);border-radius:4px;background:var(--cp-bg);font-family:inherit}
-  </style>
 </head>
 <body>
 <div id="read-progress" role="progressbar" aria-hidden="true"></div>
@@ -348,7 +335,7 @@
       </div>
 
       <div class="actions" aria-label="Resume actions">
-        <button class="btn" id="themeBtn" type="button">Toggle theme</button>
+        <button class="btn" id="themeBtn" type="button" aria-pressed="false">Dark theme</button>
         <button class="btn" id="printBtn" type="button">Print / Save PDF</button>
       </div>
     </div>
@@ -435,7 +422,7 @@
 
         <article class="card" aria-label="Milwaukee Tool Software Engineer II">
           <div class="rolehead">
-            <h3>Milwaukee Tool (Power Tool Data / Digital IoT Service) — Software Engineer II</h3>
+            <h3>Milwaukee Tool (Tool Data Foundations) — Software Engineer II</h3>
             <div class="meta">2024 • Remote (WI)</div>
           </div>
           <ul>
@@ -506,6 +493,7 @@
         <div class="card">
           <ul>
             <li>AWS Certified Solutions Architect – Associate (SAA-C03)</li>
+            <li>HashiCorp Terraform Associate (003)</li>
             <li>AWS Certified Cloud Practitioner (CLF-C01)</li>
           </ul>
         </div>
@@ -522,7 +510,7 @@
       </section>
 
       <footer class="fine">
-        Self-contained HTML resume optimized for printing and PDF generation.
+        Updated <time id="lastUpdated" datetime="2026-11-11">2026-11-11</time> · <a href="resume-ats.txt">Plain-text version</a>
       </footer>
     </main>
   </div>
@@ -533,23 +521,38 @@
       const themeBtn = document.getElementById('themeBtn');
       const printBtn = document.getElementById('printBtn');
 
+      const store = {
+        get(k){ try { return localStorage.getItem(k); } catch(e){ return null; } },
+        set(k, v){ try { localStorage.setItem(k, v); } catch(e){} }
+      };
+
       function getPreferredTheme(){
-        const v = localStorage.getItem('bsc_theme');
+        const v = store.get('bsc_theme');
         if(v === 'light' || v === 'dark') return v;
         return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
       }
 
-      function setTheme(theme){
+      function setTheme(theme, persist){
         html.dataset.theme = theme;
-        localStorage.setItem('bsc_theme', theme);
+        themeBtn.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
+        themeBtn.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+        if(persist) store.set('bsc_theme', theme);
       }
 
-      setTheme(getPreferredTheme());
+      setTheme(getPreferredTheme(), false);
+      if(window.matchMedia){
+        const mq = window.matchMedia('(prefers-color-scheme: dark)');
+        const follow = (e) => { if(!store.get('bsc_theme')) setTheme(e.matches ? 'dark' : 'light', false); };
+        if(mq.addEventListener) mq.addEventListener('change', follow); else if(mq.addListener) mq.addListener(follow);
+      }
 
       themeBtn.addEventListener('click', () => {
-        setTheme(html.dataset.theme === 'dark' ? 'light' : 'dark');
+        setTheme(html.dataset.theme === 'dark' ? 'light' : 'dark', true);
       });
       printBtn.addEventListener('click', () => window.print());
+      if(new URLSearchParams(location.search).get('print') === '1'){
+        window.addEventListener('load', () => setTimeout(() => window.print(), 250));
+      }
 
       let openState = null;
       function snapshot(){
@@ -582,116 +585,6 @@
     })();
   </script>
 
-  <!-- command palette -->
-  <div id="cmd-pal" role="dialog" aria-modal="true" aria-label="Command palette" hidden>
-    <div id="cmd-bg"></div>
-    <div id="cmd-box">
-      <div id="cmd-sr">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input id="cmd-q" type="text" placeholder="Search commands, navigate, jump to section…" autocomplete="off" spellcheck="false" aria-label="Command search" aria-controls="cmd-list" aria-autocomplete="list" />
-        <kbd id="cmd-esk">ESC</kbd>
-      </div>
-      <ul id="cmd-list" role="listbox" aria-label="Commands" aria-live="polite"></ul>
-      <div id="cmd-foot" aria-hidden="true">
-        <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
-        <span><kbd>↵</kbd> open</span>
-        <span><kbd>esc</kbd> close</span>
-      </div>
-    </div>
-  </div>
-  <script>
-  (function(){
-    var pal=document.getElementById('cmd-pal'),bg=document.getElementById('cmd-bg'),inp=document.getElementById('cmd-q'),lst=document.getElementById('cmd-list');
-    if(!pal||!bg||!inp||!lst) return;
-    var page=(location.pathname.split('/').pop()||'index.html').replace(/[?#].*/,'');
-    var NAV=[
-      {cat:'Navigate',label:'Home',desc:'Landing page',url:'index.html'},
-      {cat:'Navigate',label:'Atlas — Recruiter Resume',desc:'Clean PDF-ready',url:'resume-atlas.html'},
-      {cat:'Navigate',label:'Signal — Interactive Resume',desc:'Filters + search',url:'resume-signal.html'},
-      {cat:'Navigate',label:'Proof Hub — Case Studies',desc:'ATS export + evidence',url:'proof-hub.html'},
-      {cat:'Navigate',label:'Switchboard',desc:'Low-motion hub',url:'resume-switchboard.html'},
-    ];
-    var ACT=[
-      {cat:'Action',label:'Print / Download PDF',desc:'Open print dialog',action:'print'},
-      {cat:'Action',label:'Copy email address',desc:'bsc_pro@protonmail.com',action:'copy-email'},
-      {cat:'Action',label:'View GitHub',desc:'NorthwoodsCode',url:'https://github.com/NorthwoodsCode',ext:true},
-      {cat:'Action',label:'View LinkedIn',desc:'brandon-c-it-industry',url:'https://www.linkedin.com/in/brandon-c-it-industry',ext:true},
-    ];
-    var JMP={
-      'index.html':[
-        {cat:'Jump to',label:'Resume Modes',desc:'All format cards',anchor:'#formats'},
-        {cat:'Jump to',label:'Tailor Tools',desc:'Build a Signal link',anchor:'#tailorTools'},
-      ],
-      'resume-atlas.html':[
-        {cat:'Jump to',label:'Summary',desc:'Professional summary',anchor:'#summary'},
-        {cat:'Jump to',label:'Core Skills',desc:'Technology stack',anchor:'#skills'},
-        {cat:'Jump to',label:'Experience',desc:'Work history',anchor:'#experience'},
-        {cat:'Jump to',label:'Certifications',desc:'AWS + Terraform',anchor:'#certs'},
-        {cat:'Jump to',label:'Education',desc:'UWRF, Finance + CS',anchor:'#education'},
-      ],
-      'proof-hub.html':[
-        {cat:'Jump to',label:'Overview',desc:'Impact strip + metrics',anchor:'#start'},
-        {cat:'Jump to',label:'Timeline',desc:'Career timeline',anchor:'#timeline'},
-        {cat:'Jump to',label:'Turbo Pack',desc:'Bullet builder + export',anchor:'#turbo'},
-        {cat:'Jump to',label:'Case Studies',desc:'Project narratives',anchor:'#cases'},
-        {cat:'Jump to',label:'Credentials',desc:'Certs + education',anchor:'#cred'},
-      ],
-    };
-    var CMDS=NAV.concat(ACT).concat(JMP[page]||[]);
-    var activeIdx=-1,prevFocus=null,filtered=[];
-    function flt(q){q=(q||'').toLowerCase().trim();if(!q)return CMDS.slice();return CMDS.filter(function(c){return(c.label+' '+(c.desc||'')+' '+(c.cat||'')).toLowerCase().indexOf(q)>-1;});}
-    function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-    function mkItem(c,i){
-      var li=document.createElement('li');li.className='cpi';li.setAttribute('role','option');li.setAttribute('id','cpi-'+i);li.setAttribute('aria-selected','false');
-      li.innerHTML='<span class="cpi-lbl">'+esc(c.label)+'</span>'+(c.desc?'<span class="cpi-desc">'+esc(c.desc)+'</span>':'');
-      li.addEventListener('mousedown',function(e){e.preventDefault();execute(c);});
-      return li;
-    }
-    function render(q){
-      filtered=flt(q);lst.innerHTML='';var lastCat=null;
-      filtered.forEach(function(c,i){
-        if(c.cat!==lastCat){var h=document.createElement('li');h.className='cpcat';h.setAttribute('role','presentation');h.textContent=c.cat;lst.appendChild(h);lastCat=c.cat;}
-        lst.appendChild(mkItem(c,i));
-      });
-      setActive(-1);
-    }
-    function setActive(i){
-      activeIdx=i;
-      var items=lst.querySelectorAll('.cpi');
-      items.forEach(function(el,j){el.setAttribute('aria-selected',j===i?'true':'false');});
-      if(i>=0&&items[i])items[i].scrollIntoView({block:'nearest'});
-      inp.setAttribute('aria-activedescendant',i>=0?'cpi-'+i:'');
-    }
-    function execute(cmd){
-      closePal();
-      if(cmd.action==='print'){window.print();return;}
-      if(cmd.action==='copy-email'){
-        var t='bsc_pro@protonmail.com';
-        if(navigator.clipboard){navigator.clipboard.writeText(t);}
-        else{var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}
-        return;
-      }
-      if(cmd.anchor){var el=document.querySelector(cmd.anchor);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});return;}
-      if(cmd.url){if(cmd.ext){window.open(cmd.url,'_blank','noopener');}else{location.href=cmd.url;}}
-    }
-    function openPal(){prevFocus=document.activeElement;pal.hidden=false;render('');inp.value='';setTimeout(function(){inp.focus();},30);document.body.style.overflow='hidden';}
-    function closePal(){pal.hidden=true;document.body.style.overflow='';if(prevFocus)prevFocus.focus();}
-    inp.addEventListener('input',function(){render(inp.value);});
-    inp.addEventListener('keydown',function(e){
-      var items=lst.querySelectorAll('.cpi');
-      if(e.key==='ArrowDown'){e.preventDefault();setActive(Math.min(activeIdx+1,items.length-1));}
-      else if(e.key==='ArrowUp'){e.preventDefault();setActive(Math.max(activeIdx-1,0));}
-      else if(e.key==='Enter'){if(activeIdx>=0&&filtered[activeIdx])execute(filtered[activeIdx]);else if(filtered[0])execute(filtered[0]);}
-      else if(e.key==='Escape'){closePal();}
-    });
-    bg.addEventListener('mousedown',closePal);
-    document.getElementById('cmd-esk').addEventListener('click',closePal);
-    document.addEventListener('keydown',function(e){
-      if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();if(pal.hidden){openPal();}else{closePal();}}
-      if(!pal.hidden&&e.key==='Escape')closePal();
-    });
-  })();
-  </script>
   <script src="shared-enhancements.js"></script>
 </body>
 </html>
