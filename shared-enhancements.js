@@ -1,117 +1,342 @@
-/* shared-enhancements.js — cursor glow, card tilt, click sparks, touch support */
+/* shared-enhancements.js — loaded by every page.
+   Provides: storage that never throws, a shared command palette (Ctrl/Cmd+K),
+   a shared "Resume modes" dock, ?for=<company> personalization, per-case share
+   links, honest clipboard feedback, and the optional desktop effects that Home's
+   FX panel can switch on (cursor glow, card tilt, click sparks). Pages without the
+   FX panel get no effects. */
 (function(){
   'use strict';
   var html = document.documentElement;
   var params = new URLSearchParams(location.search);
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
   var plain = html.classList.contains('plain') || params.get('plain') === '1';
+  var page = ((location.pathname.split('/').pop() || 'index.html').replace(/[?#].*/, '')) || 'index.html';
+  var isHome = page === 'index.html';
+  var PAGES = [
+    {file:'index.html',              label:'Home',        desc:'Routing page'},
+    {file:'resume-atlas.html',       label:'Atlas',       desc:'Classic recruiter / PDF view'},
+    {file:'resume-signal.html',      label:'Signal',      desc:'Interactive tailored resume'},
+    {file:'proof-hub.html',          label:'Proof Hub',   desc:'Cases, bullets, and hard evidence'},
+    {file:'resume-switchboard.html', label:'Switchboard', desc:'Plain routing hub'},
+    {file:'now.html',                label:'Now',         desc:'What I\'m building, learning, reading'}
+  ];
+
+  /* ── storage that never throws ───────────────────────────────── */
+  var store = {
+    get: function(k){ try { return localStorage.getItem(k); } catch(e){ return null; } },
+    set: function(k, v){ try { localStorage.setItem(k, v); return true; } catch(e){ return false; } },
+    remove: function(k){ try { localStorage.removeItem(k); } catch(e){} }
+  };
+  window.BSC_STORE = store;
 
   function fxOn(key){
-    // Default-on when no FX system is present (e.g. on sub-pages without the panel).
-    return !window.BSC_FX || window.BSC_FX.get(key);
+    // Effects are opt-in through Home's FX panel; pages without the panel get none.
+    return !!(window.BSC_FX && window.BSC_FX.get(key));
   }
-
   function accentColor(){
     return getComputedStyle(html).getPropertyValue('--accent').trim() || '#86a6ff';
   }
-
-  /* ── cursor glow (desktop only) ──────────────────────────────── */
-  if(!reduced && !plain && window.matchMedia('(pointer:fine)').matches){
-    var glow = document.getElementById('cursor-glow');
-    if(!glow){
-      glow = document.createElement('div');
-      glow.id = 'cursor-glow';
-      glow.setAttribute('aria-hidden','true');
-      document.body.appendChild(glow);
-    }
-    if(!document.getElementById('bsc-glow-style')){
-      var st = document.createElement('style');
-      st.id = 'bsc-glow-style';
-      st.textContent = [
-        '#cursor-glow{',
-          'position:fixed;pointer-events:none;',
-          'width:320px;height:320px;border-radius:50%;',
-          'background:radial-gradient(circle,color-mix(in srgb,var(--accent) 16%,transparent) 0%,transparent 65%);',
-          'transform:translate(-50%,-50%);',
-          'z-index:2;',
-          'transition:left .1s linear,top .1s linear,opacity .4s ease,background .3s ease;',
-          'mix-blend-mode:screen;opacity:0;will-change:left,top;',
-        '}',
-        'html[data-theme="light"] #cursor-glow{display:none}',
-      ].join('');
-      document.head.appendChild(st);
-    }
-    var glowActive = false;
-    document.addEventListener('mousemove',function(e){
-      if(!fxOn('spotlight')){
-        if(glowActive){ glowActive = false; glow.style.opacity = '0'; }
-        return;
-      }
-      glow.style.left = e.clientX+'px';
-      glow.style.top  = e.clientY+'px';
-      if(!glowActive){ glowActive=true; glow.style.opacity='1'; }
-    },{passive:true});
-    document.addEventListener('mouseleave',function(){ glowActive=false; glow.style.opacity='0'; });
-    // Hide immediately when the user toggles spotlight off via the FX panel
-    window.addEventListener('bsc-fx-change', function(ev){
-      if(ev.detail && ev.detail.key === 'spotlight' && !ev.detail.value){
-        glowActive = false;
-        glow.style.opacity = '0';
-      }
-    });
+  function addStyle(id, css){
+    if(document.getElementById(id)) return;
+    var st = document.createElement('style'); st.id = id; st.textContent = css;
+    document.head.appendChild(st);
+  }
+  function siteLink(file){
+    // Carry plain mode across pages when the reader chose it.
+    return plain ? file + (file.indexOf('?') > -1 ? '&' : '?') + 'plain=1' : file;
   }
 
-  /* ── card 3D tilt ────────────────────────────────────────────── */
-  if(!reduced){
-    var hasFinePointer = window.matchMedia('(pointer:fine)').matches;
-    var hasCoarsePointer = window.matchMedia('(pointer:coarse)').matches;
+  addStyle('bsc-shared-print-style',
+    '@media print{.bsc-dock,#cmd-pal,#bsc-toast,#cursor-glow,[data-for-badge],[data-bsc-stack],[data-case-share]{display:none !important}}');
 
-    document.querySelectorAll('.card').forEach(function(card){
-      if(hasFinePointer){
-        card.addEventListener('mousemove',function(e){
-          if(!fxOn('tilt')) return;
-          var r = card.getBoundingClientRect();
-          var x = (e.clientX - r.left) / r.width  - 0.5;
-          var y = (e.clientY - r.top)  / r.height - 0.5;
-          card.style.willChange  = 'transform';
-          card.style.transform   = 'perspective(700px) rotateX('+(-y*7)+'deg) rotateY('+(x*7)+'deg) translateZ(6px)';
-          card.style.boxShadow   = 'var(--shadow-hover,var(--shadow))';
-          card.style.transition  = 'transform .12s ease,box-shadow .18s ease';
-        });
-        card.addEventListener('mouseleave',function(){
-          card.style.transform  = '';
-          card.style.boxShadow  = '';
-          card.style.willChange = '';
-        });
-      }
-      if(hasCoarsePointer){
-        card.addEventListener('touchmove',function(e){
-          if(!fxOn('tilt')) return;
-          var t = e.touches[0];
-          var r = card.getBoundingClientRect();
-          var x = (t.clientX - r.left) / r.width  - 0.5;
-          var y = (t.clientY - r.top)  / r.height - 0.5;
-          card.style.willChange  = 'transform';
-          card.style.transform   = 'perspective(700px) rotateX('+(-y*4)+'deg) rotateY('+(x*4)+'deg)';
-          card.style.transition  = 'none';
-        },{passive:true});
-        card.addEventListener('touchend',function(){
-          card.style.transform   = '';
-          card.style.willChange  = '';
-          card.style.transition  = 'transform .28s ease';
-        });
-      }
+  /* ── toast ───────────────────────────────────────────────────── */
+  function toast(msg){
+    var t = document.getElementById('bsc-toast');
+    if(!t){
+      addStyle('bsc-toast-style',
+        '#bsc-toast{position:fixed;left:50%;bottom:72px;transform:translateX(-50%) translateY(8px);z-index:100000;' +
+        'padding:.55rem .9rem;border-radius:999px;font:600 .85rem/1.2 system-ui,sans-serif;background:#111827;color:#f9fafb;' +
+        'box-shadow:0 10px 30px rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:opacity .18s ease,transform .18s ease}' +
+        '#bsc-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}');
+      t = document.createElement('div'); t.id = 'bsc-toast'; t.setAttribute('role','status'); t.setAttribute('aria-live','polite');
+      document.body.appendChild(t);
+    }
+    t.textContent = msg; t.classList.add('show');
+    clearTimeout(t._timer); t._timer = setTimeout(function(){ t.classList.remove('show'); }, 1800);
+  }
+  window.bscSharedToast = toast;
+
+  /* ── clipboard with honest feedback ──────────────────────────── */
+  function legacyCopy(text){
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.setAttribute('readonly',''); ta.setAttribute('aria-hidden','true');
+    ta.style.cssText = 'position:fixed;left:-9999px;top:0';
+    document.body.appendChild(ta); ta.select();
+    var ok = false;
+    try { ok = !!document.execCommand('copy'); } catch(e){ ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+  function copyText(text){
+    if(navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext){
+      return navigator.clipboard.writeText(text).then(function(){ return true; }, function(){ return legacyCopy(text); });
+    }
+    return Promise.resolve(legacyCopy(text));
+  }
+  window.bscCopy = copyText;
+  var COPY_FAIL = 'Copy failed. Select the text and copy it manually.';
+
+  /* ── shared command palette (pages without their own) ────────── */
+  (function palette(){
+    if(document.getElementById('cmd-pal')) return; // Home ships its own palette
+    addStyle('bsc-cp-style', [
+      '#cmd-pal{position:fixed;inset:0;z-index:99998;display:flex;align-items:flex-start;justify-content:center;padding-top:clamp(48px,9vh,130px)}',
+      '#cmd-pal[hidden]{display:none !important}',
+      '#cmd-pal{--cp-bg:#fff;--cp-border:#e5e7eb;--cp-text:#111827;--cp-muted:#6b7280;--cp-sub:#f9fafb;--cp-hover:#eff6ff;--cp-cat:#6b7280;--cp-bdrop:rgba(0,0,0,.48)}',
+      'html[data-theme="dark"] #cmd-pal{--cp-bg:#0f172a;--cp-border:#1e3a5f;--cp-text:#e2e8f0;--cp-muted:#94a3b8;--cp-sub:#071224;--cp-hover:rgba(37,99,235,.18);--cp-cat:#94a3b8;--cp-bdrop:rgba(0,0,0,.72)}',
+      '@media(prefers-color-scheme:dark){html:not([data-theme="light"]) #cmd-pal{--cp-bg:#0f172a;--cp-border:#1e3a5f;--cp-text:#e2e8f0;--cp-muted:#94a3b8;--cp-sub:#071224;--cp-hover:rgba(37,99,235,.18);--cp-cat:#94a3b8;--cp-bdrop:rgba(0,0,0,.72)}}',
+      '#cmd-bg{position:absolute;inset:0;background:var(--cp-bdrop);backdrop-filter:blur(4px)}',
+      '#cmd-box{position:relative;width:min(620px,92vw);background:var(--cp-bg);border-radius:16px;box-shadow:0 28px 70px rgba(0,0,0,.22);overflow:hidden;border:1px solid var(--cp-border)}',
+      '#cmd-sr{display:flex;align-items:center;gap:.65rem;padding:.9rem 1rem;border-bottom:1px solid var(--cp-border)}',
+      '#cmd-q{flex:1;border:none;outline:none;font-size:1rem;background:transparent;color:var(--cp-text);font-family:inherit}',
+      '#cmd-q::placeholder{color:var(--cp-cat)}',
+      '#cmd-esk{font-size:.7rem;padding:.18rem .42rem;border:1px solid var(--cp-border);border-radius:4px;color:var(--cp-cat);background:var(--cp-sub);font-family:inherit;white-space:nowrap;cursor:pointer}',
+      '#cmd-list{margin:0;padding:.3rem 0;list-style:none;max-height:min(380px,52vh);overflow-y:auto}',
+      '#cmd-list:empty::after{content:"No results";display:block;padding:.9rem 1.1rem;color:var(--cp-cat);font-size:.88rem}',
+      '.cpcat{padding:.5rem 1.1rem .15rem;font-size:.7rem;font-weight:760;letter-spacing:.1em;text-transform:uppercase;color:var(--cp-cat)}',
+      '.cpi{display:flex;align-items:center;gap:.65rem;padding:.58rem 1.1rem;cursor:pointer;user-select:none}',
+      '.cpi:hover,.cpi[aria-selected="true"]{background:var(--cp-hover)}',
+      '.cpi-lbl{font-size:.93rem;font-weight:560;color:var(--cp-text)}',
+      '.cpi-desc{font-size:.8rem;color:var(--cp-muted);margin-left:auto;white-space:nowrap;padding-left:.5rem}',
+      '#cmd-foot{display:flex;gap:1rem;padding:.5rem 1rem;border-top:1px solid var(--cp-border);background:var(--cp-sub)}',
+      '#cmd-foot span{font-size:.73rem;color:var(--cp-cat);display:flex;align-items:center;gap:.25rem}',
+      '#cmd-foot kbd{font-size:.69rem;padding:.12rem .32rem;border:1px solid var(--cp-border);border-radius:4px;background:var(--cp-bg);font-family:inherit}'
+    ].join('\n'));
+
+    var pal = document.createElement('div');
+    pal.id = 'cmd-pal'; pal.setAttribute('role','dialog'); pal.setAttribute('aria-modal','true'); pal.setAttribute('aria-label','Command palette'); pal.hidden = true;
+    pal.innerHTML =
+      '<div id="cmd-bg"></div>' +
+      '<div id="cmd-box">' +
+        '<div id="cmd-sr">' +
+          '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' +
+          '<input id="cmd-q" type="text" placeholder="Search commands, navigate, jump to section…" autocomplete="off" spellcheck="false" aria-label="Command search" aria-controls="cmd-list" aria-autocomplete="list" />' +
+          '<kbd id="cmd-esk">ESC</kbd>' +
+        '</div>' +
+        '<ul id="cmd-list" role="listbox" aria-label="Commands"></ul>' +
+        '<div id="cmd-foot" aria-hidden="true"><span><kbd>↑</kbd><kbd>↓</kbd> navigate</span><span><kbd>↵</kbd> open</span><span><kbd>esc</kbd> close</span></div>' +
+      '</div>';
+    document.body.appendChild(pal);
+    var bg = document.getElementById('cmd-bg'), inp = document.getElementById('cmd-q'), lst = document.getElementById('cmd-list');
+
+    var NAV = PAGES.filter(function(p){ return p.file !== page; }).map(function(p){ return {cat:'Navigate', label:p.label, desc:p.desc, url:siteLink(p.file)}; });
+    var ACT = [
+      {cat:'Action', label:'Print / Save PDF', desc: page === 'resume-atlas.html' ? 'Open print dialog' : 'Opens Atlas, the print-ready resume', action:'print'},
+      {cat:'Action', label:'Copy email address', desc:'bsc_pro@protonmail.com', action:'copy-email'},
+      {cat:'Action', label:'View GitHub', desc:'NorthwoodsCode', url:'https://github.com/NorthwoodsCode', ext:true},
+      {cat:'Action', label:'View LinkedIn', desc:'brandon-c-it-industry', url:'https://www.linkedin.com/in/brandon-c-it-industry', ext:true}
+    ];
+    var JMP = [], seen = {};
+    Array.prototype.forEach.call(document.querySelectorAll('h2[id], section[id] > h2, section[id] > .card > h2, main h2'), function(h){
+      var target = h.id ? h.id : (h.closest('section[id]') ? h.closest('section[id]').id : '');
+      var label = (h.textContent || '').replace(/\s+/g,' ').trim();
+      if(!target || !label || seen[target]) return;
+      seen[target] = true;
+      JMP.push({cat:'Jump to', label: label.slice(0, 48), anchor:'#' + target});
     });
-    // Snap all cards back when tilt is turned off mid-hover
-    window.addEventListener('bsc-fx-change', function(ev){
-      if(ev.detail && ev.detail.key === 'tilt' && !ev.detail.value){
-        document.querySelectorAll('.card').forEach(function(card){
-          card.style.transform = '';
-          card.style.boxShadow = '';
-          card.style.willChange = '';
-        });
+    var CMDS = NAV.concat(ACT).concat(JMP);
+    var activeIdx = -1, prevFocus = null, filtered = [];
+    function flt(q){ q = (q||'').toLowerCase().trim(); if(!q) return CMDS.slice(); return CMDS.filter(function(c){ return (c.label+' '+(c.desc||'')+' '+(c.cat||'')).toLowerCase().indexOf(q) > -1; }); }
+    function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    function mkItem(c, i){
+      var li = document.createElement('li'); li.className = 'cpi'; li.setAttribute('role','option'); li.id = 'cpi-' + i; li.setAttribute('aria-selected','false');
+      li.innerHTML = '<span class="cpi-lbl">' + esc(c.label) + '</span>' + (c.desc ? '<span class="cpi-desc">' + esc(c.desc) + '</span>' : '');
+      li.addEventListener('mousedown', function(e){ e.preventDefault(); execute(c); });
+      return li;
+    }
+    function render(q){
+      filtered = flt(q); lst.innerHTML = ''; var lastCat = null;
+      filtered.forEach(function(c, i){
+        if(c.cat !== lastCat){ var h = document.createElement('li'); h.className = 'cpcat'; h.setAttribute('role','presentation'); h.textContent = c.cat; lst.appendChild(h); lastCat = c.cat; }
+        lst.appendChild(mkItem(c, i));
+      });
+      setActive(-1);
+    }
+    function setActive(i){
+      activeIdx = i;
+      var items = lst.querySelectorAll('.cpi');
+      items.forEach(function(el, j){ el.setAttribute('aria-selected', j === i ? 'true' : 'false'); });
+      if(i >= 0 && items[i]) items[i].scrollIntoView({block:'nearest'});
+      if(i >= 0) inp.setAttribute('aria-activedescendant', 'cpi-' + i); else inp.removeAttribute('aria-activedescendant');
+    }
+    function execute(cmd){
+      closePal();
+      if(cmd.action === 'print'){
+        if(page === 'resume-atlas.html') window.print(); else location.href = siteLink('resume-atlas.html?print=1');
+        return;
       }
+      if(cmd.action === 'copy-email'){
+        copyText('bsc_pro@protonmail.com').then(function(ok){ toast(ok ? 'Email copied' : COPY_FAIL); });
+        return;
+      }
+      if(cmd.anchor){ var el = document.querySelector(cmd.anchor); if(el){ el.scrollIntoView({behavior: reduced ? 'auto' : 'smooth', block:'start'}); if(el.tabIndex < 0) el.tabIndex = -1; el.focus({preventScroll:true}); } return; }
+      if(cmd.url){ if(cmd.ext){ window.open(cmd.url, '_blank', 'noopener'); } else { location.href = cmd.url; } }
+    }
+    function openPal(){ prevFocus = document.activeElement; pal.hidden = false; render(''); inp.value = ''; setTimeout(function(){ inp.focus(); }, 30); document.body.style.overflow = 'hidden'; }
+    function closePal(){ pal.hidden = true; document.body.style.overflow = ''; if(prevFocus && prevFocus.focus) prevFocus.focus(); }
+    inp.addEventListener('input', function(){ render(inp.value); });
+    inp.addEventListener('keydown', function(e){
+      var items = lst.querySelectorAll('.cpi');
+      if(e.key === 'ArrowDown'){ e.preventDefault(); setActive(Math.min(activeIdx + 1, items.length - 1)); }
+      else if(e.key === 'ArrowUp'){ e.preventDefault(); setActive(Math.max(activeIdx - 1, 0)); }
+      else if(e.key === 'Enter'){ if(activeIdx >= 0 && filtered[activeIdx]) execute(filtered[activeIdx]); else if(filtered[0]) execute(filtered[0]); }
+      else if(e.key === 'Escape'){ closePal(); }
+      else if(e.key === 'Tab'){ e.preventDefault(); } // keep focus inside the dialog
     });
+    bg.addEventListener('mousedown', closePal);
+    document.getElementById('cmd-esk').addEventListener('click', closePal);
+    document.addEventListener('keydown', function(e){
+      if((e.metaKey || e.ctrlKey) && !e.altKey && (e.key === 'k' || e.key === 'K')){ e.preventDefault(); if(pal.hidden) openPal(); else closePal(); }
+      else if(!pal.hidden && e.key === 'Escape') closePal();
+    });
+    window.bscOpenPalette = openPal;
+  })();
+
+  /* ── shared "Resume modes" dock (pages without their own) ─────── */
+  (function dock(){
+    if(document.querySelector('.bsc-dock')) return; // Home ships its own dock markup
+    addStyle('bsc-dock-style', [
+      '.bsc-dock{--dk-bg:#fff;--dk-fg:#111827;--dk-muted:#6b7280;--dk-border:#e5e7eb;--dk-hover:#eff6ff;--dk-accent:#2563eb;position:fixed;right:16px;bottom:16px;z-index:9990;width:min(300px,calc(100vw - 32px));display:flex;flex-direction:column;align-items:flex-end;pointer-events:none;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}',
+      'html[data-theme="dark"] .bsc-dock{--dk-bg:#0f172a;--dk-fg:#e2e8f0;--dk-muted:#94a3b8;--dk-border:#1e3a5f;--dk-hover:rgba(37,99,235,.18);--dk-accent:#8ab4ff}',
+      '@media(prefers-color-scheme:dark){html:not([data-theme="light"]) .bsc-dock{--dk-bg:#0f172a;--dk-fg:#e2e8f0;--dk-muted:#94a3b8;--dk-border:#1e3a5f;--dk-hover:rgba(37,99,235,.18);--dk-accent:#8ab4ff}}',
+      '.bsc-dock summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;padding:.6rem .95rem;border-radius:999px;background:var(--dk-bg);color:var(--dk-fg);border:1px solid var(--dk-border);box-shadow:0 10px 30px rgba(0,0,0,.25);font-weight:700;font-size:.9rem;pointer-events:auto}',
+      '.bsc-dock summary::-webkit-details-marker{display:none}',
+      '.bsc-dock summary:focus-visible{outline:3px solid var(--dk-accent);outline-offset:3px}',
+      '.bsc-dock-panel{order:-1;margin:0 0 10px;width:100%;pointer-events:auto;background:var(--dk-bg);color:var(--dk-fg);border:1px solid var(--dk-border);border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.3);padding:12px}',
+      '.bsc-dock-kicker{font-size:.68rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--dk-muted);margin:2px 4px 8px}',
+      '.bsc-dock-grid{display:grid;gap:6px}',
+      '.bsc-dock-link{display:grid;gap:1px;padding:8px 10px;border-radius:10px;text-decoration:none;color:var(--dk-fg);border:1px solid transparent}',
+      '.bsc-dock-link:hover,.bsc-dock-link:focus-visible{background:var(--dk-hover);border-color:var(--dk-border);outline:none}',
+      '.bsc-dock-link strong{font-size:.9rem}',
+      '.bsc-dock-link span{font-size:.76rem;color:var(--dk-muted)}',
+      '.bsc-dock-link[aria-current="page"]{border-color:var(--dk-accent)}',
+      '.bsc-dock-link[aria-current="page"] strong::after{content:" • you are here";font-weight:500;color:var(--dk-muted);font-size:.74rem}'
+    ].join('\n'));
+    var d = document.createElement('details'); d.className = 'bsc-dock';
+    d.innerHTML = '<summary aria-label="Open resume modes menu">Resume modes</summary>' +
+      '<div class="bsc-dock-panel"><div class="bsc-dock-kicker">Same story, five views</div><div class="bsc-dock-grid">' +
+      PAGES.map(function(p){
+        return '<a class="bsc-dock-link" href="' + siteLink(p.file) + '" data-page="' + p.file + '"' + (p.file === page ? ' aria-current="page"' : '') + '><strong>' + p.label + '</strong><span>' + p.desc + '</span></a>';
+      }).join('') + '</div></div>';
+    document.body.appendChild(d);
+    d.querySelectorAll('.bsc-dock-link').forEach(function(link){
+      link.addEventListener('click', function(){ store.set('bsc_last_resume_mode', link.getAttribute('data-page')); });
+    });
+    document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && d.open) d.open = false; });
+    document.addEventListener('click', function(e){ if(d.open && !d.contains(e.target)) d.open = false; });
+  })();
+
+  /* ── optional desktop effects (only where Home's FX panel exists) ── */
+  if(window.BSC_FX && !reduced && !plain){
+    /* cursor glow (desktop only) */
+    if(window.matchMedia('(pointer:fine)').matches){
+      var glow = document.getElementById('cursor-glow');
+      if(!glow){
+        glow = document.createElement('div');
+        glow.id = 'cursor-glow';
+        glow.setAttribute('aria-hidden','true');
+        document.body.appendChild(glow);
+      }
+      addStyle('bsc-glow-style', [
+        '#cursor-glow{position:fixed;pointer-events:none;width:320px;height:320px;border-radius:50%;',
+        'background:radial-gradient(circle,color-mix(in srgb,var(--accent) 16%,transparent) 0%,transparent 65%);',
+        'transform:translate(-50%,-50%);z-index:2;transition:left .1s linear,top .1s linear,opacity .4s ease,background .3s ease;',
+        'mix-blend-mode:screen;opacity:0;will-change:left,top}',
+        'html[data-theme="light"] #cursor-glow{display:none}'
+      ].join(''));
+      var glowActive = false;
+      document.addEventListener('mousemove', function(e){
+        if(!fxOn('spotlight')){ if(glowActive){ glowActive = false; glow.style.opacity = '0'; } return; }
+        glow.style.left = e.clientX + 'px'; glow.style.top = e.clientY + 'px';
+        if(!glowActive){ glowActive = true; glow.style.opacity = '1'; }
+      }, {passive:true});
+      document.addEventListener('mouseleave', function(){ glowActive = false; glow.style.opacity = '0'; });
+      window.addEventListener('bsc-fx-change', function(ev){
+        if(ev.detail && ev.detail.key === 'spotlight' && !ev.detail.value){ glowActive = false; glow.style.opacity = '0'; }
+      });
+    }
+
+    /* card 3D tilt */
+    (function tilt(){
+      var hasFinePointer = window.matchMedia('(pointer:fine)').matches;
+      var hasCoarsePointer = window.matchMedia('(pointer:coarse)').matches;
+      document.querySelectorAll('.card').forEach(function(card){
+        if(card.querySelector('input,textarea,select')) return; // never tilt a form
+        if(hasFinePointer){
+          card.addEventListener('mousemove', function(e){
+            if(!fxOn('tilt')) return;
+            var r = card.getBoundingClientRect();
+            var x = (e.clientX - r.left) / r.width - 0.5;
+            var y = (e.clientY - r.top) / r.height - 0.5;
+            card.style.willChange = 'transform';
+            card.style.transform = 'perspective(700px) rotateX(' + (-y*7) + 'deg) rotateY(' + (x*7) + 'deg) translateZ(6px)';
+            card.style.boxShadow = 'var(--shadow-hover,var(--shadow))';
+            card.style.transition = 'transform .12s ease,box-shadow .18s ease';
+          });
+          card.addEventListener('mouseleave', function(){ card.style.transform = ''; card.style.boxShadow = ''; card.style.willChange = ''; });
+        }
+        if(hasCoarsePointer){
+          card.addEventListener('touchmove', function(e){
+            if(!fxOn('tilt')) return;
+            var t = e.touches[0]; var r = card.getBoundingClientRect();
+            var x = (t.clientX - r.left) / r.width - 0.5; var y = (t.clientY - r.top) / r.height - 0.5;
+            card.style.willChange = 'transform';
+            card.style.transform = 'perspective(700px) rotateX(' + (-y*4) + 'deg) rotateY(' + (x*4) + 'deg)';
+            card.style.transition = 'none';
+          }, {passive:true});
+          card.addEventListener('touchend', function(){ card.style.transform = ''; card.style.willChange = ''; card.style.transition = 'transform .28s ease'; });
+        }
+      });
+      window.addEventListener('bsc-fx-change', function(ev){
+        if(ev.detail && ev.detail.key === 'tilt' && !ev.detail.value){
+          document.querySelectorAll('.card').forEach(function(card){ card.style.transform = ''; card.style.boxShadow = ''; card.style.willChange = ''; });
+        }
+      });
+    })();
+
+    /* click sparks (click only; taps raise click too, and scroll gestures must not spark) */
+    (function sparks(){
+      function spawnSparks(cx, cy){
+        var count = 10, color = accentColor();
+        for(var i = 0; i < count; i++){
+          (function(idx){
+            var angle = (Math.PI*2*idx/count) + (Math.random()-0.5)*0.9;
+            var speed = 48 + Math.random()*72;
+            var vx = Math.cos(angle)*speed, vy = Math.sin(angle)*speed - 28;
+            var size = 3 + Math.random()*3;
+            var s = document.createElement('div');
+            s.setAttribute('aria-hidden','true');
+            s.style.cssText = 'position:fixed;pointer-events:none;z-index:9999;width:' + size + 'px;height:' + size + 'px;border-radius:50%;background:' + color + ';left:' + cx + 'px;top:' + cy + 'px;opacity:1';
+            document.body.appendChild(s);
+            var start = null, dur = 520 + Math.random()*280;
+            (function frame(ts){
+              if(!start) start = ts;
+              var p = (ts - start) / dur;
+              if(p >= 1){ s.remove(); return; }
+              s.style.left = (cx + vx*p) + 'px';
+              s.style.top = (cy + vy*p + 145*p*p) + 'px';
+              s.style.opacity = Math.max(0, 1 - p*p);
+              requestAnimationFrame(frame);
+            })(performance.now());
+          })(i);
+        }
+      }
+      document.addEventListener('click', function(e){
+        if(!fxOn('sparks')) return;
+        if(e.target.closest('a,button,input,select,textarea,summary,label')) return;
+        spawnSparks(e.clientX, e.clientY);
+      });
+    })();
   }
 
   /* ── per-case "copy share link" buttons ─────────────────────── */
@@ -128,43 +353,20 @@
       var btn = document.createElement('button');
       btn.type = 'button';
       btn.setAttribute('data-case-share','');
-      btn.setAttribute('aria-label','Copy shareable link to '+slug+' case');
+      btn.setAttribute('aria-label','Copy shareable link to this case study');
       btn.title = 'Copy shareable link';
       btn.textContent = '🔗';
-      btn.style.cssText = [
-        'margin-left:8px','font-size:.85em','padding:1px 8px',
-        'border:1px solid currentColor','border-radius:6px',
-        'background:transparent','color:inherit','opacity:.5',
-        'cursor:pointer','vertical-align:middle','line-height:1.4'
-      ].join(';');
+      btn.style.cssText = 'margin-left:8px;font-size:.85em;padding:2px 8px;min-width:32px;min-height:28px;border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;opacity:.6;cursor:pointer;vertical-align:middle;line-height:1.4';
       btn.addEventListener('mouseenter', function(){ btn.style.opacity = '1'; });
-      btn.addEventListener('mouseleave', function(){ btn.style.opacity = '.5'; });
-      btn.addEventListener('focus',      function(){ btn.style.opacity = '1'; });
-      btn.addEventListener('blur',       function(){ btn.style.opacity = '.5'; });
+      btn.addEventListener('mouseleave', function(){ btn.style.opacity = '.6'; });
+      btn.addEventListener('focus', function(){ btn.style.opacity = '1'; });
+      btn.addEventListener('blur', function(){ btn.style.opacity = '.6'; });
       btn.addEventListener('click', function(ev){
-        ev.preventDefault();
-        ev.stopPropagation();
-        var url = origin + 'case/' + slug + '/';
-        var done = function(){
-          var prev = btn.textContent;
-          btn.textContent = '✓';
-          setTimeout(function(){ btn.textContent = prev; }, 1400);
-          var toast = document.getElementById('toast');
-          if(toast){ toast.textContent = 'Link copied'; toast.classList.add('show'); setTimeout(function(){ toast.classList.remove('show'); }, 1600); }
-        };
-        if(navigator.clipboard && navigator.clipboard.writeText){
-          navigator.clipboard.writeText(url).then(done, function(){ fallback(); });
-        } else { fallback(); }
-        function fallback(){
-          var ta = document.createElement('textarea');
-          ta.value = url;
-          ta.style.position = 'fixed';
-          ta.style.left = '-9999px';
-          document.body.appendChild(ta);
-          ta.select();
-          try { document.execCommand('copy'); done(); } catch(e){}
-          document.body.removeChild(ta);
-        }
+        ev.preventDefault(); ev.stopPropagation();
+        copyText(origin + 'case/' + slug + '/').then(function(ok){
+          if(ok){ var prev = btn.textContent; btn.textContent = '✓'; setTimeout(function(){ btn.textContent = prev; }, 1400); }
+          toast(ok ? 'Link copied' : COPY_FAIL);
+        });
       });
       host.appendChild(btn);
     });
@@ -172,22 +374,16 @@
 
   /* ── ?for=<company> personalization ─────────────────────────── */
   (function personalize(){
-    var slug = (params.get('for') || '').toLowerCase().replace(/[^a-z0-9-]/g,'');
+    var slug = (params.get('for') || '').toLowerCase().replace(/[^a-z0-9-]/g, '');
     if(!slug) return;
     fetch('companies.json', {cache:'force-cache'})
       .then(function(r){ return r.ok ? r.json() : null; })
       .then(function(data){
         if(!data || !data[slug]) return;
         var co = data[slug];
-
-        // 1. Pin atmosphere (existing CSS-var system)
-        if(co.atmosphere){
-          html.setAttribute('data-atmosphere', co.atmosphere);
-        }
-
-        // 2. Apply focus chips (resume-signal mechanism: checkboxes with [value])
+        if(co.atmosphere) html.setAttribute('data-atmosphere', co.atmosphere);
         if(co.focus){
-          var values = co.focus.split(',').map(function(s){return s.trim();}).filter(Boolean);
+          var values = co.focus.split(',').map(function(s){ return s.trim(); }).filter(Boolean);
           var changed = false;
           document.querySelectorAll('input[type="checkbox"][value]').forEach(function(inp){
             if(values.indexOf(inp.value) !== -1 && !inp.checked){
@@ -196,111 +392,50 @@
               changed = true;
             }
           });
-          // Some pages init filters from URL only; nudge them by also pushing ?focus=
-          if(!changed){
+          // Signal reads ?focus= on load; mirror it into the URL only there.
+          if(!changed && page === 'resume-signal.html'){
             var u = new URLSearchParams(location.search);
             u.set('focus', co.focus);
             history.replaceState(null, '', location.pathname + '?' + u.toString());
           }
         }
-
-        // 3. "Tailored for <Co>" badge — fixed top-right, accessible
         if(document.querySelector('[data-for-badge]')) return;
         var b = document.createElement('div');
         b.setAttribute('data-for-badge','');
         b.setAttribute('role','status');
         b.setAttribute('aria-label','Personalized view for ' + co.name);
         b.style.cssText = [
-          'position:fixed','top:14px','right:14px','z-index:20',
+          'position:fixed','left:14px','bottom:14px','z-index:20',
           'display:inline-flex','align-items:center','gap:8px',
           'padding:7px 13px','border-radius:999px',
-          'background:color-mix(in srgb,var(--accent) 14%,transparent)',
-          'border:1px solid color-mix(in srgb,var(--accent) 45%,transparent)',
-          'color:var(--fg,#fff)','font-size:.78rem','font-weight:600',
-          'box-shadow:0 6px 20px rgba(0,0,0,.22)',
-          'letter-spacing:.02em','line-height:1'
+          'background:color-mix(in srgb,var(--accent,#2563eb) 14%,#111827)',
+          'border:1px solid color-mix(in srgb,var(--accent,#2563eb) 45%,transparent)',
+          'color:#f9fafb','font-size:.78rem','font-weight:600',
+          'box-shadow:0 6px 20px rgba(0,0,0,.22)','letter-spacing:.02em','line-height:1'
         ].join(';');
         var dot = document.createElement('span');
         dot.setAttribute('aria-hidden','true');
-        dot.style.cssText = 'width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent)';
+        dot.style.cssText = 'width:8px;height:8px;border-radius:50%;background:var(--accent,#2563eb);box-shadow:0 0 8px var(--accent,#2563eb)';
         b.appendChild(dot);
         var txt = document.createElement('span');
         txt.textContent = 'Tailored for ' + co.name;
         b.appendChild(txt);
         document.body.appendChild(b);
       })
-      .catch(function(){ /* silent — never break the page over a missing file */ });
+      .catch(function(){ /* never break the page over a missing file */ });
   })();
 
-  /* ── stack-disclosure line in footer ────────────────────────── */
+  /* ── stack-disclosure line (Home footer only; never printed) ──── */
   (function injectStack(){
-    if(document.querySelector('[data-bsc-stack]')) return;
+    if(!isHome || document.querySelector('[data-bsc-stack]')) return;
+    var footer = document.querySelector('footer');
+    if(!footer) return;
     var p = document.createElement('p');
     p.setAttribute('data-bsc-stack','');
     p.className = 'mono';
     p.style.cssText = 'margin:10px 0 0;font-size:.78rem;opacity:.62;line-height:1.55';
-    p.innerHTML = 'Built with HTML + vanilla JS + CSS · FX by Three.js / Vanta · '+
-                  'OG art via Pillow · Hosted on GitHub Pages · '+
-                  'CI: GitHub Actions + headless Chrome · '+
-                  '<a href="https://github.com/NorthwoodsCode/resume" rel="noopener" target="_blank" style="color:inherit;text-decoration:underline;text-underline-offset:3px">Zero build, zero deps</a>.';
-    var footer = document.querySelector('footer');
-    if(footer){
-      footer.appendChild(p);
-    } else {
-      var f = document.createElement('footer');
-      f.style.cssText = 'margin:48px auto 0;padding:24px 16px;text-align:center;max-width:960px';
-      f.appendChild(p);
-      (document.querySelector('main') || document.body).appendChild(f);
-    }
+    p.innerHTML = 'Built with HTML + vanilla JS + CSS · Hosted on GitHub Pages · CI: GitHub Actions + headless Chrome · ' +
+      '<a href="https://github.com/NorthwoodsCode/resume" rel="noopener" target="_blank" style="color:inherit;text-decoration:underline;text-underline-offset:3px">Source</a>.';
+    footer.appendChild(p);
   })();
-
-  /* ── click / tap sparks ──────────────────────────────────────── */
-  if(!reduced && !plain){
-    function spawnSparks(cx,cy){
-      var count = 10;
-      var color = accentColor();
-      for(var i=0;i<count;i++){
-        (function(idx){
-          var angle = (Math.PI*2*idx/count)+(Math.random()-0.5)*0.9;
-          var speed = 48+Math.random()*72;
-          var vx = Math.cos(angle)*speed;
-          var vy = Math.sin(angle)*speed-28;
-          var size = 3+Math.random()*3;
-          var s = document.createElement('div');
-          s.setAttribute('aria-hidden','true');
-          s.style.cssText = [
-            'position:fixed','pointer-events:none','z-index:9999',
-            'width:'+size+'px','height:'+size+'px',
-            'border-radius:50%','background:'+color,
-            'left:'+cx+'px','top:'+cy+'px','opacity:1'
-          ].join(';');
-          document.body.appendChild(s);
-          var start=null, dur=520+Math.random()*280;
-          (function frame(ts){
-            if(!start) start=ts;
-            var p=(ts-start)/dur;
-            if(p>=1){s.remove();return;}
-            s.style.left=(cx+vx*p)+'px';
-            s.style.top =(cy+vy*p+145*p*p)+'px';
-            s.style.opacity=Math.max(0,1-p*p);
-            requestAnimationFrame(frame);
-          })(performance.now());
-        })(i);
-      }
-    }
-
-    document.addEventListener('click',function(e){
-      if(!fxOn('sparks')) return;
-      if(e.target.closest('a,button,input,select,textarea,summary,label')) return;
-      spawnSparks(e.clientX,e.clientY);
-    });
-
-    document.addEventListener('touchend',function(e){
-      if(!fxOn('sparks')) return;
-      if(e.target.closest('a,button,input,select,textarea,summary,label')) return;
-      var t = e.changedTouches[0];
-      spawnSparks(t.clientX,t.clientY);
-    },{passive:true});
-  }
-
 })();
