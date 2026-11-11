@@ -12,7 +12,7 @@
     "slug": "java-etl",
     "name": "1,200-Hour Automation",
     "title": "Java + SQL Server ETL program",
-    "strap": "Saved ~$40K/yr · zero ongoing support",
+    "strap": "Saved ~$40K · zero ongoing support",
     "tags": ["Java", "SQL Server", "ETL", "Automation"],
     "accent":  "176,79,255",
     "accent2": "103,232,200"
@@ -21,7 +21,7 @@
     "slug": "secure-provisioning",
     "name": "Secure Provisioning",
     "title": "Python CLI + AWS automation",
-    "strap": "10 min → <1 min per device · ~100 hrs saved",
+    "strap": "10 min → <1 min per device · repeatable across dev, test, prod",
     "tags": ["Python", "AWS", "Secrets Manager", "Auth0"],
     "accent":  "178,135,255",
     "accent2": "103,232,200"

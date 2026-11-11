@@ -214,8 +214,6 @@
       font-size:.95rem;
     }
 
-    .screenNote{}
-
     .panel{
       flex:1 1 390px;
       padding:16px;
@@ -310,6 +308,22 @@
       min-height:1.5em;
     }
 
+    .emptyState{
+      grid-column:1 / -1;
+      margin:0;
+      padding:14px 16px;
+      border:1px dashed var(--border);
+      border-radius:var(--radius);
+      background:var(--surface);
+      color:var(--text);
+      display:flex;
+      flex-wrap:wrap;
+      gap:.6rem;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .emptyState[hidden]{display:none}
+
     .row{
       display:grid;
       grid-template-columns:1fr 1fr;
@@ -377,8 +391,6 @@
   color:var(--text);
 }
 
-.mono{font-family:var(--mono)}
-
     .toast{
       position:fixed;
       bottom:18px;
@@ -413,14 +425,23 @@
     }
 
     @media print{
-      .panel, .toast, .search, .navrow, .skip, .hint, .screenNote{display:none !important}
+      html, html[data-theme="dark"]{
+        --bg:#fff; --surface:#fff; --surface-2:#fff; --text:#000; --muted:#333; --border:#bbb;
+        --accent:#000; --accent-2:#000; --shadow:none; --focus:transparent;
+      }
+      .panel, .toast, .search, .navrow, .skip, .hint, .screenNote, #read-progress, #emptyState{display:none !important}
       .printMeta{display:block}
       body{background:#fff;color:#000}
       .wrap{max-width:8.5in; padding:0}
-      .row{grid-template-columns:1fr !important}
-      .card, .hero{box-shadow:none !important; background:#fff !important}
-      .card{break-inside:avoid-page; page-break-inside:avoid}
+      .top{display:block}
+      .hero{background:#fff !important; box-shadow:none !important; border:none !important; padding:0 0 10px; break-inside:avoid; page-break-inside:avoid}
+      .badge, .kpi{background:#fff !important; color:#000 !important; border:1px solid #999 !important; box-shadow:none}
+      .row{grid-template-columns:1fr !important; margin-top:10px}
+      .card, .sectionGroup{box-shadow:none !important; background:#fff !important; border:1px solid #ccc}
+      h3, h4, .roleTitle{break-after:avoid; page-break-after:avoid}
+      .item{break-inside:avoid; page-break-inside:avoid}
       a{color:#000; text-decoration:none}
+      .meta .badge a[href^="http"]:after{content:" (" attr(href) ")"; font-size:9pt}
       #profilesLabel, #profilesList{display:none !important}
       .item[data-hidden="true"]{display:none !important}
       .item{opacity:1 !important; border-left-color:transparent !important}
@@ -459,31 +480,6 @@
   }
 }
 </script>
-<style>
-  /* command palette */
-  #cmd-pal{position:fixed;inset:0;z-index:99998;display:flex;align-items:flex-start;justify-content:center;padding-top:clamp(48px,9vh,130px)}
-  #cmd-pal[hidden]{display:none !important}
-  #cmd-pal{--cp-bg:#fff;--cp-border:#e5e7eb;--cp-text:#111827;--cp-muted:#6b7280;--cp-sub:#f9fafb;--cp-hover:#eff6ff;--cp-cat:#9ca3af;--cp-bdrop:rgba(0,0,0,.48)}
-  html[data-theme="dark"] #cmd-pal{--cp-bg:#0f172a;--cp-border:#1e3a5f;--cp-text:#e2e8f0;--cp-muted:#64748b;--cp-sub:#071224;--cp-hover:rgba(37,99,235,.15);--cp-cat:#475569;--cp-bdrop:rgba(0,0,0,.72)}
-  @media(prefers-color-scheme:dark){html:not([data-theme="light"]) #cmd-pal{--cp-bg:#0f172a;--cp-border:#1e3a5f;--cp-text:#e2e8f0;--cp-muted:#64748b;--cp-sub:#071224;--cp-hover:rgba(37,99,235,.15);--cp-cat:#475569;--cp-bdrop:rgba(0,0,0,.72)}}
-  #cmd-bg{position:absolute;inset:0;background:var(--cp-bdrop);backdrop-filter:blur(4px)}
-  #cmd-box{position:relative;width:min(620px,92vw);background:var(--cp-bg);border-radius:16px;box-shadow:0 28px 70px rgba(0,0,0,.22);overflow:hidden;border:1px solid var(--cp-border)}
-  #cmd-sr{display:flex;align-items:center;gap:.65rem;padding:.9rem 1rem;border-bottom:1px solid var(--cp-border)}
-  #cmd-sr svg{flex-shrink:0;color:var(--cp-muted)}
-  #cmd-q{flex:1;border:none;outline:none;font-size:1rem;background:transparent;color:var(--cp-text);font-family:inherit}
-  #cmd-q::placeholder{color:var(--cp-cat)}
-  #cmd-esk{font-size:.7rem;padding:.18rem .42rem;border:1px solid var(--cp-border);border-radius:4px;color:var(--cp-cat);background:var(--cp-sub);font-family:inherit;white-space:nowrap;cursor:pointer}
-  #cmd-list{margin:0;padding:.3rem 0;list-style:none;max-height:min(380px,52vh);overflow-y:auto}
-  #cmd-list:empty::after{content:'No results';display:block;padding:.9rem 1.1rem;color:var(--cp-cat);font-size:.88rem}
-  .cpcat{padding:.5rem 1.1rem .15rem;font-size:.7rem;font-weight:760;letter-spacing:.1em;text-transform:uppercase;color:var(--cp-cat)}
-  .cpi{display:flex;align-items:center;gap:.65rem;padding:.58rem 1.1rem;cursor:pointer;user-select:none}
-  .cpi:hover,.cpi[aria-selected="true"]{background:var(--cp-hover)}
-  .cpi-lbl{font-size:.93rem;font-weight:560;color:var(--cp-text)}
-  .cpi-desc{font-size:.8rem;color:var(--cp-muted);margin-left:auto;white-space:nowrap;padding-left:.5rem}
-  #cmd-foot{display:flex;gap:1rem;padding:.5rem 1rem;border-top:1px solid var(--cp-border);background:var(--cp-sub)}
-  #cmd-foot span{font-size:.73rem;color:var(--cp-cat);display:flex;align-items:center;gap:.25rem}
-  #cmd-foot kbd{font-size:.69rem;padding:.12rem .32rem;border:1px solid var(--cp-border);border-radius:4px;background:var(--cp-bg);font-family:inherit}
-</style>
 </head>
 <body>
 <div id="read-progress" role="progressbar" aria-hidden="true"></div>
@@ -505,7 +501,7 @@
 <div class="kpi"><b>&lt;1 min / device</b><small>Provisioning automation down from ~10 minutes</small></div>
 <div class="kpi"><b>Multi-env IaC</b><small>Terraform-managed dev / test / prod pipelines</small></div>
 </div>
-<p class="screenNote hint">Tailor on screen for a target role, then export a cleaner PDF or copy ATS text from the filtered view.</p>
+<p class="screenNote hint">Pick focus areas to highlight the most relevant bullets, then print or copy the plain-text version.</p>
 </section>
 <aside aria-label="Tailoring controls" class="panel">
 <h2>Tailor this view</h2>
@@ -539,13 +535,14 @@
 <button class="btn primary" id="shareBtn" type="button">Copy tailored link</button>
 <button class="btn" id="copyTextBtn" type="button">Copy ATS text</button>
 <button class="btn" id="resetBtn" type="button">Reset filters</button>
-<button class="btn" id="themeBtn" type="button">Toggle theme</button>
+<button class="btn" id="themeBtn" type="button" aria-pressed="false">Dark theme</button>
 <button class="btn" id="printBtn" type="button">Print / Save PDF</button>
 </div>
 <div aria-live="polite" class="matchHint" id="matchHint"></div>
 </aside>
 </div>
 <main class="row" id="content">
+<p class="emptyState" id="emptyState" hidden><span>No bullets match these filters.</span> <button class="btn" id="emptyReset" type="button">Reset filters</button></p>
 <section aria-label="Summary" class="card">
 <div class="printMeta" id="printMeta"></div>
 <h3>Summary</h3>
@@ -571,12 +568,12 @@
 </section>
 <section aria-label="Experience" class="card">
 <h3>Professional Experience</h3>
-<div class="sub">Recent roles with bullets you can tailor toward backend, platform, cloud, data, and enablement work</div>
+<div class="sub">Recent roles. Highlighted bullets match the focus areas you picked.</div>
 <div class="roleBlock">
 <h4 class="roleTitle">Milwaukee Tool (Digital IoT Service) — Senior Software Engineer <span class="metaLine">2025–Present</span></h4>
 <ul>
 <li class="item" data-tags="iot cloud api data">Initiated and delivered a greenfield IoT provisioning capability (Python CLI + supporting APIs) for secure device registration, certificate generation, and bootstrapping across dev, test, and prod.</li>
-<li class="item" data-tags="iot cloud opex">Reduced provisioning time from ~10 minutes to under 1 minute per device, avoiding an estimated ~100 hours of manual work in a 100-device rollout.</li>
+<li class="item" data-tags="iot cloud opex">Reduced provisioning time from ~10 minutes to under 1 minute per device with a repeatable workflow across dev, test, and prod.</li>
 <li class="item" data-tags="iot cloud api">Integrated AWS Secrets Manager, Auth0 patterns, and MQTT delta updates to strengthen security and cut constrained-device payload size by ~40%.</li>
 <li class="item" data-tags="opex lead">Worked across IoT, security, and cloud teams to align provisioning architecture with AWS IoT Core standards and enterprise security policies.</li>
 <li class="item" data-tags="enable lead">Created a comprehensive README, diagrams, and demo assets that made the workflow easier for other engineers to adopt safely and reduced repetitive support friction.</li>
@@ -587,7 +584,7 @@
 </ul>
 </div>
 <div class="roleBlock">
-<h4 class="roleTitle">Milwaukee Tool (Digital IoT Service) — Software Engineer II <span class="metaLine">2024</span></h4>
+<h4 class="roleTitle">Milwaukee Tool (Tool Data Foundations) — Software Engineer II <span class="metaLine">2024</span></h4>
 <ul>
 <li class="item" data-tags="data api">Advanced Tool Data Foundations work by implementing a comprehensive tagging system and supporting tool-read integration into QuickLink.</li>
 <li class="item" data-tags="enable opex">Strengthened partner-team support with clearer documentation, better workflow visualization, and faster enablement around feature requests and data insights.</li>
@@ -610,31 +607,32 @@
 <div class="sub">Signals that reinforce scope, ownership, and technical range</div>
 <ul id="signalBullets">
 <li class="item" data-tags="cloud api data opex">$85M payment portal — shipped a full-stack AWS-hosted web application that processed ~250,000 payments across its lifetime.</li>
-<li class="item" data-tags="cloud api data opex">1,200-hour automation — built a Java + SQL Server automated data-entry program that eliminated an estimated $40K in annual manual work.</li>
+<li class="item" data-tags="cloud api data opex">1,200-hour automation — built a Java + SQL Server automated data-entry program that eliminated an estimated $40K of manual work.</li>
 <li class="item" data-tags="cloud api opex">Serverless request-bus — prototyped an API Gateway → Step Functions → multi-Lambda pipeline that filtered, validated, transformed, and augmented requests end-to-end in seconds.</li>
 <li class="item" data-tags="cloud api opex">Greenfield provisioning automation — moved device onboarding from manual and error-prone to a secure, repeatable workflow with &lt;1 minute per-device execution.</li>
 <li class="item" data-tags="enable lead">README + demo assets — made complex workflows easier to adopt, improved setup consistency, and reduced repetitive support friction.</li>
 <li class="item" data-tags="lead enable opex">Reusable demos + interactive documentation — scaled knowledge sharing, improved clarity, and reinforced peer mentorship across teams.</li>
 <li class="item" data-tags="ai enable">AI-assisted drafting and analysis — used approved GenAI workflows to improve communication clarity and speed up internal knowledge-sharing materials.</li>
 </ul>
-<p class="screenNote hint">Use Copy ATS text after filtering to generate a simpler text version from the current view.</p>
+<p class="screenNote hint">Copy ATS text gives a plain-text version of the current view.</p>
 </section>
 <section aria-label="Education, credentials, and profiles" class="card">
 <h3>Education &amp; Credentials</h3>
 <div class="sub">Education, certifications, and relevant profile links</div><div class="sectionGroup" id="certDetails" style="margin-top:10px"><h4 class="sectionLabel">Certifications</h4>
 <ul style="margin-top:8px">
 <li class="item" data-tags="cloud">AWS Certified Solutions Architect – Associate (SAA-C03)</li>
+<li class="item" data-tags="cloud data">HashiCorp Terraform Associate (003)</li>
 <li class="item" data-tags="cloud">AWS Certified Cloud Practitioner (CLF-C01)</li>
 </ul>
 </div><div class="sectionGroup" id="educationDetails" style="margin-top:10px"><h4 class="sectionLabel">Education</h4>
 <ul style="margin-top:8px">
-<li class="item" data-tags="enable"><b>University of Wisconsin–River Falls:</b> B.S. Finance, Minor in Computer Science</li>
+<li><b>University of Wisconsin–River Falls:</b> B.S. Finance, Minor in Computer Science</li>
 </ul>
-</div><h4 class="sectionLabel" id="profilesLabel">Profiles</h4><ul class="linkList" id="profilesList">
-<li class="item" data-tags="enable"><b>Email:</b> <a href="mailto:bsc_pro@protonmail.com">bsc_pro@protonmail.com</a></li>
-<li class="item" data-tags="enable"><b>GitHub:</b> <a href="https://github.com/NorthwoodsCode" rel="noopener noreferrer">github.com/NorthwoodsCode</a></li>
-<li class="item" data-tags="enable"><b>Portfolio:</b> <a href="https://northwoodscode.github.io/resume/" rel="noopener noreferrer">northwoodscode.github.io/resume/</a></li>
-<li class="item" data-tags="enable"><b>LinkedIn:</b> <a href="https://www.linkedin.com/in/brandon-c-it-industry" rel="noopener noreferrer">linkedin.com/in/brandon-c-it-industry</a></li>
+</div><h4 class="sectionLabel" id="profilesLabel">Profiles</h4><ul id="profilesList">
+<li><b>Email:</b> <a href="mailto:bsc_pro@protonmail.com">bsc_pro@protonmail.com</a></li>
+<li><b>GitHub:</b> <a href="https://github.com/NorthwoodsCode" rel="noopener noreferrer">github.com/NorthwoodsCode</a></li>
+<li><b>Portfolio:</b> <a href="https://northwoodscode.github.io/resume/" rel="noopener noreferrer">northwoodscode.github.io/resume/</a></li>
+<li><b>LinkedIn:</b> <a href="https://www.linkedin.com/in/brandon-c-it-industry" rel="noopener noreferrer">linkedin.com/in/brandon-c-it-industry</a></li>
 </ul>
 
 
@@ -670,15 +668,27 @@
         return (text || '').replace(/\s+/g, ' ').trim();
       }
 
+      const store = {
+        get(k){ try { return localStorage.getItem(k); } catch(e){ return null; } },
+        set(k, v){ try { localStorage.setItem(k, v); } catch(e){} }
+      };
+      const emptyState = document.getElementById('emptyState');
+      const emptyReset = document.getElementById('emptyReset');
+      const FOCUS_ALIAS = {leadership:'lead', enablement:'enable', genai:'ai', ops:'opex', operations:'opex', devops:'opex', aws:'cloud', platform:'cloud', apis:'api', integrations:'api', devices:'iot'};
+      const KNOWN_FOCUS = chipInputs.map(i => i.value);
+      let unknownFocus = [];
+
       function getPreferredTheme(){
-        const v = localStorage.getItem('bsc_theme');
+        const v = store.get('bsc_theme');
         if(v === 'light' || v === 'dark') return v;
         return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
       }
 
-      function setTheme(theme){
+      function setTheme(theme, persist){
         html.dataset.theme = theme;
-        localStorage.setItem('bsc_theme', theme);
+        themeBtn.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
+        themeBtn.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+        if(persist) store.set('bsc_theme', theme);
       }
 
       function getSelectedTags(){
@@ -732,6 +742,10 @@
           if(!only) parts.push('Non-matches stay visible for context');
           matchHint.textContent = parts.join(' • ');
         }
+        if(unknownFocus.length){
+          matchHint.textContent += ' • Ignored unknown focus: ' + unknownFocus.join(', ') + ' (available: ' + KNOWN_FOCUS.join(', ') + ')';
+        }
+        if(emptyState) emptyState.hidden = !(filtersActive() && matchCount === 0);
 
         const printParts = [];
         if(selected.length) printParts.push('Focus: ' + selected.join(', '));
@@ -759,21 +773,29 @@
         return window.location.origin + newUrl;
       }
 
+      function legacyCopy(text){
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        let ok = false;
+        try { ok = !!document.execCommand('copy'); } catch(e){ ok = false; }
+        document.body.removeChild(ta);
+        return ok;
+      }
+
       async function copyToClipboard(text){
+        let ok = false;
         try{
-          await navigator.clipboard.writeText(text);
-          toastMsg('Copied!');
-        }catch(e){
-          const ta = document.createElement('textarea');
-          ta.value = text;
-          ta.style.position = 'fixed';
-          ta.style.left = '-9999px';
-          document.body.appendChild(ta);
-          ta.select();
-          document.execCommand('copy');
-          document.body.removeChild(ta);
-          toastMsg('Copied!');
-        }
+          if(typeof window.bscCopy === 'function') ok = await window.bscCopy(text);
+          else if(navigator.clipboard && window.isSecureContext){ await navigator.clipboard.writeText(text); ok = true; }
+          else ok = legacyCopy(text);
+        }catch(e){ ok = legacyCopy(text); }
+        toastMsg(ok ? 'Copied!' : 'Copy failed. Select the text and copy it manually.');
+        return ok;
       }
 
       function lineText(node){
@@ -830,7 +852,14 @@
 
       function initFromURL(){
         const params = new URLSearchParams(window.location.search);
-        const focus = (params.get('focus') || '').split(',').map(s => s.trim()).filter(Boolean);
+        const raw = (params.get('focus') || '').split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+        const focus = [];
+        unknownFocus = [];
+        raw.forEach(k => {
+          const key = FOCUS_ALIAS[k] || k;
+          if(KNOWN_FOCUS.includes(key)){ if(!focus.includes(key)) focus.push(key); }
+          else unknownFocus.push(k);
+        });
         const q = params.get('q') || '';
         const only = params.get('only') === '1';
 
@@ -847,10 +876,17 @@
         updateURL(true);
       }
 
-      setTheme(getPreferredTheme());
+      setTheme(getPreferredTheme(), false);
+      if(window.matchMedia){
+        const mq = window.matchMedia('(prefers-color-scheme: dark)');
+        const follow = (e) => { if(!store.get('bsc_theme')) setTheme(e.matches ? 'dark' : 'light', false); };
+        if(mq.addEventListener) mq.addEventListener('change', follow); else if(mq.addListener) mq.addListener(follow);
+      }
       initFromURL();
       applyFilters();
       updateURL();
+      window.addEventListener('popstate', () => { initFromURL(); applyFilters(); });
+      if(emptyReset) emptyReset.addEventListener('click', () => { resetFilters(); toastMsg('Filters reset'); });
 
       chipInputs.forEach(i => i.addEventListener('change', () => { applyFilters(); updateURL(); }));
       onlyMatches.addEventListener('change', () => { applyFilters(); updateURL(); });
@@ -885,7 +921,7 @@
         toastMsg('Filters reset');
       });
 
-      themeBtn.addEventListener('click', () => setTheme(html.dataset.theme === 'dark' ? 'light' : 'dark'));
+      themeBtn.addEventListener('click', () => setTheme(html.dataset.theme === 'dark' ? 'light' : 'dark', true));
       printBtn.addEventListener('click', () => window.print());
     })();
   </script>
@@ -902,116 +938,6 @@
     })();
   </script>
 
-  <!-- command palette -->
-  <div id="cmd-pal" role="dialog" aria-modal="true" aria-label="Command palette" hidden>
-    <div id="cmd-bg"></div>
-    <div id="cmd-box">
-      <div id="cmd-sr">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input id="cmd-q" type="text" placeholder="Search commands, navigate, jump to section…" autocomplete="off" spellcheck="false" aria-label="Command search" aria-controls="cmd-list" aria-autocomplete="list" />
-        <kbd id="cmd-esk">ESC</kbd>
-      </div>
-      <ul id="cmd-list" role="listbox" aria-label="Commands" aria-live="polite"></ul>
-      <div id="cmd-foot" aria-hidden="true">
-        <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
-        <span><kbd>↵</kbd> open</span>
-        <span><kbd>esc</kbd> close</span>
-      </div>
-    </div>
-  </div>
-  <script>
-  (function(){
-    var pal=document.getElementById('cmd-pal'),bg=document.getElementById('cmd-bg'),inp=document.getElementById('cmd-q'),lst=document.getElementById('cmd-list');
-    if(!pal||!bg||!inp||!lst) return;
-    var page=(location.pathname.split('/').pop()||'index.html').replace(/[?#].*/,'');
-    var NAV=[
-      {cat:'Navigate',label:'Home',desc:'Landing page',url:'index.html'},
-      {cat:'Navigate',label:'Atlas — Recruiter Resume',desc:'Clean PDF-ready',url:'resume-atlas.html'},
-      {cat:'Navigate',label:'Signal — Interactive Resume',desc:'Filters + search',url:'resume-signal.html'},
-      {cat:'Navigate',label:'Proof Hub — Case Studies',desc:'ATS export + evidence',url:'proof-hub.html'},
-      {cat:'Navigate',label:'Switchboard',desc:'Low-motion hub',url:'resume-switchboard.html'},
-    ];
-    var ACT=[
-      {cat:'Action',label:'Print / Download PDF',desc:'Open print dialog',action:'print'},
-      {cat:'Action',label:'Copy email address',desc:'bsc_pro@protonmail.com',action:'copy-email'},
-      {cat:'Action',label:'View GitHub',desc:'NorthwoodsCode',url:'https://github.com/NorthwoodsCode',ext:true},
-      {cat:'Action',label:'View LinkedIn',desc:'brandon-c-it-industry',url:'https://www.linkedin.com/in/brandon-c-it-industry',ext:true},
-    ];
-    var JMP={
-      'index.html':[
-        {cat:'Jump to',label:'Resume Modes',desc:'All format cards',anchor:'#formats'},
-        {cat:'Jump to',label:'Tailor Tools',desc:'Build a Signal link',anchor:'#tailorTools'},
-      ],
-      'resume-atlas.html':[
-        {cat:'Jump to',label:'Summary',desc:'Professional summary',anchor:'#summary'},
-        {cat:'Jump to',label:'Core Skills',desc:'Technology stack',anchor:'#skills'},
-        {cat:'Jump to',label:'Experience',desc:'Work history',anchor:'#experience'},
-        {cat:'Jump to',label:'Certifications',desc:'AWS + Terraform',anchor:'#certs'},
-        {cat:'Jump to',label:'Education',desc:'UWRF, Finance + CS',anchor:'#education'},
-      ],
-      'proof-hub.html':[
-        {cat:'Jump to',label:'Overview',desc:'Impact strip + metrics',anchor:'#start'},
-        {cat:'Jump to',label:'Timeline',desc:'Career timeline',anchor:'#timeline'},
-        {cat:'Jump to',label:'Turbo Pack',desc:'Bullet builder + export',anchor:'#turbo'},
-        {cat:'Jump to',label:'Case Studies',desc:'Project narratives',anchor:'#cases'},
-        {cat:'Jump to',label:'Credentials',desc:'Certs + education',anchor:'#cred'},
-      ],
-    };
-    var CMDS=NAV.concat(ACT).concat(JMP[page]||[]);
-    var activeIdx=-1,prevFocus=null,filtered=[];
-    function flt(q){q=(q||'').toLowerCase().trim();if(!q)return CMDS.slice();return CMDS.filter(function(c){return(c.label+' '+(c.desc||'')+' '+(c.cat||'')).toLowerCase().indexOf(q)>-1;});}
-    function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-    function mkItem(c,i){
-      var li=document.createElement('li');li.className='cpi';li.setAttribute('role','option');li.setAttribute('id','cpi-'+i);li.setAttribute('aria-selected','false');
-      li.innerHTML='<span class="cpi-lbl">'+esc(c.label)+'</span>'+(c.desc?'<span class="cpi-desc">'+esc(c.desc)+'</span>':'');
-      li.addEventListener('mousedown',function(e){e.preventDefault();execute(c);});
-      return li;
-    }
-    function render(q){
-      filtered=flt(q);lst.innerHTML='';var lastCat=null;
-      filtered.forEach(function(c,i){
-        if(c.cat!==lastCat){var h=document.createElement('li');h.className='cpcat';h.setAttribute('role','presentation');h.textContent=c.cat;lst.appendChild(h);lastCat=c.cat;}
-        lst.appendChild(mkItem(c,i));
-      });
-      setActive(-1);
-    }
-    function setActive(i){
-      activeIdx=i;
-      var items=lst.querySelectorAll('.cpi');
-      items.forEach(function(el,j){el.setAttribute('aria-selected',j===i?'true':'false');});
-      if(i>=0&&items[i])items[i].scrollIntoView({block:'nearest'});
-      inp.setAttribute('aria-activedescendant',i>=0?'cpi-'+i:'');
-    }
-    function execute(cmd){
-      closePal();
-      if(cmd.action==='print'){window.print();return;}
-      if(cmd.action==='copy-email'){
-        var t='bsc_pro@protonmail.com';
-        if(navigator.clipboard){navigator.clipboard.writeText(t);}
-        else{var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}
-        return;
-      }
-      if(cmd.anchor){var el=document.querySelector(cmd.anchor);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});return;}
-      if(cmd.url){if(cmd.ext){window.open(cmd.url,'_blank','noopener');}else{location.href=cmd.url;}}
-    }
-    function openPal(){prevFocus=document.activeElement;pal.hidden=false;render('');inp.value='';setTimeout(function(){inp.focus();},30);document.body.style.overflow='hidden';}
-    function closePal(){pal.hidden=true;document.body.style.overflow='';if(prevFocus)prevFocus.focus();}
-    inp.addEventListener('input',function(){render(inp.value);});
-    inp.addEventListener('keydown',function(e){
-      var items=lst.querySelectorAll('.cpi');
-      if(e.key==='ArrowDown'){e.preventDefault();setActive(Math.min(activeIdx+1,items.length-1));}
-      else if(e.key==='ArrowUp'){e.preventDefault();setActive(Math.max(activeIdx-1,0));}
-      else if(e.key==='Enter'){if(activeIdx>=0&&filtered[activeIdx])execute(filtered[activeIdx]);else if(filtered[0])execute(filtered[0]);}
-      else if(e.key==='Escape'){closePal();}
-    });
-    bg.addEventListener('mousedown',closePal);
-    document.getElementById('cmd-esk').addEventListener('click',closePal);
-    document.addEventListener('keydown',function(e){
-      if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();if(pal.hidden){openPal();}else{closePal();}}
-      if(!pal.hidden&&e.key==='Escape')closePal();
-    });
-  })();
-  </script>
   <script src="shared-enhancements.js"></script>
 </body>
 </html>
