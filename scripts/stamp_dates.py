@@ -8,6 +8,10 @@
 
 Run from the repo root after checkout (needs full git history for accurate
 dates): python3 scripts/stamp_dates.py
+
+Runs at deploy time in the GitHub Actions build job, editing the checked-out
+files in place before they are copied into the published site. Nothing is
+committed back, so the repository keeps its source dates. Standard library only.
 """
 import re
 import subprocess
@@ -18,6 +22,11 @@ REPO = Path(__file__).resolve().parent.parent
 
 
 def last_commit_date(path):
+    """Return the date (YYYY-MM-DD) of the last commit touching `path`, or None.
+
+    %cs is the committer date in short form. A shallow clone would report the
+    clone date for every file, which is why the workflow fetches full history.
+    """
     try:
         out = subprocess.run(
             ["git", "log", "-1", "--format=%cs", "--", str(path)],
@@ -29,6 +38,7 @@ def last_commit_date(path):
 
 
 def main():
+    """Update lastUpdated tags and sitemap lastmod values; return exit code 0."""
     changed = 0
     for page in sorted(REPO.glob("*.html")):
         date = last_commit_date(page)
@@ -50,6 +60,7 @@ def main():
         src = sitemap.read_text()
 
         def stamp(m):
+            # Map each sitemap URL to the source file that determines its date.
             loc = m.group(1)
             tail = loc.rstrip("/").split("/")[-1]
             if "/case/" in loc:

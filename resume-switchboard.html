@@ -23,6 +23,10 @@
   <meta name="twitter:image" content="https://northwoodscode.github.io/resume/og-image.png" />
 
   <style>
+    /* ── Theme tokens ──
+       Light values live on :root; the dark block overrides the same variables.
+       The script below always sets data-theme to "light" or "dark" on load, so no
+       prefers-color-scheme media query is needed here. */
     :root{
       --bg:#ffffff;
       --fg:#0f172a;
@@ -56,6 +60,7 @@
       --shadow-2:0 14px 30px rgba(0,0,0,.30);
     }
 
+    /* ── Base ── */
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
     body{
@@ -69,6 +74,7 @@
     a:hover{text-decoration:underline}
     button,input{font:inherit}
 
+    /* Skip link: parked off-screen until it receives keyboard focus. */
     .skip{
       position:absolute;
       left:-999px;
@@ -87,6 +93,7 @@
       padding:0 18px 80px;
     }
 
+    /* ── Hero ── Header band: two soft accent glows over a card-to-background fade. */
     header{
       border-bottom:1px solid var(--border);
       background:
@@ -105,6 +112,7 @@
       align-items:stretch;
     }
 
+    /* Surface shared by every card type so border, radius and shadow stay consistent. */
     .heroMain,
     .card,
     .modeCard,
@@ -207,6 +215,7 @@
     .metaPill a{color:inherit}
 
     .actionRow{margin-top:1.1rem}
+    /* ── Buttons and pills ── */
     .btn{
       border:1px solid var(--border);
       background:color-mix(in srgb, var(--bg) 66%, var(--card));
@@ -263,6 +272,7 @@
     }
     .sectionHead p{margin:0;color:var(--muted)}
 
+    /* ── Audience route cards ── Three columns, two under 1100px, one under 760px. */
     .modesGrid{
       display:grid;
       grid-template-columns:repeat(3,minmax(0,1fr));
@@ -319,6 +329,7 @@
     .modeList li{margin:.36rem 0}
     .modeActions{margin-top:auto;padding-top:6px}
 
+    /* ── Proof cards ── Five columns, stepping down to 3, 2 and 1 on narrower screens. */
     .proofWrap{
       display:grid;
       grid-template-columns:repeat(5,minmax(0,1fr));
@@ -363,6 +374,7 @@
     .mono{font-family:var(--mono)}
     .mono{font-family:var(--mono)}
 
+    /* ── Signal link builder ── Presets, focus chips, search row and live URL preview. */
     .builderGrid{
       display:grid;
       grid-template-columns:1fr;
@@ -429,6 +441,7 @@
       white-space:nowrap;
     }
 
+    /* ── Fast recruiter summary ── */
     .summaryCard textarea{
       width:100%;
       min-height:184px;
@@ -448,12 +461,16 @@
       font-size:.93rem;
     }
 
+    /* ── Footer ── */
     footer{
       margin-top:18px;
       color:var(--muted);
       font-size:.95rem;
     }
 
+    /* ── Toast ──
+       Fixed status pill. pointer-events:none keeps it from blocking clicks while
+       hidden; the .show class fades it in. */
     .toast{
       position:fixed;
       left:50%;
@@ -476,9 +493,11 @@
     }
 
 
+    /* ── Reduced motion ── Switch off transitions and smooth scrolling on request. */
     @media (prefers-reduced-motion: reduce){
       *{transition:none !important;scroll-behavior:auto !important}
     }
+    /* ── Mobile ── Tighter gutters, then full-width search and wrapping pills. */
     @media (max-width:640px){
       .shell{padding:0 14px 74px}
       .hero{padding:18px 14px 20px}
@@ -489,6 +508,9 @@
       .modeTop{flex-wrap:wrap}
       .proofCard .value{overflow-wrap:anywhere}
     }
+    /* ── Print ──
+       Hide interactive controls, use black on white, and print each external
+       link's URL after its text so a paper copy is still useful. */
     @media print{
       header .actionRow,
       .toast,
@@ -513,6 +535,7 @@
 <body>
   <a class="skip" href="#start">Skip to resume routing</a>
 
+  <!-- Hero: headline, default recommendations, contact links and primary actions -->
   <header>
     <div class="hero">
       <section class="heroMain" aria-label="Primary resume routing guidance">
@@ -557,6 +580,7 @@
   </header>
 
   <main class="shell sections" id="start">
+    <!-- Audience route cards: pick an entry point by who is reading -->
     <section aria-labelledby="route-heading">
       <div class="sectionHead">
         <div>
@@ -661,6 +685,7 @@
       </div>
     </section>
 
+    <!-- Proof points: short quantified highlights; Proof Hub carries the detail -->
     <section aria-labelledby="proof-heading">
       <div class="sectionHead">
         <div>
@@ -702,6 +727,7 @@
       <p class="note">These highlights are short; the resume and Proof Hub carry the detail.</p>
     </section>
 
+    <!-- Fast recruiter summary: copy-ready paragraph for forms and notes -->
     <section aria-labelledby="summary-heading">
       <div class="sectionHead">
         <div>
@@ -720,6 +746,7 @@
       </article>
     </section>
 
+    <!-- Signal link builder: presets, focus chips and search produce a tailored Signal URL -->
     <section aria-labelledby="builder-heading">
       <div class="sectionHead">
         <div>
@@ -743,6 +770,7 @@
             <button class="presetBtn" type="button" data-open-focus="ai,enable,lead">GenAI / Automation</button>
           </div>
 
+          <!-- Focus chips: checked values become the comma-separated focus= parameter -->
           <div class="chips" id="chips">
             <label class="tag" data-tag="cloud"><input type="checkbox" value="cloud" />Cloud &amp; AWS</label>
             <label class="tag" data-tag="api"><input type="checkbox" value="api" />APIs &amp; Integrations</label>
@@ -774,27 +802,40 @@
       </div>
     </section>
 
+    <!-- Footer: privacy statement -->
     <footer>
       <p style="margin:0">Private by default: no analytics, no cookies, no session replay, no ad tracking. Theme choice is stored locally in the browser only.</p>
     </footer>
   </main>
 
+  <!-- Toast: polite live region, so screen readers announce messages set by toastMsg() -->
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script>
+    // Switchboard behaviour, in one IIFE so nothing leaks to window. It owns:
+    //   1. the light/dark theme toggle (with guarded storage),
+    //   2. a copy helper that reports failure honestly, plus the toast it uses,
+    //   3. the Signal link builder (preview, open, copy, reset).
+    // Shared site features (command palette, dock, etc.) come from shared-enhancements.js.
     (function(){
       const html = document.documentElement;
       const toast = document.getElementById('toast');
       const themeBtn = document.getElementById('themeBtn');
       const fastPitch = document.getElementById('fastPitch');
       const copyFastPitch = document.getElementById('copyFastPitch');
+      // Target of every generated link. Relative, so it resolves wherever the site is hosted.
       const SIGNAL = 'resume-signal.html';
 
+      // Show a short status message. Not debounced: a second message within 1.6s
+      // is hidden by the first message's timer.
       function toastMsg(msg){
         toast.textContent = msg;
         toast.classList.add('show');
         setTimeout(() => toast.classList.remove('show'), 1600);
       }
 
+      // Copy with honest feedback. Prefer the async Clipboard API (needs a secure
+      // context and permission); if it throws, fall back to a hidden textarea and
+      // execCommand. "Copied" is only shown when one of the two actually worked.
       async function copyToClipboard(text){
         try{
           await navigator.clipboard.writeText(text);
@@ -815,6 +856,9 @@
         }
       }
 
+      // Theme: a saved choice wins, otherwise follow the OS setting. localStorage is
+      // wrapped in try/catch because it can throw (blocked site data, some private
+      // or sandboxed contexts); the page then works but forgets the choice.
       function getPreferredTheme(){
         let v = null;
         try{ v = localStorage.getItem('bsc_theme'); }catch(e){}
@@ -827,6 +871,7 @@
         try{ localStorage.setItem('bsc_theme', theme); }catch(e){}
       }
 
+      // Apply once on load so data-theme is always an explicit "light" or "dark".
       setTheme(getPreferredTheme());
       themeBtn.addEventListener('click', () => setTheme(html.dataset.theme === 'dark' ? 'light' : 'dark'));
 
@@ -834,6 +879,9 @@
         await copyToClipboard(fastPitch.value);
       });
 
+      // ── Signal link builder ──
+      // The UI state (checked chips, search text, "only matches") is turned into a
+      // query string for resume-signal.html and shown live in the preview box.
       const tagLabels = Array.from(document.querySelectorAll('.tag[data-tag]'));
       const tagInputs = Array.from(document.querySelectorAll('.tag input[type="checkbox"][value]'));
       const q = document.getElementById('q');
@@ -854,16 +902,22 @@
         });
       }
 
+      // Chips -> focus=a,b ; trimmed search text -> q= ; "Show only matches" -> only=1.
+      // Empty parts are left out, so no input at all yields plain resume-signal.html.
       function buildSignalUrl(){
         const selected = getSelectedTags();
         const params = new URLSearchParams();
         if(selected.length) params.set('focus', selected.join(','));
         if((q.value || '').trim()) params.set('q', (q.value || '').trim());
         if(only.checked) params.set('only', '1');
+        // URLSearchParams encodes commas as %2C. Restore them so the link reads
+        // focus=cloud,api like the hand-written preset links. (This also un-encodes
+        // commas typed into the search term.)
         const qs = params.toString().replace(/%2C/gi, ',');
         return SIGNAL + (qs ? ('?' + qs) : '');
       }
 
+      // Redraw the URL preview and the chip highlight (data-on drives the CSS).
       function updatePreview(){
         preview.textContent = buildSignalUrl();
         setTagsUI();
@@ -873,6 +927,7 @@
       q.addEventListener('input', updatePreview);
       only.addEventListener('change', updatePreview);
 
+      // Preset buttons skip the builder state and open Signal with their own focus list.
       document.querySelectorAll('[data-open-focus]').forEach(btn => {
         btn.addEventListener('click', () => {
           const focus = btn.getAttribute('data-open-focus') || '';
@@ -886,11 +941,14 @@
         window.location.href = buildSignalUrl();
       });
 
+      // Copy an absolute URL (origin + current directory + the relative link) so it
+      // still works when pasted into an email or chat.
       copyBuilt.addEventListener('click', async () => {
         const absolute = window.location.origin + window.location.pathname.replace(/[^/]*$/, '') + buildSignalUrl();
         await copyToClipboard(absolute);
       });
 
+      // Clear every input, then refresh the preview.
       resetBuilt.addEventListener('click', () => {
         tagInputs.forEach(i => i.checked = false);
         q.value = '';

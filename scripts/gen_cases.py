@@ -11,6 +11,11 @@ Slack or LinkedIn, the unfurl card is specific to that case. Clicking
 the link lands them on the right anchor of proof-hub.
 
 Run from repo root: python3 scripts/gen_cases.py
+
+Runs at deploy time: the GitHub Actions build job executes it before the site
+is assembled, so the generated PNGs and stub pages are published without being
+committed. Requires Pillow (used by gen_og.py). It also writes
+case/sitemap-cases.xml, a snippet of sitemap entries for manual splicing.
 """
 
 import json, os, sys, html, subprocess
@@ -21,6 +26,10 @@ CASES = REPO / "cases.json"
 BASE_URL = "https://northwoodscode.github.io/resume"
 
 
+# Stub page template, filled with str.format(). Link-preview crawlers (Slack,
+# LinkedIn) read the OG/Twitter meta tags and do not run JavaScript; real
+# visitors are sent on by the meta refresh, with location.replace as a backup.
+# Literal CSS braces are doubled ({{ }}) because format() treats { } as fields.
 STUB_TEMPLATE = """<!doctype html>
 <html lang="en">
 <head>
@@ -50,11 +59,13 @@ STUB_TEMPLATE = """<!doctype html>
 
 
 def parse_rgb(s):
+    """Split an "R,G,B" string into a list of ints (not currently called here)."""
     parts = [int(p.strip()) for p in s.split(",")]
     return parts
 
 
 def main():
+    """Generate an OG image and stub page for every case in cases.json."""
     if not CASES.exists():
         print(f"cases.json not found at {CASES}", file=sys.stderr)
         sys.exit(1)
@@ -81,7 +92,8 @@ def main():
         ]
         subprocess.run(cmd, check=True)
 
-        # 2. Generate the case stub page
+        # 2. Generate the case stub page. Text fields are HTML-escaped because
+        #    they land in attributes and markup; URLs are built here, not from JSON.
         case_slug_dir = case_dir / slug
         case_slug_dir.mkdir(exist_ok=True)
         canonical = f"{BASE_URL}/proof-hub.html#case-{slug}"
@@ -99,7 +111,7 @@ def main():
         (case_slug_dir / "index.html").write_text(stub)
         print(f"  → case/{slug}/index.html")
 
-    # 3. Append the new case URLs to a sitemap snippet for review/copy-paste.
+    # 3. Write a sitemap snippet with the case URLs (overwritten on every run).
     snippet = REPO / "case" / "sitemap-cases.xml"
     lines = []
     for c in cases:
