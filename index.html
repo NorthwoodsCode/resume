@@ -3,12 +3,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Tells the browser the page supports both schemes, so native controls and scrollbars can follow the theme. -->
   <meta name="color-scheme" content="light dark" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="icon" href="favicon.ico" sizes="any" />
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <!-- Browser UI colour on mobile; matches the dark theme background (--bg, #04070f). -->
   <meta name="theme-color" content="#04070f" />
 
+  <!-- Search and social-sharing metadata: description, canonical URL, Open Graph and Twitter card. -->
   <title>Brandon S. Clark — Resume Home</title>
   <meta name="description" content="Resume site for Brandon S. Clark, Senior Software Engineer (AWS backend / cloud platform): a classic PDF-ready resume, a focus-filtered version for hiring managers, and case studies with hard evidence." />
   <link rel="canonical" href="https://northwoodscode.github.io/resume/" />
@@ -23,7 +26,12 @@
   <meta name="twitter:description" content="Secure AWS systems, maintainable APIs, and calm operational delivery for backend, cloud, and data platforms." />
   <meta name="twitter:image" content="https://northwoodscode.github.io/resume/og-image.png" />
 
+  <!-- Main stylesheet: theme tokens, atmosphere colours, layout, components, responsive rules, print. -->
   <style>
+    /* ── Theme tokens ──
+       :root holds the light palette. Components read these custom properties, so a theme
+       switch only has to change values here. Dark overrides follow on html[data-theme="dark"].
+    */
     :root{
       --bg:#f6fbff;
       --fg:#0b1325;
@@ -58,6 +66,11 @@
       --shadow-hover:0 22px 68px rgba(0,0,0,.36);
     }
 
+    /* ── Atmosphere colour sets (dark theme) ──
+       Each data-atmosphere value swaps the accent pair; the muted presets (ghost onward) also replace
+       background, text and panel tokens. They are scoped with :not([data-theme="light"]) so these dark
+       backgrounds can never leak into the light theme, which has its own accent-only overrides below.
+    */
     html:not([data-theme="light"])[data-atmosphere="blue"]{
       --accent:#86a6ff;
       --accent2:#6fffd1;
@@ -126,6 +139,9 @@
     html[data-theme="light"][data-atmosphere="bronze"]{--accent:#92400e;--accent2:#1d4ed8}
     html[data-theme="light"][data-atmosphere="autumn"]{--accent:#b45309;--accent2:#1d4ed8}
 
+    /* ── Base and accessibility ──
+       Reset, page background (accent-tinted gradients over --bg) and the shared keyboard focus ring.
+    */
     *{box-sizing:border-box}
     html,body{min-height:100%}
     html{scroll-behavior:smooth}
@@ -152,6 +168,7 @@
       outline-offset:3px;
     }
 
+    /* Skip link: parked off-screen until it receives keyboard focus, then slides into view. */
     .skip{
       position:absolute;
       left:-999px;
@@ -166,6 +183,10 @@
     }
     .skip:focus{left:12px}
 
+    /* ── Atmosphere layers ──
+       Fixed, click-through layers behind the page: #vanta (animated background drawn by script), a CSS
+       fallback glow, and a scrim that tames contrast. Plain mode (html.plain) hides the animation.
+    */
     #vanta,
     .atmosphere-fallback,
     .scrim{
@@ -185,6 +206,7 @@
       filter:blur(18px) saturate(1.05);
       will-change:opacity,transform;
     }
+    /* Once the animated background is running, fade the CSS fallback out. */
     html.vanta-active .atmosphere-fallback{opacity:0}
     @keyframes fog-fallback-drift{
       0%  { transform:scale(1.09) translate(0%,   0%);   }
@@ -214,6 +236,7 @@
     }
     html.plain #vanta{display:none}
     html.plain .scrim{opacity:.68}
+    /* Confetti canvas: above the page but never intercepts clicks. Script adds .is-on to fade it in. */
     #confetti{
       position:fixed;
       inset:0;
@@ -227,6 +250,9 @@
     #confetti.is-on{opacity:1}
     html.plain #confetti{display:none}
 
+    /* ── Layout ──
+       Page shell and top bar.
+    */
     .site{
       position:relative;
       z-index:2;
@@ -280,6 +306,9 @@
       justify-content:flex-end;
     }
 
+    /* ── Appearance panel (Look and Feel) ──
+       A details dropdown. The default marker is hidden so the summary looks like the other toolbar buttons.
+    */
     .appearance-panel{
       position:relative;
     }
@@ -525,6 +554,7 @@
     }
     @media print{ .fx-panel{ display:none !important; } }
 
+    /* ── Buttons ── */
     .btn{
       min-height:50px;
       display:inline-flex;
@@ -623,6 +653,7 @@
       padding:46px 0 20px;
     }
 
+    /* ── Hero ── */
     .hero-wrap{
       width:min(var(--hero), calc(100vw - 40px));
       margin:0 auto;
@@ -641,6 +672,9 @@
       overflow:hidden;
       isolation:isolate;
     }
+    /* Decorative layers: an accent glow behind the text (::before) and a faint top sheen (::after).
+       isolation:isolate on the shell keeps the glow's negative z-index inside it.
+    */
     .hero-shell::before{
       content:"";
       position:absolute;
@@ -710,6 +744,7 @@
     @keyframes blink-caret{
       0%,100%{opacity:1}50%{opacity:0}
     }
+    /* Availability badge. Script hides it after an expiry date. */
     .avail-badge{
       display:inline-flex;
       align-items:center;
@@ -795,6 +830,7 @@
     .micro-pill a,
     .micro-pill[href]{color:inherit}
 
+    /* ── Content sections and cards ── */
     #formats{scroll-margin-top:20px;}
     .section-shell{
       width:min(var(--max), calc(100vw - 40px));
@@ -821,6 +857,7 @@
       background:linear-gradient(180deg, rgba(255,255,255,.08), transparent 28%);
       pointer-events:none;
     }
+    /* Keep card content above the ::after sheen. */
     .card > *{position:relative; z-index:1}
     .kicker,
     .previewMeta{
@@ -859,6 +896,7 @@
     }
     .plainLink:hover{opacity:.92}
 
+    /* ── Route panel and mode cards ── */
     .route-panel{
       display:grid;
       gap:12px;
@@ -879,6 +917,9 @@
       gap:.6rem;
       align-items:center;
     }
+    /* ── Tailoring tools ──
+       A collapsible details card holding one-click presets and the custom Signal link builder.
+    */
     .tools-card{
       padding:16px 18px;
     }
@@ -950,6 +991,9 @@
       font-weight:700;
       text-wrap:pretty;
     }
+    /* ── Layout previews ──
+       CSS-only thumbnails of each resume mode. Their markup is aria-hidden, so screen readers skip them.
+    */
     .layoutPreview{
       margin-top:10px;
       position:relative;
@@ -1356,6 +1400,7 @@
     .w56{width:56%}
     .w48{width:48%}
 
+    /* Tailoring tools: preset and link-builder panels, chips and search row. */
     .split-panels{
       display:grid;
       grid-template-columns:1fr 1fr;
@@ -1403,6 +1448,9 @@
       backdrop-filter:blur(12px);
     }
 
+    /* ── Toast ──
+       Small status message pinned near the bottom of the screen; script adds .show to reveal it.
+    */
     .toast{
       position:fixed;
       bottom:18px;
@@ -1429,6 +1477,10 @@
       font-size:.95rem;
     }
 
+    /* ── Headline specular sweep ──
+       ::after repeats the text (via data-text) with a transparent fill and a moving white gradient clipped
+       to the glyphs, giving a one-shot glint. It only animates while script has added .specular-run.
+    */
     .specular-headline{
       position:relative;
       display:inline-block;
@@ -1483,6 +1535,10 @@
     }
     html.plain .specular-headline::after{display:none;}
 
+    /* ── Mode dock ──
+       Floating details menu linking every page. Invisible and non-interactive until script sets
+       html.show-dock (it toggles with scroll position).
+    */
     .bsc-dock{
       position:fixed;
       right:16px;
@@ -1571,6 +1627,10 @@
       box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--accent) 25%, transparent);
     }
 
+    /* ── Responsive ──
+       At 900px panels stack and mode cards drop to two columns. At 720px the mode cards become a swipeable
+       horizontal rail. At 520px action buttons stack into a single column.
+    */
     @media (max-width: 900px){
       .split-panels{grid-template-columns:1fr}
       .formats-grid{
@@ -1609,6 +1669,9 @@
         grid-template-columns:repeat(2, minmax(0, 1fr));
       }
       .cta-row .btn{width:100%}
+      /* Mobile rail: cards flow in one horizontal row, each about 88vw wide so the next one peeks in,
+         and scroll-snap settles each card at the start edge.
+      */
       .formats-grid{
         grid-auto-flow:column;
         grid-template-columns:none;
@@ -1639,12 +1702,21 @@
       .summaryMeta{width:100%; justify-content:center}
     }
 
+    /* ── Reduced motion ──
+       Disable transitions and smooth scrolling, and drop the headline glint and confetti. The fallback
+       atmosphere drift is switched off by its own reduced-motion query earlier in this sheet.
+    */
     @media (prefers-reduced-motion: reduce){
       *{transition:none !important; scroll-behavior:auto !important}
       .specular-headline::after{display:none}
       #confetti{display:none}
     }
 
+    /* ── Print ──
+       Hide decorative layers and interactive chrome, then use a plain white page with dark text and
+       bordered cards. Colours here are fixed values rather than theme tokens, so output looks the same
+       whatever theme or atmosphere is active on screen.
+    */
     @media print{
       #vanta,.atmosphere-fallback,.scrim,#confetti,.topbar,.warn,.toast,.bsc-dock,.fx-menu,.appearance-menu,#fxPanel,#cursor-glow,[data-for-badge],[data-bsc-stack]{display:none !important}
       .section-shell > .card, .formats-grid > .card, .section-shell > .grid > .card, #tailorTools{opacity:1 !important; transform:none !important; transition:none !important}
@@ -1667,6 +1739,7 @@
       a{color:#111 !important; text-decoration:none !important}
     }
   </style>
+  <!-- Structured data (schema.org Person) for search engines. It is read by crawlers only and has no visual effect. -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -1688,10 +1761,14 @@
     ]
   }
   </script>
+  <!-- Command palette styles. It has its own colour variables so it stays readable on any atmosphere. -->
   <style>
     /* command palette */
     #cmd-pal{position:fixed;inset:0;z-index:99998;display:flex;align-items:flex-start;justify-content:center;padding-top:clamp(48px,9vh,130px)}
     #cmd-pal[hidden]{display:none !important}
+    /* Palette colours live in local --cp-* variables: light by default, dark when the theme is dark or when
+       the theme is not forced light and the OS prefers dark.
+    */
     #cmd-pal{--cp-bg:#fff;--cp-border:#e5e7eb;--cp-text:#111827;--cp-muted:#6b7280;--cp-sub:#f9fafb;--cp-hover:#eff6ff;--cp-cat:#9ca3af;--cp-bdrop:rgba(0,0,0,.48)}
     html[data-theme="dark"] #cmd-pal{--cp-bg:#0f172a;--cp-border:#1e3a5f;--cp-text:#e2e8f0;--cp-muted:#64748b;--cp-sub:#071224;--cp-hover:rgba(37,99,235,.15);--cp-cat:#475569;--cp-bdrop:rgba(0,0,0,.72)}
     @media(prefers-color-scheme:dark){html:not([data-theme="light"]) #cmd-pal{--cp-bg:#0f172a;--cp-border:#1e3a5f;--cp-text:#e2e8f0;--cp-muted:#64748b;--cp-sub:#071224;--cp-hover:rgba(37,99,235,.15);--cp-cat:#475569;--cp-bdrop:rgba(0,0,0,.72)}}
@@ -1715,19 +1792,24 @@
   </style>
 </head>
 <body>
+  <!-- Skip link: first focusable element, lets keyboard users jump past the toolbar to the formats. -->
   <a class="skip" href="#formats">Skip to resume formats</a>
+  <!-- Background layers (decorative, hidden from assistive tech): animated canvas, CSS fallback, contrast scrim. -->
   <div id="vanta" aria-hidden="true"></div>
   <div class="atmosphere-fallback" aria-hidden="true"></div>
   <div class="scrim" aria-hidden="true"></div>
+  <!-- Confetti canvas: full-screen overlay that script draws on; click-through and hidden from assistive tech. -->
   <canvas id="confetti" aria-hidden="true"></canvas>
 
   <div class="site">
+    <!-- Topbar: brand tag plus page utilities (command palette, plain mode, theme, effects, appearance). -->
     <header class="topbar" aria-label="Page utilities">
       <div class="brand-tag"><span class="brand-dot" aria-hidden="true"></span> Brandon S. Clark · Resume</div>
       <div class="top-actions">
         <button class="btn lift small" id="cmdPalBtn" type="button" aria-label="Open command palette">⌘K</button>
         <a class="btn lift small" href="?plain=1" id="plainModeLink" aria-label="Toggle plain mode">Plain mode</a>
         <button class="btn lift small" id="themeBtn" type="button">Light mode</button>
+        <!-- FX panel: a switch per effect, plus a Reading mode preset that turns them all off. -->
         <details class="fx-panel" id="fxPanel">
           <summary class="btn lift small" aria-label="Toggle visual effects">✨ FX</summary>
           <div class="fx-menu" role="group" aria-label="Visual effect toggles">
@@ -1787,6 +1869,7 @@
             </ul>
           </div>
         </details>
+        <!-- Look and Feel panel: choose the background effect and the colour atmosphere (aria-pressed marks the active choice). -->
         <details class="appearance-panel" id="appearancePanel">
           <summary class="btn lift small">Look &amp; Feel</summary>
           <div class="appearance-menu">
@@ -1826,10 +1909,13 @@
       </div>
     </header>
 
+    <!-- Status banner: hidden until script has a message to show; a polite live region. -->
     <div class="warn" id="warn" role="status" aria-live="polite" hidden></div>
 
+    <!-- Main content: hero first, then routing and the mode cards. -->
     <main class="main" id="content">
       <div class="hero-wrap">
+        <!-- Hero: name, positioning line and the primary calls to action. -->
         <section class="hero-shell card" aria-label="Cinematic resume hero">
           <div class="avail-badge" id="availBadge" aria-label="Availability status">
             <span class="dot" aria-hidden="true"></span>
@@ -1853,6 +1939,7 @@
           </div>
         </section>
 
+        <!-- Contact row: location and direct links. -->
         <section class="meta-row" aria-label="Contact links">
           <span class="micro-pill">Wisconsin · Remote</span>
           <a class="micro-pill" href="mailto:bsc_pro@protonmail.com">bsc_pro@protonmail.com</a>
@@ -1861,7 +1948,9 @@
         </section>
       </div>
 
+      <!-- Formats section: target of the skip link and the See all modes link. -->
       <div class="section-shell" id="formats">
+        <!-- Route panel: audience-based shortcuts to the right mode. -->
         <section class="card route-panel" aria-label="Recommended routes">
           <div class="kicker">Reader routing</div>
           <h2 class="section-title">Choose the mode that matches how they review</h2>
@@ -1876,7 +1965,9 @@
           </div>
         </section>
 
+        <!-- Mode cards: one per resume view, each with a CSS-only layout preview. A swipeable rail on narrow screens. -->
         <div aria-label="Resume formats" class="grid formats-grid">
+          <!-- Mode card: Signal -->
           <section aria-label="Interactive resume" class="card">
             <div class="kicker">Interactive resume</div>
             <h2>Signal — Tailorable / Hiring‑manager first</h2>
@@ -1936,6 +2027,7 @@
             <p class="hint mono">Tip: Signal supports URLs like <span id="exampleUrl">resume-signal.html?focus=cloud,api</span></p>
           </section>
 
+          <!-- Mode card: Atlas -->
           <section aria-label="Print-ready resume" class="card">
             <div class="kicker">Print / PDF / classic</div>
             <h2>Atlas — Recruiter‑safe document view</h2>
@@ -1985,6 +2077,7 @@
             <p class="hint">If you are short on time, Atlas is the fastest classic read.</p>
           </section>
 
+          <!-- Mode card: Proof Hub -->
           <section aria-label="Proof hub" class="card">
             <div class="kicker">Evidence layer</div>
             <h2>Proof Hub — Case studies / hard metrics / bullet bank</h2>
@@ -2046,6 +2139,7 @@
             <p class="hint">The evidence behind the headline bullets.</p>
           </section>
 
+          <!-- Mode card: Switchboard -->
           <section aria-label="Static switchboard" class="card">
             <div class="kicker">Low-motion fallback</div>
             <h2>Switchboard — Clean / no-fog / backup hub</h2>
@@ -2100,6 +2194,7 @@
           </section>
         </div>
 
+        <!-- Tailoring tools: collapsed by default; one-click presets plus a custom Signal link builder. -->
         <details class="card tools-card" id="tailorTools">
           <summary class="tools-summary">
             <span class="tools-copy">
@@ -2160,6 +2255,7 @@
           </div>
         </details>
 
+        <!-- Footer: privacy statement. -->
         <footer>
           <p style="margin:0">Privacy by default: no analytics, no cookies, no session replay, no ad tracking. Use <a class="plainLink mono" href="?plain=1" id="plainModeLinkFooter">?plain=1</a> for a recruiter-safe, no-animation version, or open the Switchboard.</p>
         </footer>
@@ -2167,9 +2263,14 @@
     </main>
   </div>
 
+  <!-- Toast: live region for brief confirmations. -->
   <div aria-live="polite" class="toast" id="toast" role="status"></div>
 
   <script>
+    // Main page script: owns the appearance and effects state (theme, atmosphere, background
+    // effect), the BSC_FX feature toggles, the lazy-loaded animated background, plain-mode link
+    // rewriting, the mode dock wiring and the Signal link builder. Everything lives inside this
+    // IIFE; only window.BSC_FX and window.bscToast are exposed for the other scripts.
     (function(){
       const html = document.documentElement;
       const themeColorMeta = document.querySelector('meta[name="theme-color"]');
@@ -2182,8 +2283,12 @@
       const fxPanel = document.getElementById('fxPanel');
       const atmosphereButtons = Array.from(document.querySelectorAll('[data-atmosphere-btn]'));
 
+      // Storage can throw (private windows, blocked site data), so every localStorage access in
+      // this script is wrapped in try/catch and the page still works with the defaults.
       // BSC_FX: runtime feature toggles persisted to localStorage. Defined before
       // any feature script runs so they can gate behavior via window.BSC_FX.get().
+      // Only the booleans listed here are accepted from storage, so a stale or hand-edited value
+      // cannot inject unknown keys or non-boolean types.
       const BSC_FX_DEFAULTS = { spotlight:false, tilt:false, sparks:false, confetti:true };
       let fxState = (function(){
         try{
@@ -2200,6 +2305,9 @@
         return Object.assign({}, BSC_FX_DEFAULTS);
       })();
       function fxSave(){ try{ localStorage.setItem('bsc_fx', JSON.stringify(fxState)); }catch(e){} }
+      // Public API for the toggles. set() persists the value and announces it on window with a
+      // 'bsc-fx-change' CustomEvent ({key, value}) so features such as confetti can react live.
+      // get() returns true for unknown keys, so a feature without a registered toggle stays on.
       window.BSC_FX = {
         get: function(k){ return (k in fxState) ? !!fxState[k] : true; },
         set: function(k, v){
@@ -2219,6 +2327,9 @@
         switchboard: 'resume-switchboard.html'
       };
 
+      // Atmosphere presets. The *Css values feed <meta name="theme-color">; the hex numbers feed
+      // Vanta, which wants numeric colours. Each preset has a dark and a light variant because
+      // the same atmosphere has to stay readable in both themes.
       const ATMOSPHERES = {
         blue:{
           baseDarkCss:'#070a12',
@@ -2306,6 +2417,7 @@
       };
 
       const params = new URLSearchParams(location.search);
+      // ?plain=1 is the recruiter-safe mode: no motion, static background (CSS keys off html.plain).
       const plain = params.get('plain') === '1';
       if(plain) html.classList.add('plain');
 
@@ -2328,6 +2440,7 @@
       }
       window.bscToast = toastMsg;
 
+      // Theme resolution order: saved choice, then the OS colour-scheme preference, then dark.
       function getPreferredTheme(){
         try{
           const value = localStorage.getItem('bsc_theme');
@@ -2358,6 +2471,8 @@
         return ATMOSPHERES[preset] ? preset : 'blue';
       }
 
+      // Allow-list for the background effect. Anything else (including a stale stored value)
+      // falls back to 'fog'.
       var VALID_EFFECTS = ['fog','clouds','ocean','depth','still','leaves'];
 
       function currentEffect(){
@@ -2379,6 +2494,8 @@
         });
       }
 
+      // data-effect mirrors data-vanta-effect; the CSS uses it to freeze the static gradient when
+      // the 'still' effect is selected.
       function applyEffect(name){
         var next = VALID_EFFECTS.indexOf(name) > -1 ? name : 'fog';
         html.setAttribute('data-vanta-effect', next);
@@ -2400,6 +2517,9 @@
         });
       }
 
+      // Brief accent-colour wash as feedback when the atmosphere changes. Skipped for reduced
+      // motion. The double requestAnimationFrame lets the browser paint opacity:0 first, so the
+      // transition to the target opacity actually runs.
       function flashAtmosphereChange(){
         if(window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
         var el = document.createElement('div');
@@ -2418,6 +2538,8 @@
         });
       }
 
+      // skipAtmosphere avoids restarting the background while the page is still initialising;
+      // startVanta() is called once explicitly after setup.
       function applyAtmosphere(name, skipAtmosphere){
         const next = ATMOSPHERES[name] ? name : 'blue';
         html.setAttribute('data-atmosphere', next);
@@ -2442,12 +2564,15 @@
         if(!skipAtmosphere) startVanta();
       }
 
+      // Initial state: apply saved preferences without restarting the background each time.
       applyTheme(getPreferredTheme(), true);
       applyAtmosphere(getPreferredAtmosphere(), true);
       html.setAttribute('data-vanta-effect', getPreferredEffect());
       html.setAttribute('data-effect', getPreferredEffect());
       syncEffectButtons();
 
+      // Builds the plain/animated toggle links from the current URL so other query parameters
+      // and the hash survive the switch.
       function updatePlainLinks(){
         const targets = [plainModeLink, plainModeLinkInline].filter(Boolean);
         targets.forEach(function(link){
@@ -2504,6 +2629,7 @@
         });
       });
 
+      // Hover hints for the effect buttons, shown through the shared warning banner (setWarn).
       var effectLabels = {
         fog:'Fog — drifting atmospheric mist',
         clouds:'Clouds — volumetric sky with slow drift',
@@ -2556,6 +2682,9 @@
         return chipInputs.filter(function(input){ return input.checked; }).map(function(input){ return input.value; });
       }
 
+      // ── Signal link builder ──
+      // Turns the chosen chips, search text and 'only' checkbox into a resume-signal.html URL.
+      // URLSearchParams encodes commas as %2C; they are put back so the link reads focus=cloud,api.
       function buildSignalUrl(){
         const selected = getSelectedTags();
         const p = new URLSearchParams();
@@ -2573,6 +2702,8 @@
         });
       }
 
+      // Clipboard API first; falls back to a hidden textarea plus execCommand('copy') for
+      // browsers or contexts (such as non-secure origins) where the async API is unavailable.
       async function copyToClipboard(text){
         try{
           await navigator.clipboard.writeText(text);
@@ -2609,6 +2740,8 @@
         });
       }
       if(copyBuilt){
+        // The copied link must be absolute so it works when pasted elsewhere; the replace drops
+        // the current file name and keeps the directory.
         copyBuilt.addEventListener('click', async function(){
           const absolute = window.location.origin + window.location.pathname.replace(/[^/]*$/, '') + buildSignalUrl();
           await copyToClipboard(absolute);
@@ -2648,6 +2781,9 @@
         });
       });
 
+      // ── Animated background ──
+      // Effects: 'leaves' is a lightweight 2D canvas; fog, clouds, ocean and depth use Vanta on
+      // three.js, fetched on demand. 'still' and every guard path use the CSS fallback gradient.
       const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       let vanta = null;
 
@@ -2766,6 +2902,8 @@
         };
       }
 
+      // 'vanta' hides the CSS fallback gradient (html.vanta-active); 'fallback' shows it
+      // (html.use-fallback). Exactly one of the two is active after each start attempt.
       function setAtmosphereState(mode){
         html.classList.toggle('vanta-active', mode === 'vanta');
         html.classList.toggle('use-fallback', mode === 'fallback');
@@ -2779,6 +2917,7 @@
         html.classList.remove('vanta-active');
       }
 
+      // Vanta needs WebGL; checking first avoids downloading scripts that cannot run.
       function webglAvailable(){
         try{
           const c = document.createElement('canvas');
@@ -2786,6 +2925,8 @@
         }catch(e){ return false; }
       }
 
+      // Builds the options object for the current effect, theme and atmosphere. Mouse and touch
+      // interaction are disabled when the visitor prefers reduced motion.
       function buildEffectConfig(){
         var effect = currentEffect();
         var dark = currentTheme() === 'dark';
@@ -2843,9 +2984,14 @@
         });
       }
 
+      // Lazy loader: three.js and the Vanta effect files are only requested when an animated
+      // effect is actually needed, so plain mode, reduced motion, 'still' and 'leaves' never
+      // download them. three.js must load before the Vanta effect script.
       var VANTA_SRC = {
         FOG:'vanta.fog.min.js', CLOUDS:'vanta.clouds.min.js', WAVES:'vanta.waves.min.js', RIPPLE:'vanta.ripple.min.js'
       };
+      // Promise cache keyed by URL so repeated effect switches do not inject the same script twice.
+      // A failed load is evicted from the cache so a later attempt can retry.
       var scriptPromises = {};
       function loadScriptOnce(url){
         if(!scriptPromises[url]){
@@ -2866,6 +3012,9 @@
         });
       }
 
+      // Central entry point, called after any theme, atmosphere or effect change. It tears down
+      // the previous effect, then either selects the CSS fallback (plain mode, reduced motion,
+      // 'still', no WebGL, load failure) or starts the chosen effect.
       function startVanta(){
         destroyVanta();
         html.setAttribute('data-effect', currentEffect());
@@ -2905,6 +3054,9 @@
         setWarn('');
         var neededKey = eff === 'ocean' ? 'WAVES' : eff === 'depth' ? 'RIPPLE' : eff === 'clouds' ? 'CLOUDS' : 'FOG';
         var requestedEffect = eff;
+        // If the CDN scripts have not arrived in 4 seconds, show the CSS fallback instead of leaving
+        // the page waiting. The checks after loading discard results that arrive too late or after
+        // the visitor already switched to another effect.
         var timedOut = false;
         var timer = window.setTimeout(function(){
           timedOut = true;
@@ -2935,6 +3087,8 @@
       startVanta();
       updatePreview();
 
+      // In plain mode, keep the visitor in plain mode when they follow links to the other resume
+      // pages: append plain=1 to those links, before any #hash and without duplicating it.
       if(html.classList.contains('plain') || params.get('plain') === '1'){
         document.querySelectorAll('a[href]').forEach(function(a){
           var h = a.getAttribute('href');
@@ -2947,12 +3101,15 @@
         });
       }
 
+      // The mode dock appears after scrolling past the first screen. The scroll listener is
+      // passive because it never calls preventDefault, so it cannot block scrolling.
       function syncDockVisibility(){
         html.classList.toggle('show-dock', window.scrollY > 160);
       }
       syncDockVisibility();
       window.addEventListener('scroll', syncDockVisibility, { passive:true });
 
+      // Mark the dock link for the current page and remember which mode was last used.
       document.addEventListener('DOMContentLoaded', function(){
         const current = location.pathname.split('/').pop() || 'index.html';
         document.querySelectorAll('.bsc-dock-link').forEach(function(link){
@@ -2966,6 +3123,8 @@
         });
       });
 
+      // The toggle inputs and BSC_FX stay in sync in both directions: user changes write to the
+      // store, and the 'bsc-fx-change' event and the cross-tab 'storage' event update the inputs.
       /* ── FX panel: wire toggle switches to BSC_FX state ───────────── */
       if(fxPanel){
         const fxToggles = Array.from(fxPanel.querySelectorAll('input.fx-toggle'));
@@ -3017,6 +3176,7 @@
             });
           }catch(_e){}
         });
+        // Reading mode: one click turns every toggle off and switches to the still background.
         var readingBtn = document.getElementById('fxReadingMode');
         if(readingBtn){
           readingBtn.addEventListener('click', function(){
@@ -3047,6 +3207,7 @@
     })();
   </script>
 
+  <!-- Mode dock: floating menu linking every page; shown only when html.show-dock is set (see CSS). -->
   <details class="bsc-dock">
     <summary>Mode dock</summary>
     <div class="bsc-dock-panel">
@@ -3082,6 +3243,9 @@
 
 
   <script id="bsc-confetti-script">
+    // Confetti burst on load. Owns the #confetti canvas and exposes window.bscConfettiBurst.
+    // Does nothing at all in plain mode or with reduced motion, so those visitors never get
+    // a moving overlay; it also respects the 'confetti' BSC_FX toggle.
     (function(){
       const canvas = document.getElementById('confetti');
       if(!canvas) return;
@@ -3138,6 +3302,7 @@
           : ['rgba(134,166,255,0.94)', 'rgba(111,255,209,0.90)', 'rgba(255,255,255,0.86)', 'rgba(255,214,122,0.88)'];
       }
 
+      // Position comes from getBoundingClientRect, i.e. viewport coordinates, to match the fixed canvas.
       // The explosion starts at the name in the hero (falls back to upper centre).
       function origin(){
         const headline = document.getElementById('heroHeadline');
@@ -3150,6 +3315,8 @@
         return { x: width * 0.5, y: Math.min(height * 0.32, 320) };
       }
 
+      // One piece: random direction, speed scaled by power, a small upward bias, and its own
+      // gravity and drag so the pieces spread out and fall at different rates.
       function makePiece(index, o, power){
         const colors = palette();
         const angle = Math.random() * Math.PI * 2;
@@ -3187,6 +3354,9 @@
         ctx.restore();
       }
 
+      // Time-based animation: dt scales motion to the real frame time (capped at 2.5 frames so
+      // a long pause cannot fling pieces across the screen), keeping speed similar on 60 Hz
+      // and high-refresh displays. Pieces fade after 700 ms; the run ends at 2.2 s.
       function frame(ts){
         if(!active) return;
         if(!startTs){ startTs = ts; lastTs = ts; }
@@ -3226,6 +3396,7 @@
         window.removeEventListener('resize', resize);
       }
 
+      // A second call while a burst is running adds pieces instead of restarting the animation.
       function burst(){
         resize();
         const o = origin();
@@ -3239,6 +3410,7 @@
           window.addEventListener('resize', resize, { passive:true });
           raf = window.requestAnimationFrame(frame);
         }
+        // Origin is recomputed because the layout may have shifted in the meantime.
         // second, softer wave for the "pop-pop"
         window.setTimeout(function(){
           if(!active) return;
@@ -3258,6 +3430,9 @@
   </script>
 
   <script id="bsc-hero-specular-script">
+    // One-time specular shine across the hero name. sessionStorage remembers that it played, so
+    // it runs once per browser session rather than on every reload. Skipped for plain mode and
+    // reduced motion.
     (function(){
       const headline = document.getElementById('heroHeadline');
       if(!headline) return;
@@ -3279,11 +3454,14 @@
         if(played) return;
         played = true;
         headline.classList.remove('specular-run');
+        // Reading offsetWidth forces a reflow, so removing and re-adding the class restarts the
+        // CSS animation instead of being merged into a no-op.
         void headline.offsetWidth;
         headline.classList.add('specular-run');
         try{ sessionStorage.setItem(storageKey, '1'); }catch(e){}
       }
 
+      // Hovering or focusing the card plays the shine right away, instead of waiting for scroll.
       const heroCard = headline.closest('.card');
       if(heroCard){
         const handoff = function(){ playOnce(); };
@@ -3291,6 +3469,8 @@
         heroCard.addEventListener('focusin', handoff, { once:true });
       }
 
+      // Otherwise play once the name is mostly in view (72%); without IntersectionObserver,
+      // play after a short delay.
       if('IntersectionObserver' in window){
         const io = new IntersectionObserver(function(entries){
           entries.forEach(function(entry){
@@ -3308,6 +3488,8 @@
   </script>
 
   <script>
+    // The comparison uses the visitor's local clock. Date months are zero-based, so (2026, 11, ...)
+    // means 31 December 2026 at 23:59:59. After that moment the badge hides itself.
     /* availability badge: auto-hide after AVAILABLE_UNTIL date */
     (function(){
       var badge = document.getElementById('availBadge');
@@ -3316,6 +3498,8 @@
   </script>
 
   <script>
+    // Types the role phrase one character at a time, then drops the .typing class (the caret).
+    // Skipped for reduced motion, which leaves the server-rendered text untouched.
     /* hero typing animation */
     (function(){
       if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -3354,6 +3538,8 @@
   </div>
   <script>
   (function(){
+    // Command palette (Ctrl/Cmd+K): a filterable list of navigation links, actions and
+    // per-page section jumps. Bails out quietly if the palette markup is missing.
     var pal=document.getElementById('cmd-pal'),bg=document.getElementById('cmd-bg'),inp=document.getElementById('cmd-q'),lst=document.getElementById('cmd-list');
     if(!pal||!bg||!inp||!lst) return;
     var page=(location.pathname.split('/').pop()||'index.html').replace(/[?#].*/,'');
@@ -3370,6 +3556,7 @@
       {cat:'Action',label:'View GitHub',desc:'NorthwoodsCode',url:'https://github.com/NorthwoodsCode',ext:true},
       {cat:'Action',label:'View LinkedIn',desc:'brandon-c-it-industry',url:'https://www.linkedin.com/in/brandon-c-it-industry',ext:true},
     ];
+    // Section jumps are keyed by page, so each page only offers anchors that exist on it.
     var JMP={
       'index.html':[
         {cat:'Jump to',label:'Resume Modes',desc:'All format cards',anchor:'#formats'},
@@ -3393,10 +3580,12 @@
     var CMDS=NAV.concat(ACT).concat(JMP[page]||[]);
     var activeIdx=-1,prevFocus=null,filtered=[];
     function flt(q){q=(q||'').toLowerCase().trim();if(!q)return CMDS.slice();return CMDS.filter(function(c){return(c.label+' '+(c.desc||'')+' '+(c.cat||'')).toLowerCase().indexOf(q)>-1;});}
+    // Labels are inserted via innerHTML below, so HTML-significant characters are escaped first.
     function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
     function mkItem(c,i){
       var li=document.createElement('li');li.className='cpi';li.setAttribute('role','option');li.setAttribute('id','cpi-'+i);li.setAttribute('aria-selected','false');
       li.innerHTML='<span class="cpi-lbl">'+esc(c.label)+'</span>'+(c.desc?'<span class="cpi-desc">'+esc(c.desc)+'</span>':'');
+      // mousedown + preventDefault runs the command before the input loses focus and the list closes.
       li.addEventListener('mousedown',function(e){e.preventDefault();execute(c);});
       return li;
     }
@@ -3415,6 +3604,8 @@
       if(i>=0&&items[i])items[i].scrollIntoView({block:'nearest'});
       inp.setAttribute('aria-activedescendant',i>=0?'cpi-'+i:'');
     }
+    // Close first, then act. The clipboard path falls back to a temporary textarea when the
+    // async Clipboard API is unavailable or rejects. External links open with noopener.
     function execute(cmd){
       closePal();
       if(cmd.action==='print'){location.href='resume-atlas.html?print=1';return;}
@@ -3436,6 +3627,7 @@
       if(cmd.url){if(cmd.ext){window.open(cmd.url,'_blank','noopener');}else{location.href=cmd.url;}}
     }
     function openPal(){prevFocus=document.activeElement;pal.hidden=false;render('');inp.value='';setTimeout(function(){inp.focus();},30);document.body.style.overflow='hidden';}
+    // Closing returns focus to whatever was focused before the palette opened.
     function closePal(){pal.hidden=true;document.body.style.overflow='';if(prevFocus)prevFocus.focus();}
     inp.addEventListener('input',function(){render(inp.value);});
     inp.addEventListener('keydown',function(e){
@@ -3448,11 +3640,13 @@
     bg.addEventListener('mousedown',closePal);
     document.getElementById('cmd-esk').addEventListener('click',closePal);
     document.addEventListener('keydown',function(e){
+      // preventDefault stops the browser's own Ctrl/Cmd+K (often 'focus the search bar').
       if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();if(pal.hidden){openPal();}else{closePal();}}
       if(!pal.hidden&&e.key==='Escape')closePal();
     });
     var cmdBtn = document.getElementById('cmdPalBtn');
     if(cmdBtn){
+      // Show the shortcut that matches the visitor's platform.
       var isMac = /Mac|iPhone|iPad|iPod/.test(navigator.platform || navigator.userAgent || '');
       cmdBtn.textContent = isMac ? '⌘K' : 'Ctrl+K';
       cmdBtn.setAttribute('aria-label', 'Open command palette ('+(isMac?'⌘K':'Ctrl+K')+')');
@@ -3461,6 +3655,9 @@
   })();
   </script>
   <script>
+    // Cards fade and slide in as they scroll into view. This fails open: nothing is hidden for
+    // reduced motion or without IntersectionObserver, printing reveals everything, and a
+    // 4-second timer reveals any card that is still hidden, so content is never left invisible.
   /* scroll reveal stagger */
   (function(){
     if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -3469,6 +3666,7 @@
     function revealAll(){
       items.forEach(function(el){ el.style.opacity = '1'; el.style.transform = ''; });
     }
+    // Print and PDF export would otherwise capture cards that have not scrolled into view yet.
     window.addEventListener('beforeprint', revealAll);
     window.setTimeout(function(){
       items.forEach(function(el){ if(el.style.opacity === '0'){ el.style.opacity = '1'; el.style.transform = ''; } });

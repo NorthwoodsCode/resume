@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="robots" content="noindex" />
   <title>Redirecting — Brandon S. Clark</title>
+  <!-- Redirect and link-fixing logic. It runs before the page body is parsed, so
+       the /for/<slug> redirect happens without flashing the 404 content. -->
   <script>
     /* GitHub Pages has no server-side redirects, so pretty per-recipient
        links (/for/<company>) land here. Rewrite to the query-string form the
@@ -12,19 +14,35 @@
        Mirrors the old Cloudflare _redirects rule:
          /for/:slug  ->  /?for=:slug  */
     (function () {
+      // Step 1: read the path the visitor asked for, e.g. /resume/for/acme
       var p = location.pathname;
+      // Step 2: match "<base>/for/<slug>". The lazy (.*?) captures whatever precedes
+      // /for/ (empty on a custom domain, "/resume" on a project page), so one
+      // pattern serves both hosting layouts. Group 2 is the slug.
       var m = p.match(/^(.*?)\/for\/([^\/?#]+)\/?$/);
       if (m) {
+        // Step 3: decode the slug so it is not double-encoded below. A malformed
+        // escape such as %E0%A4%A throws URIError; the catch keeps the raw text.
         var slug = m[2];
         try { slug = decodeURIComponent(m[2]); } catch (e) {}
+        // Step 4: send the visitor to <base>/?for=<slug>, re-encoding the slug and keeping
+        // any #hash. replace() (not assign) keeps the dead /for/ URL out of history,
+        // so Back does not bounce the visitor straight into this redirect again.
         location.replace((m[1] || '') + '/?for=' + encodeURIComponent(slug) + location.hash);
         return;
       }
+      // Not a /for/ link, so this is an ordinary 404. The links in the body are
+      // written for a project page (/resume/...), so they are corrected below if
+      // the site is actually served from a domain root.
       /* Plain 404: point "back" at the site root (project-pages path or domain root). */
+      // Base-path detection: a path starting with /resume/ means GitHub project
+      // pages, otherwise assume the site root.
       var base = p.indexOf('/resume/') === 0 ? '/resume/' : '/';
+      // Wait for DOMContentLoaded because this script sits in <head>, before the links exist.
       document.addEventListener('DOMContentLoaded', function () {
         var a = document.getElementById('home');
         if (a) a.setAttribute('href', base);
+        // Link id suffix -> page. Each anchor is id="go-<key>" and gets base + page.
         var map = {atlas: 'resume-atlas.html', signal: 'resume-signal.html', proof: 'proof-hub.html'};
         Object.keys(map).forEach(function (k) {
           var l = document.getElementById('go-' + k);
@@ -33,6 +51,8 @@
       });
     })();
   </script>
+  <!-- Minimal inline styles on purpose: GitHub Pages serves this file at any URL
+       depth, where relative stylesheet links would break. -->
   <style>
     body{margin:0;min-height:100vh;display:grid;place-items:center;font:16px/1.5 system-ui,sans-serif;background:#0b0d12;color:#e6e8ee}
     a{color:#8ab4ff}

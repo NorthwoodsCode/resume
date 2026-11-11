@@ -49,6 +49,9 @@
 
 
   <style>
+    /* ── Theme tokens and themes ── */
+    /* Every colour below is a custom property. The light values live on :root and the dark theme
+     overrides the same names, so rules elsewhere just use var(--name) and follow the theme. */
     :root {
       --bg: #f8fafc;
       --card: #ffffff;
@@ -64,6 +67,7 @@
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     }
 
+    /* Dark theme: same token names, new values. The script sets data-theme on <html>. */
     html[data-theme="dark"] {
       --bg: #0b1220;
       --card: #0f172a;
@@ -99,6 +103,7 @@
       padding: 22px 16px 72px;
     }
 
+    /* ── Header and controls ── */
     header {
       background: var(--card);
       border: 1px solid var(--border);
@@ -246,6 +251,8 @@
       font-size: 12px;
     }
 
+    /* ── Year navigation ── */
+    /* Horizontal scroll keeps the chip row on one line on narrow screens instead of wrapping. */
     .year-nav {
       margin: 14px 0 10px;
       display: flex;
@@ -269,6 +276,7 @@
       border-color: rgba(37,99,235,0.35);
     }
 
+    /* ── Cards and bullets ── */
     .card {
       background: var(--card);
       border: 1px solid var(--border);
@@ -308,6 +316,7 @@
       justify-content: space-between;
       border-bottom: 1px solid var(--border);
     }
+    /* Hide the default disclosure triangle in WebKit; list-style: none above covers other browsers. */
     details.year summary::-webkit-details-marker { display: none; }
 
     .year-title {
@@ -341,6 +350,7 @@
       border-radius: 14px;
       background: rgba(148, 163, 184, 0.05);
     }
+    /* Slightly stronger tint in dark mode so tiles stay visible against the dark card colour. */
     html[data-theme="dark"] .bullet {
       background: rgba(148, 163, 184, 0.07);
     }
@@ -350,6 +360,8 @@
       background: rgba(37, 99, 235, 0.06);
     }
 
+    /* Copy, Pick and match-badge sit at fixed corners of the tile (absolute position);
+       the 152px right padding on .bullet below reserves room so text never runs under them. */
     .bullet .copy-btn {
       position: absolute;
       top: 10px;
@@ -574,6 +586,7 @@
     /* ------------------------------------------------------------
        Bullet upgrades: Pick + JD match badge
        ------------------------------------------------------------ */
+    /* Reserves the right-hand gutter for the absolutely positioned action buttons. */
     .bullet { padding-right: 152px; }
 
     .bullet .pick-btn {
@@ -755,15 +768,21 @@
     .cred-list { margin: 0; padding-left: 18px; }
     .cred-list li { margin: 0 0 8px; }
 
+    /* .btn sets display, which would override the hidden attribute; this restores it
+       (used by the author-only Public Mode button). */
     .btn[hidden] { display: none; }
+    /* Screen: hidden. Shown only inside @media print below. */
     .print-identity { display: none; }
     details.tools > summary { cursor: pointer; font-weight: 700; padding: 4px 2px; }
     details.tools[open] > summary { margin-bottom: 4px; }
+    /* Leaves a little space above an element when a #hash link scrolls to it. */
     :target { scroll-margin-top: 12px; }
 
     /* ------------------------------------------------------------
        Mobile: bullet actions flow below the text
        ------------------------------------------------------------ */
+    /* On phones the gutter would squeeze the text, so actions drop below it (order: 1 for text,
+       order: 2 for actions) and become normal flex items (position: static). */
     @media (max-width: 640px) {
       .wrap { padding: 14px 12px 64px; }
       header { padding: 14px 14px 12px; }
@@ -792,9 +811,14 @@
     /* ------------------------------------------------------------
        Print: identity block, light tokens, white tiles
        ------------------------------------------------------------ */
+    /* Print rules: the page prints as a plain document. Interactive tools are hidden,
+       the print-only identity block is shown, and the tokens are forced to the light palette so a
+       dark-theme visitor still gets dark text on white paper (ink-friendly and legible). */
     @media print {
       .quick-actions, #laneBar, #laneHighlights, .search-chips, [data-case-share] { display: none !important; }
 
+      /* Re-declaring the light tokens here wins over the dark theme because this rule comes later
+         and only applies when printing. */
       html, html[data-theme="dark"] {
         --bg: #f8fafc;
         --card: #ffffff;
@@ -813,6 +837,8 @@
       .badges, .meta, .hint, .tailored-badge {
         display: none !important;
       }
+      /* Header becomes a flat resume heading; .print-identity is hidden on screen (display: none above)
+         and revealed here with contact details. */
       header { border: 0; box-shadow: none; padding: 0 0 8px; background: #fff; color: #000; }
       .print-identity { display: block; margin-top: 4px; font-size: 12px; color: #000; }
       .print-identity .pi-title { font-weight: 700; }
@@ -832,6 +858,7 @@
 </head>
 <body>
   <div class="wrap">
+    <!-- Header: title, badges, print-only identity block, search and controls -->
     <header>
       <div class="topline">
         <h1>Brandon S. Clark — Proof Hub (Resume + Case Studies)</h1>
@@ -841,6 +868,7 @@
         </div>
       </div>
 
+      <!-- Print identity: hidden on screen, shown by the @media print rules in place of the badges and meta links -->
       <div class="print-identity">
         <div class="pi-title">Senior Software Engineer • AWS Backend / Cloud Platform</div>
         <div>Wisconsin (Remote) · bsc_pro@protonmail.com · linkedin.com/in/brandon-c-it-industry · github.com/NorthwoodsCode</div>
@@ -874,6 +902,7 @@
       </div>
     </header>
 
+    <!-- Year navigation: in-page anchors to the sections below and to each year of bullets -->
     <nav class="year-nav" aria-label="Jump to year">
       <a class="chip" href="#start" title="Recruiter quick start">Start</a>
       <a class="chip" href="#cases" title="Architecture case studies">Cases</a>
@@ -893,6 +922,7 @@
     </nav>
 
 
+    <!-- Recruiter Quick Start: quick actions, proof points and role lanes (filled in by the script) -->
     <section class="card" id="start">
       <h2>Recruiter Quick Start</h2>
 
@@ -934,6 +964,7 @@
     </section>
 
 
+    <!-- Case studies: one details element per case; the search chips run the bullet filter -->
     <section class="card" id="cases">
       <h2>Case Studies (architecture + outcomes)</h2>
 
@@ -1015,6 +1046,7 @@
       </div>
     </section>
 
+    <!-- Role timeline -->
     <section class="card" id="timeline">
       <h2>Role Timeline (Milwaukee Tool)</h2>
       <ul class="timeline">
@@ -1030,6 +1062,7 @@
 
 
 
+    <!-- Credentials -->
     <section class="card" id="cred">
       <h2>Credentials (quick verification signals)</h2>
       <ul class="cred-list">
@@ -1040,6 +1073,7 @@
       </ul>
     </section>
 
+    <!-- Tailoring tools (collapsed by default): recruiter pack, impact snapshot, focus filters, skills, job description match, selected bullets -->
     <section class="card" id="turbo">
       <details class="tools">
         <summary>Tailoring tools: recruiter pack, skills pack, JD match, bullet picker</summary>
@@ -1120,6 +1154,10 @@
       </details>
     </section>
 
+    <!-- Bullet inventory: one details element per year, each holding li.bullet items.
+         data-text (written here) is a lowercase copy of the bullet, used for skills counting.
+         The script adds data-raw (the displayed text), data-public (internal names replaced),
+         plus data-year, data-tags and data-match at load time. Search and tags use the raw/public text. -->
     <main id="content">
       
     <details class="year" id="y2025" open>
@@ -1641,6 +1679,10 @@
 
   
   <script>
+    // Proof Hub script. Owns everything interactive on this page: theme, Public Mode, search and
+    // tag/lane filters, the job description matcher, bullet picking and export, the recruiter pack,
+    // keyboard shortcut, deep links and print handling. Wrapped in an IIFE so nothing leaks to window.
+    // shared-enhancements.js is loaded separately after this script.
     (function() {
       /* ------------------------------------------------------------
          Theme (Auto default)
@@ -1648,6 +1690,8 @@
       const root = document.documentElement;
       const themeBtn = document.getElementById('themeBtn');
 
+      // localStorage can throw (private browsing, blocked cookies, disabled storage), so every access
+      // is wrapped; on failure reads return null and writes are ignored and the page still works.
       // Safe storage wrappers (storage can be blocked)
       function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
       function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
@@ -1655,6 +1699,7 @@
       const reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
       const authorMode = new URLSearchParams(location.search).get('author') === '1';
 
+      // Anything unexpected in storage falls back to 'auto' so a stale or tampered value cannot break styling.
       // bsc_theme: 'light' | 'dark' | 'auto' (auto follows prefers-color-scheme)
       let theme = lsGet('bsc_theme');
       if (theme !== 'auto' && theme !== 'light' && theme !== 'dark') theme = 'auto';
@@ -1669,6 +1714,7 @@
         themeBtn.textContent = 'Theme: ' + label;
       }
 
+      // Click order: Auto, Light, Dark, then back to Auto. The choice is remembered in storage.
       function cycleTheme() {
         theme = (theme === 'auto') ? 'light' : (theme === 'light' ? 'dark' : 'auto');
         lsSet('bsc_theme', theme);
@@ -1694,6 +1740,7 @@
       /* ------------------------------------------------------------
          Copy helper
          ------------------------------------------------------------ */
+      // Legacy copy path: returns whether execCommand reported success; always cleans up the temporary textarea.
       function fallbackCopy(text) {
         let ok = false;
         let ta = null;
@@ -1715,6 +1762,9 @@
         return ok;
       }
 
+      // Prefer the async Clipboard API (needs a secure context: https or localhost). If it is missing or
+      // rejects, fall back to a hidden textarea and execCommand. Callers get a rejection when nothing
+      // was copied, so the UI can say so rather than claiming success.
       // Resolves true on success; rejects when nothing was copied.
       function copyText(text) {
         if (!text) return Promise.reject(new Error('empty'));
@@ -1725,6 +1775,7 @@
         return fb();
       }
 
+      // Shows a success toast only after the copy really worked; otherwise tells the visitor to copy manually.
       function copyWithToast(text, okMsg) {
         copyText(text).then(
           () => toast(okMsg),
@@ -1732,6 +1783,7 @@
         );
       }
 
+      // Delays fn until input pauses for `wait` ms (used so typing in the JD box does not rescore on every key).
       function debounce(fn, wait) {
         let t = null;
         return function(...args) {
@@ -1754,6 +1806,7 @@
       // make counts dynamic (so you can keep editing the HTML without updating numbers)
       if (totalCountEl) totalCountEl.textContent = String(bullets.length);
 
+      // raw = the text as authored in the HTML, captured before Public Mode rewrites what is displayed.
       // Ensure each bullet has stable raw text + id
       bullets.forEach((b, i) => {
         if (!b.id) b.id = 'b' + (i + 1);
@@ -1772,10 +1825,14 @@
         }
       });
 
+      // Public Mode swaps internal project names for generic ones in everything shown or copied.
+      // Visitors always get it on: the toggle button stays hidden and a stored "off" is ignored unless
+      // the URL has ?author=1.
       // Public Mode defaults ON; only author mode (?author=1) can turn it off.
       let publicMode = !(authorMode && lsGet('bsc_public') === '0');
       const publicBtn = document.getElementById('publicBtn');
 
+      // [pattern, replacement] pairs applied in order. \b word boundaries and /i avoid partial or case-sensitive misses.
       const SANITIZE_MAP = [
         [/\bJEDI\b/gi, 'Platform Org'],
         [/\bDIoTS\b/gi, 'Digital IoT Services'],
@@ -1791,6 +1848,9 @@
         return t;
       }
 
+      // The one place that decides which text a bullet shows: raw in author mode with Public Mode off,
+      // otherwise its data-public version. Display, copy, export and matching all go through here so
+      // internal names cannot leak through one path while hidden in another.
       function getActiveText(b) {
         if (!b) return '';
         const raw = (b.dataset.raw || '').trim();
@@ -1798,11 +1858,13 @@
         return ((b.dataset.public || sanitizeText(raw)) || '').trim();
       }
 
+      // Lowercased counterpart of getActiveText, precomputed below, for case-insensitive search and scoring.
       function getActiveLower(b) {
         if (!b) return '';
         return publicMode ? (b.dataset.publicLower || '') : (b.dataset.rawLower || '');
       }
 
+      // Computed once at load so toggling Public Mode and filtering never re-run the regexes.
       // precompute public-safe versions (so toggling is instant)
       bullets.forEach(b => {
         b.dataset.public = sanitizeText(b.dataset.raw || '');
@@ -1810,6 +1872,8 @@
         b.dataset.publicLower = (b.dataset.public || '').toLowerCase();
       });
 
+      // Re-renders everything that shows bullet text. The typeof checks tolerate being called early,
+      // before later sections have defined their functions. `silent` skips the storage write and toast (used at load).
       function applyPublicMode(on, silent) {
         publicMode = !!on;
         if (!silent) lsSet('bsc_public', publicMode ? '1' : '0');
@@ -1846,6 +1910,8 @@
       /* ------------------------------------------------------------
          Turbo Tools: Tags (category filters)
          ------------------------------------------------------------ */
+      /* ── Tags and category filters ── */
+      // Each tag is a keyword regex tested against a bullet's active lowercase text.
       const TAG_DEFS = [
         { key: 'cloud', label: '☁️ Cloud/AWS', re: /\b(aws|lambda|step functions|api gateway|cloudtrail|sagemaker|secrets manager|well-architected|documentdb|dynamodb)\b/i },
         { key: 'iot', label: '📡 IoT/MQTT', re: /\b(iot|mqtt|device provisioning|provisioning|telemetry|certificate|bootstrapp)\b/i },
@@ -1865,6 +1931,7 @@
         return tags;
       }
 
+      // Tags are assigned from the active text, so they follow the current Public Mode wording.
       const tagCounts = Object.create(null);
       bullets.forEach(b => {
         const t = getActiveLower(b);
@@ -1876,6 +1943,7 @@
       const tagFiltersEl = document.getElementById('tagFilters');
       const activeTags = new Set();
 
+      // Tag filters use OR logic: a bullet shows if it has any selected tag. Text search then narrows with AND.
       function renderTagFilters() {
         if (!tagFiltersEl) return;
         tagFiltersEl.innerHTML = '';
@@ -1944,6 +2012,7 @@
       const skillsStatusEl = document.getElementById('skillsStatus');
       const copySkillsBtn = document.getElementById('copySkillsBtn');
 
+      // Counts how many bullets mention each skill (any alias counts once per bullet) and ranks by count.
       function computeSkills() {
         const counts = SKILLS.map(s => ({ term: s.term, count: 0 }));
         const texts = bullets.map(b => (b.dataset.text || b.dataset.raw || '').toLowerCase());
@@ -1996,6 +2065,8 @@
 
       let impactMetrics = [];
 
+      // Finds the first bullet matching the regex. The impact tiles are parsed out of the bullet text,
+      // so each metric falls back to generic wording if a bullet is reworded and the pattern stops matching.
       function findFirstText(re) {
         for (const b of bullets) {
           const raw = (b.dataset.raw || '').replace(/\s+/g,' ');
@@ -2078,6 +2149,8 @@
         });
       }
 
+      /* ── Role lanes ── */
+      // A lane = tags to filter on plus extra terms used only to rank highlights.
       // Role lanes: one-click focus (sets tag filters + shows curated highlights)
       const LANES = [
         { key: 'cloud', label: '☁️ Cloud / Platform', tags: ['cloud','devops','security'], terms: ['aws','terraform','serverless','well-architected','api gateway','step functions'] },
@@ -2091,6 +2164,7 @@
       const laneHighlightsEl = document.getElementById('laneHighlights');
       let activeLane = null;
 
+      // Choosing a lane replaces the active tag filters with that lane's tags (null clears them).
       function setLane(key) {
         activeLane = key;
 
@@ -2151,6 +2225,8 @@
         return /\d/.test(text || '');
       }
 
+      // Ranking heuristic: tag overlap weighs most (3), then each lane term (1), then a nudge toward
+      // recent years and bullets that contain numbers. Higher means more relevant.
       function laneScore(b, lane) {
         const tags = (b.dataset.tags || '').split(/\s+/).filter(Boolean);
         const t = getActiveLower(b);
@@ -2238,6 +2314,8 @@
         laneHighlightsEl.appendChild(ul);
       }
 
+      /* ── Recruiter pack ── */
+      // Plain-text summary built from current state (lane, impact metrics, top skills, best bullets).
       // Recruiter pack output
       const recruiterPackOutEl = document.getElementById('recruiterPackOut');
       const copyPackBtn = document.getElementById('copyPackBtn');
@@ -2257,6 +2335,7 @@
         ].filter(Boolean).join('\n');
       }
 
+      // Output is plain text on purpose: it is pasted into emails and chat. With no lane, it uses the most recent quantified bullets.
       function buildRecruiterPack() {
         const lines = [];
         lines.push('Brandon S. Clark — Senior Software Engineer • AWS Backend / Cloud Platform');
@@ -2360,6 +2439,7 @@
       const clearSelectedBtn = document.getElementById('clearSelectedBtn');
       const printBtn = document.getElementById('printBtn');
 
+      /* ── Pick and selected export ── */
       // selection state
       const selected = new Map(); // bulletId -> text
 
@@ -2380,6 +2460,7 @@
         selectedOutEl.value = lines.join('\n');
       }
 
+      // Selected stores the text at the moment of picking; applyPublicMode refreshes it if the mode changes.
       function togglePick(b) {
         const id = b.id;
         const text = getActiveText(b);
@@ -2426,6 +2507,7 @@
         });
       });
 
+      // Exports are plain "- " or "* " lines: no tables or styling, which survives applicant tracking systems and chat apps.
       // ATS / Markdown export
       function selectedAsATS() {
         const lines = Array.from(selected.values());
@@ -2467,6 +2549,9 @@
         printBtn.addEventListener('click', () => window.print());
       }
 
+      /* ── Job description matcher ── */
+      // Scoring is deliberately simple and explainable: the JD is reduced to a list of terms, and a
+      // bullet scores one point per term it contains.
       // JD terms extraction (prefer skills list; fallback to keywords)
       const STOP = new Set([
         'a','an','and','are','as','at','be','but','by','for','from','has','have','in','is','it','its',
@@ -2474,6 +2559,8 @@
         'will','can','may','must','should','not','all','any','into','over','per','plus'
       ]);
 
+      // Prefer known skill names found in the JD (less noisy). Only if none are found, fall back to the
+      // most frequent non-stop-words so unfamiliar job descriptions still produce some matches.
       function extractTerms(jdText) {
         const t = (jdText || '').toLowerCase();
         if (!t.trim()) return [];
@@ -2506,6 +2593,7 @@
 
       let jdTerms = [];
 
+      // Substring match, so multi-word terms like "step functions" work; also means short terms can match inside longer words.
       function scoreBullet(textLower) {
         if (!jdTerms.length) return 0;
         let score = 0;
@@ -2585,6 +2673,7 @@
         });
       }
 
+      // Rescore every bullet against the pasted JD, then refresh badges, the top-10 list and the filters.
       function computeJdMatches() {
         const jdText = jdEl ? jdEl.value : '';
         jdTerms = extractTerms(jdText);
@@ -2623,6 +2712,7 @@
         });
       }
 
+      // Adds the n highest scoring bullets to Selected without removing any existing picks.
       function autoPickTopMatches(n) {
         if (!jdTerms.length) {
           toast('Paste a JD first');
@@ -2656,6 +2746,9 @@
         visibleCountEl.textContent = String(visible);
       }
 
+      // Single source of truth for visibility. Text uses AND across words, tags use OR, and "JD matches
+      // only" applies only once a JD has produced terms. Year sections with no visible bullets are hidden,
+      // and sections with matches are opened while any filter is active.
       function applyFilters() {
         const q = (search.value || '').trim().toLowerCase();
         const parts = q ? q.split(/\s+/).filter(Boolean) : [];
@@ -2710,6 +2803,8 @@
       /* ------------------------------------------------------------
          Keyboard: "/" focuses search (not while typing, no modifiers)
          ------------------------------------------------------------ */
+      // Ignore Ctrl/Cmd/Alt combos so browser shortcuts keep working, and ignore keystrokes in form fields
+      // so typing a "/" in the search box or JD textarea is not hijacked.
       document.addEventListener('keydown', (e) => {
         if (e.key !== '/' || e.ctrlKey || e.metaKey || e.altKey) return;
         const a = document.activeElement;
@@ -2722,6 +2817,9 @@
       /* ------------------------------------------------------------
          Deep links: open and scroll to #case-*, and any target inside a <details>
          ------------------------------------------------------------ */
+      // Opens every collapsed <details> that contains the target so the browser can actually show it,
+      // then scrolls, so deep links work even in browsers that do not expand closed <details> themselves.
+      // Smooth scrolling is skipped when the visitor prefers reduced motion.
       function revealHash() {
         let id = '';
         try { id = decodeURIComponent(location.hash.slice(1)); } catch (e) { id = location.hash.slice(1); }
@@ -2738,6 +2836,7 @@
           el.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
         }
       }
+      // hashchange does not fire when the same link is clicked twice, so this click handler covers that case.
       window.addEventListener('hashchange', revealHash);
       document.addEventListener('click', (e) => {
         const a = e.target && e.target.closest ? e.target.closest('a[href^="#"]') : null;
@@ -2749,6 +2848,8 @@
       /* ------------------------------------------------------------
          Print: open every <details>, then restore
          ------------------------------------------------------------ */
+      // Collapsed sections would print empty, so open them all before printing and put each back afterwards.
+      // Both Ctrl+P and the Print button reach these events.
       let printRestore = null;
       window.addEventListener('beforeprint', () => {
         printRestore = Array.from(document.querySelectorAll('details')).map(d => [d, d.open]);
@@ -2759,6 +2860,7 @@
         printRestore = null;
       });
 
+      // Order matters: applyPublicMode runs last (silently) so everything is rendered in the right mode, then deep links are applied.
       // Initial state
       updateSelectedUI();
       applyFilters();

@@ -19,7 +19,15 @@
   <meta name="twitter:title" content="Brandon S. Clark — Now" />
   <meta name="twitter:description" content="What I'm currently building, learning, and reading." />
   <meta name="twitter:image" content="https://northwoodscode.github.io/resume/og-image.png" />
+  <!--
+    /now page: a short, deliberately informal snapshot of what I am focused on
+    right now (the convention comes from Derek Sivers's nownownow.com).
+    The "Last refreshed" date is not edited by hand: scripts/stamp_dates.py
+    rewrites <time id="lastUpdated"> at build time from the last git commit
+    that touched this file.
+  -->
   <style>
+    /* ── Theme tokens ── Light values by default; dark overrides follow. */
     :root{
       --bg:#ffffff; --fg:#111827; --muted:#4b5563;
       --card:#f3f4f6; --border:#e5e7eb;
@@ -29,12 +37,16 @@
       --sans:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
       --radius:14px; --max:880px;
     }
+    /* Dark values for an explicit data-theme="dark" choice. */
     html[data-theme="dark"]{
       --bg:#0b1220; --fg:#e5e7eb; --muted:#a8b4d8;
       --card:#101a31; --border:#233156;
       --accent:#60a5fa; --accent2:#34d399;
       --shadow:0 10px 30px rgba(0,0,0,.45);
     }
+    /* The same dark values again for data-theme="auto" when the OS prefers dark.
+       CSS cannot share one block between a media query and an attribute selector,
+       so the values are repeated; keep the two blocks in sync. */
     @media (prefers-color-scheme: dark){
       html[data-theme="auto"]{
         --bg:#0b1220; --fg:#e5e7eb; --muted:#a8b4d8;
@@ -43,13 +55,16 @@
         --shadow:0 10px 30px rgba(0,0,0,.45);
       }
     }
+    /* ── Base and layout ── */
     *{box-sizing:border-box}
     body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);line-height:1.55}
     a{color:var(--accent);text-decoration:none}
     a:hover{text-decoration:underline}
     a:focus-visible,button:focus-visible{outline:3px solid color-mix(in srgb,var(--accent) 55%,white);outline-offset:3px}
+    /* Skip link: off-screen until keyboard focus reveals it. */
     .skip{position:absolute;left:-999px;top:10px;background:var(--bg);border:1px solid var(--border);padding:.5rem .75rem;border-radius:10px;z-index:1000}
     .skip:focus{left:10px}
+    /* ── Sticky header ── */
     header{position:sticky;top:0;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);z-index:20}
     .head{max-width:var(--max);margin:0 auto;padding:18px 18px 16px;display:flex;align-items:center;gap:18px;justify-content:space-between}
     .head h1{margin:0;font-size:clamp(1.2rem,2.6vw,1.7rem);letter-spacing:-.02em}
@@ -57,8 +72,10 @@
     .wrap{max-width:var(--max);margin:0 auto;padding:30px 18px 80px}
     .lede{color:var(--muted);font-size:1.02rem;margin:0 0 28px;max-width:62ch}
     .lede a{font-weight:600}
+    /* ── "Last refreshed" stamp ── */
     .stamp{display:inline-flex;align-items:center;gap:8px;padding:4px 10px;border:1px solid var(--border);border-radius:999px;font-family:var(--mono);font-size:.74rem;color:var(--muted);margin:0 0 28px}
     .stamp .dot{width:7px;height:7px;border-radius:50%;background:var(--accent2);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent2) 18%,transparent)}
+    /* ── Content cards ── */
     section.card{
       background:var(--card);border:1px solid var(--border);
       border-radius:var(--radius);padding:22px 24px;margin:0 0 18px;
@@ -72,9 +89,11 @@
     section.card p:last-child{margin-bottom:0}
     section.card ul{margin:6px 0 0;padding-left:20px}
     section.card li{margin:4px 0}
+    /* ── Footnote and inline code ── */
     .fine{color:var(--muted);font-size:.86rem;margin-top:30px;text-align:center;line-height:1.7}
     .fine a{color:var(--muted);text-decoration:underline;text-underline-offset:3px}
     code{font-family:var(--mono);font-size:.92em;padding:1px 6px;border-radius:4px;background:color-mix(in srgb,var(--accent) 10%,transparent)}
+    /* ── Print ── Force the light tokens so dark mode never prints a dark page. */
     @media print{
       html, html[data-theme="dark"], html[data-theme="auto"]{ --bg:#fff; --fg:#000; --muted:#333; --card:#fff; --border:#ccc; --shadow:none }
       header{ position:static }
@@ -84,6 +103,7 @@
 <body>
   <a class="skip" href="#main">Skip to content</a>
 
+  <!-- Sticky header with the site-wide navigation -->
   <header>
     <div class="head">
       <h1>Now</h1>
@@ -97,6 +117,7 @@
     </div>
   </header>
 
+  <!-- Main content: the freshness stamp, then one card per topic -->
   <main id="main" class="wrap">
     <p class="stamp"><span class="dot" aria-hidden="true"></span> Last refreshed <time id="lastUpdated" datetime="2026-11-11">2026-11-11</time></p>
 
@@ -138,6 +159,7 @@
     </p>
   </main>
 
+  <!-- Shared site behaviour; see the header comment in shared-enhancements.js -->
   <script src="shared-enhancements.js"></script>
 </body>
 </html>

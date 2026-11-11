@@ -2,6 +2,11 @@
 
 Each test is an async function that takes a ChromeSession and returns
 (name, ok, message). Run via `python3 tests/test_home.py` from the repo root.
+
+The script serves the repo over a local http.server, drives headless Chrome
+through the small CDP harness in harness.py, and prints PASS/FAIL per test. All
+tests share one browser tab, so most start with goto(..., clear_storage=True)
+to begin from a clean localStorage. Tests are listed in TESTS near the bottom.
 """
 import asyncio
 import json
@@ -15,8 +20,11 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PORT = 8766
 BASE = f"http://localhost:{PORT}"
 
+# JS snippets reused across tests. GET_ATM / GET_THEME read the attributes the
+# site's scripts set on <html> for the colour atmosphere and light/dark theme.
 GET_ATM = "document.documentElement.getAttribute('data-atmosphere')"
 GET_THEME = "document.documentElement.getAttribute('data-theme')"
+# Every page of the site, in the order the "6/6 pages" messages count them.
 PAGES = (
     "/",
     "/resume-atlas.html",
@@ -25,11 +33,17 @@ PAGES = (
     "/resume-switchboard.html",
     "/now.html",
 )
+# Init script that makes localStorage/sessionStorage throw a SecurityError on
+# access, the way a browser with blocked site data behaves. The page's own code
+# must cope; see test_pages_survive_blocked_storage.
 BLOCK_STORAGE = (
     "(function(){var t={get:function(){throw new DOMException('Storage disabled',"
     "'SecurityError');},configurable:true};try{Object.defineProperty(window,"
     "'localStorage',t);Object.defineProperty(window,'sessionStorage',t);}catch(e){}})();"
 )
+# Collects only the text a visitor could see: skips script/style/noscript and
+# anything hidden with display:none or visibility:hidden. Used to check what is
+# actually rendered rather than what is merely in the HTML source.
 VISIBLE_TEXT = (
     "(function(){var out='';(function walk(n){if(n.nodeType===3){out+=n.textContent+' ';"
     "return;}if(n.nodeType!==1)return;if(['SCRIPT','STYLE','NOSCRIPT'].indexOf(n.tagName)>=0)"
@@ -39,10 +53,14 @@ VISIBLE_TEXT = (
 
 
 def _real_errors(c):
+    """Console errors, ignoring any that mention three.js (the optional 3D
+    background library), so its failures do not fail unrelated tests."""
     return [e for e in c.errors if "three.js" not in e.lower()]
 
 
 # ─── Page load + structure ──────────────────────────────────────────────
+# Protects the basics: each page loads without JS errors, and the FX panel and
+# sub-pages get exactly the features they should (and none they should not).
 
 async def test_page_loads_clean(c):
     await c.goto(BASE + "/", clear_storage=True)
@@ -88,6 +106,8 @@ async def test_subpages_load_without_BSC_FX(c):
 
 
 # ─── BSC_FX state + persistence ─────────────────────────────────────────
+# BSC_FX is the effects store behind the FX panel. These tests cover its
+# defaults, localStorage persistence, change event and checkbox syncing.
 
 async def test_fx_defaults(c):
     await c.goto(BASE + "/", clear_storage=True)
@@ -154,6 +174,8 @@ async def test_checkbox_click_updates_state(c):
 
 async def _confetti_fires(c, url, window_s=2.0):
     """Navigate and report whether the confetti canvas switches on within window_s."""
+    # Short initial wait, then poll every 100 ms: the check should not depend
+    # on exactly when the burst starts, and a long sleep could miss it.
     await c.goto(url, wait=0.25)
     for _ in range(int(window_s / 0.1)):
         if await c.eval("(function(){var e=document.getElementById('confetti');return !!(e&&e.classList.contains('is-on'));})()"):
@@ -169,6 +191,7 @@ async def test_confetti_pops_on_home_load(c):
     await c.eval("window.BSC_FX && window.BSC_FX.set('confetti', false)")
     off = await _confetti_fires(c, BASE + "/", window_s=1.5)
     await c.eval("window.BSC_FX && window.BSC_FX.set('confetti', true)")
+    # Emulate the OS "reduce motion" setting; the site must skip the animation.
     await c.emulate_media("", [{"name": "prefers-reduced-motion", "value": "reduce"}])
     reduced = await _confetti_fires(c, BASE + "/", window_s=1.5)
     await c.emulate_media("", [])
@@ -180,6 +203,8 @@ async def test_confetti_pops_on_home_load(c):
 
 
 # ─── Shared module: footer line, palette, dock ──────────────────────────
+# Features injected by shared-enhancements.js: the stack footer (Home only),
+# the Ctrl+K command palette and the navigation dock on sub-pages.
 
 async def test_stack_footer_home_only(c):
     failures = []
@@ -217,6 +242,8 @@ async def test_shared_palette_and_dock_on_subpages(c):
 
 
 # ─── ?for= personalization, /now ────────────────────────────────────────
+# Personalised links (?for=<company>) and the /now page: correct atmosphere and
+# badge for known slugs, silent no-op for unknown ones.
 
 async def test_for_param_personalizes(c):
     await c.goto(BASE + "/?for=stripe", clear_storage=True)
@@ -265,6 +292,8 @@ async def test_now_page_loads_with_sections(c):
 
 
 # ─── Proof Hub ──────────────────────────────────────────────────────────
+# Proof Hub case studies: anchors, copy-link buttons, deep links and keyboard
+# shortcuts that must not fire while typing in the search box.
 
 async def test_proof_hub_case_anchors_exist(c):
     await c.goto(BASE + "/proof-hub.html", clear_storage=True)
@@ -330,6 +359,8 @@ async def test_no_internal_terms_rendered(c):
 
 
 # ─── Signal ─────────────────────────────────────────────────────────────
+# Signal's filter UI: ?focus= parsing and aliases, history (popstate) handling
+# and the empty state.
 
 async def test_signal_focus_filters_and_aliases(c):
     await c.goto(BASE + "/resume-signal.html?focus=cloud,api", clear_storage=True)
@@ -356,6 +387,7 @@ async def test_signal_back_button_restores_filters(c):
     await c.goto(BASE + "/resume-signal.html", clear_storage=True)
     await c.eval("document.querySelector('[data-preset-focus=\"lead,enable,opex\"]').click()")
     after_preset = await c.eval("location.search")
+    # history.back() fires popstate asynchronously, so give the handler time to run.
     await c.eval("history.back()")
     await asyncio.sleep(0.4)
     checked = await c.eval(
@@ -375,6 +407,8 @@ async def test_signal_empty_state(c):
 
 
 # ─── Print ──────────────────────────────────────────────────────────────
+# Print styles: identity details stay visible on a white page and animated
+# cards do not print as invisible. Print is emulated, not opened.
 
 async def test_print_keeps_identity(c):
     checks = {
@@ -385,6 +419,7 @@ async def test_print_keeps_identity(c):
     failures = []
     for page, sel in checks.items():
         await c.goto(BASE + page, clear_storage=True)
+        # Force the dark theme first so the test proves print rules override it.
         await c.eval("document.documentElement.setAttribute('data-theme','dark')")
         await c.emulate_media("print")
         await asyncio.sleep(0.3)
@@ -412,6 +447,7 @@ async def test_home_print_shows_cards(c):
 
 
 async def test_atlas_print_param_triggers_print(c):
+    # Replace window.print before the page runs so no dialog opens and calls are counted.
     ident = await c.add_init_script("window.__printed=0;window.print=function(){window.__printed++;};")
     await c.goto(BASE + "/resume-atlas.html?print=1", clear_storage=True)
     await asyncio.sleep(0.6)
@@ -421,11 +457,14 @@ async def test_atlas_print_param_triggers_print(c):
 
 
 # ─── Robustness ─────────────────────────────────────────────────────────
+# Resilience checks: no failed requests, working pages without storage, valid
+# links, lazy-loaded 3D libraries and no sideways scroll on phones.
 
 async def test_no_failed_resources(c):
     failures = []
     for page in PAGES:
         await c.goto(BASE + page, clear_storage=True)
+        # CDN failures are ignored so an offline or flaky network cannot fail the run.
         bad = [f for f in c.failed_requests if "cdn.jsdelivr.net" not in f]
         if bad:
             failures.append(f"{page}: {bad}")
@@ -472,6 +511,8 @@ async def test_switchboard_links_resolve(c):
 
 
 async def test_plain_and_reduced_motion_skip_3d_stack(c):
+    # c.requests is reset on each goto and records every URL fetched, so an
+    # empty CDN list proves the bundles were never even requested.
     await c.goto(BASE + "/?plain=1", clear_storage=True)
     plain_cdn = [u for u in c.requests if "cdn.jsdelivr.net" in u]
     await c.emulate_media("", [{"name": "prefers-reduced-motion", "value": "reduce"}])
@@ -497,6 +538,7 @@ async def test_home_default_requests_3d_stack_lazily(c):
 
 
 async def test_mobile_no_horizontal_overflow(c):
+    # 375px is a common phone width; scrollWidth > clientWidth means sideways scroll.
     await c.set_viewport(375, 812, mobile=True)
     failures = []
     for page in PAGES:
@@ -547,7 +589,10 @@ TESTS = [
 
 
 async def main():
+    """Serve the repo, run every test in TESTS and exit non-zero on any failure."""
     server = serve_directory(ROOT, port=PORT)
+    # Separate ports for the web server (8766) and DevTools (9438), so neither
+    # collides with a developer's own server or browser.
     async with ChromeSession(port=9438) as chrome:
         print(f"Running {len(TESTS)} tests against {BASE}\n")
         results = []
