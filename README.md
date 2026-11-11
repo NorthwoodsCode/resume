@@ -14,11 +14,13 @@ Most resume sites force every reader through the same generic page. This one rou
 
 | Page | Audience | What it does |
 | ---- | -------- | ------------ |
-| [Home](https://northwoodscode.github.io/resume/) | First impression | Cinematic landing with mode routing, FX panel, swipe-to-switch atmospheres, command palette, theme toggle, and tailored link builder |
+| [Home](https://northwoodscode.github.io/resume/) | First impression | Landing page with audience routing, an animated backdrop that loads on demand, optional effects (off by default), command palette, theme toggle, and a tailored-link builder |
 | [Atlas](https://northwoodscode.github.io/resume/resume-atlas.html) | Recruiters / ATS | Classic document layout — clean, fast, print-to-PDF safe |
 | [Signal](https://northwoodscode.github.io/resume/resume-signal.html) | Hiring managers | Focus-filtered view with shareable URLs and copy-ready ATS text |
 | [Proof Hub](https://northwoodscode.github.io/resume/proof-hub.html) | Technical interviewers | Case studies, accomplishment inventory, JD matching, and bullet export |
-| [Switchboard](https://northwoodscode.github.io/resume/resume-switchboard.html) | Reduced-motion / conservative browsers | Low-motion, privacy-first routing hub |
+| [Switchboard](https://northwoodscode.github.io/resume/resume-switchboard.html) | Reduced-motion / conservative browsers | Plain, privacy-first routing hub |
+
+Plus [/now](https://northwoodscode.github.io/resume/now.html), a short "what I'm building, learning, reading" page. Every page shares a command palette (`Ctrl+K` / `⌘K`) and a "Resume modes" dock for moving between views.
 
 ---
 
@@ -45,26 +47,26 @@ Focus filters let you surface the work most relevant to a given role without rew
 ```text
 resume-signal.html?focus=cloud,api
 resume-signal.html?focus=iot,data
-resume-signal.html?focus=leadership,enablement
-resume-signal.html?focus=genai,ops
+resume-signal.html?focus=lead,enable
+resume-signal.html?focus=ai,opex
 ```
 
-Each filtered URL is shareable and produces copy-ready ATS-formatted output for fast submissions.
+Focus keys: `cloud`, `api`, `iot`, `data`, `opex`, `lead`, `enable`, `ai`. Common aliases (`leadership`, `enablement`, `genai`, `ops`) are mapped automatically; unknown keys are reported on the page instead of silently ignored. Add `&only=1` to hide non-matching bullets and `&q=term` to search. Each filtered URL is shareable, Back/Forward restores the filters, and the view produces copy-ready ATS-formatted text.
 
 ---
 
 ## Tech
 
 - Static HTML / CSS / Vanilla JavaScript — no framework, no build step
-- **11 atmospheres** (blue, crimson, emerald, violet, ghost, void, amethyst, graphite, ink, bronze, autumn) across **6 visual effects** (still, leaves, fog, clouds, ocean, depth) — Vanta + Three.js powers fog, clouds, ocean, and depth; leaves is a custom canvas renderer; still is a static fallback
-- **FX panel** — glass-HUD toggle bank for cursor spotlight, 3D card tilt, click sparks, swipe-to-switch, and confetti, persisted to `localStorage` and synced across tabs
-- **Swipe gestures** on the home page — full horizontal flick cycles atmospheres; swipe up opens the command palette; swipe down fires confetti
-- **Command palette** (`⌘K` / `Ctrl+K`) for keyboard-first navigation
-- Hero typing animation, availability badge, scroll-reveal stagger, click sparks, cursor spotlight
-- Local browser storage for theme, atmosphere, effect, and FX preferences
+- **11 atmospheres** (blue, crimson, emerald, violet, ghost, void, amethyst, graphite, ink, bronze, autumn), each with light and dark tokens, across **6 visual effects** (still, leaves, fog, clouds, ocean, depth). Three.js and the one Vanta bundle an effect needs load on demand, only for fog, clouds, ocean and depth, and never under `?plain=1` or `prefers-reduced-motion`
+- **FX panel** on Home — a confetti burst pops on every load (skipped under `?plain=1` and `prefers-reduced-motion`), plus toggles for cursor spotlight, 3D card tilt and click sparks, which are off by default; choices persist to `localStorage`, and other pages run no effects
+- **Command palette** (`⌘K` / `Ctrl+K`) and **mode dock** on every page, provided by `shared-enhancements.js`
+- Hero typing animation (runs once), availability badge, scroll-reveal that fails open (print and no-observer browsers see everything)
+- Print stylesheets on Atlas, Signal and Proof Hub keep the name and contact block, force light tokens, and print link URLs; `resume-atlas.html?print=1` opens the print dialog directly
+- Local browser storage for theme, atmosphere, effect, and FX preferences, guarded so blocked storage never breaks a page
 - Structured data (JSON-LD), OG tags, favicons, sitemap, and robots.txt for SEO
 - GitHub Pages deployment via GitHub Actions — tests gate every deploy
-- Headless-Chrome UI test suite (CDP over websockets) runs on every push and PR
+- Headless-Chrome UI test suite (CDP over websockets) runs on every push and PR: print identity, deep links, focus filters, blocked storage, lazy loading, mobile overflow, dead links
 
 ---
 
@@ -88,7 +90,8 @@ Or use VS Code Live Server. Avoid opening via `file://` — query-string feature
 ├── resume-signal.html         # Signal — hiring manager + focus filters
 ├── proof-hub.html             # Proof Hub — evidence layer + case studies
 ├── resume-switchboard.html    # Switchboard — low-motion fallback hub
-├── shared-enhancements.js     # Cursor spotlight, 3D tilt, sparks (gated by BSC_FX)
+├── now.html                   # /now page
+├── shared-enhancements.js     # Shared palette + dock, ?for= personalization, case share links, safe storage, opt-in FX
 ├── resume-ats.txt             # Plain-text ATS-friendly resume
 ├── favicon.ico / favicon.svg / apple-touch-icon.png / og-image.png
 ├── robots.txt / sitemap.xml
@@ -96,7 +99,8 @@ Or use VS Code Live Server. Avoid opening via `file://` — query-string feature
 ├── cases.json / companies.json
 ├── scripts/
 │   ├── gen_og.py              # OG image renderer (Pillow)
-│   └── gen_cases.py           # per-case OG art + /case/<slug>/ stub pages (run at deploy)
+│   ├── gen_cases.py           # per-case OG art + /case/<slug>/ stub pages (run at deploy)
+│   └── stamp_dates.py         # writes last-updated dates from git history (run at deploy)
 ├── tests/
 │   ├── harness.py             # CDP-over-websocket Chrome driver
 │   └── test_home.py           # functional UI tests
@@ -121,12 +125,11 @@ Content is intentionally repeated across pages so each mode stays optimized for 
 
 After editing, verify:
 
-- [ ] `python3 tests/test_home.py` from the repo root — all 18 functional tests pass
+- [ ] `python3 tests/test_home.py` from the repo root — all 32 functional tests pass
 - [ ] Home loads and routes correctly; `?plain=1` fallback works
 - [ ] FX panel toggles each persist + visibly turn the corresponding effect on/off
-- [ ] Horizontal swipe (or click-and-drag on desktop) cycles atmospheres in both directions
 - [ ] Signal presets open with the right focus areas active
-- [ ] Atlas prints cleanly to PDF
+- [ ] Atlas, Signal and Proof Hub print to PDF with the name and contact block on page one
 - [ ] Proof Hub filters, JD matching, and copy actions work
 - [ ] Switchboard routes readers to the right mode
 - [ ] Theme toggles behave consistently across all pages
@@ -137,17 +140,17 @@ CI runs the test suite on every push and PR automatically; a regression blocks d
 
 ## Deployment
 
-Pushes to `main` deploy to GitHub Pages via the `.github/workflows/deploy.yml` workflow. The workflow first runs the headless-Chrome test suite — if any test fails, the deploy is skipped. Pull requests run the test suite only. Per-case OG art and `/case/<slug>/` stub pages are generated during the build step, so they are not committed.
+Pushes to `main` deploy to GitHub Pages via the `.github/workflows/deploy.yml` workflow. The workflow first runs the headless-Chrome test suite — if any test fails, the deploy is skipped. Pull requests run the test suite only; the build and deploy jobs run on `main`. During the build, `scripts/stamp_dates.py` writes each page's last-updated date and the sitemap's `lastmod` values from git history, and per-case OG art and `/case/<slug>/` stub pages are generated, so none of those are committed.
 
 ```text
 Production:  https://northwoodscode.github.io/resume/
 ```
 
-One-time setup: repo **Settings → Pages → Source → GitHub Actions**.
+One-time setup: repo **Settings → Pages → Source → GitHub Actions** (already done for the live site).
 
 Pretty `/for/<company>` links are handled by `404.html`, which redirects to `/?for=<company>` client-side (GitHub Pages has no server-side redirects).
 
-Verify all five routes after deploy.
+Verify all six pages after deploy, plus `/case/payment-portal/` and `/for/stripe` (served by `404.html`, so it returns HTTP 404 with a client-side redirect; link unfurlers will not see OG tags for it).
 
 ---
 

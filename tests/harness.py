@@ -1,14 +1,19 @@
 """CDP test harness for driving headless Chrome.
 
-Stdlib + websockets only — no pytest, no playwright. Each test boots a fresh
-page, runs Runtime.evaluate calls over the Chrome DevTools Protocol, and
+Stdlib + websockets only — no pytest, no playwright. Each test navigates the
+shared page, runs Runtime.evaluate calls over the Chrome DevTools Protocol, and
 reports back. Use ChromeSession via `async with` or call start()/stop().
+The session also records every request URL and every failed or 4xx/5xx
+response (requests / failed_requests), and can emulate print media, media
+features, viewports and init scripts.
 """
 import asyncio
 import json
 import os
+import shutil
 import subprocess
 import sys
+import tempfile
 import time
 import urllib.request
 
@@ -38,6 +43,9 @@ class ChromeSession:
         self._id = 0
         self._errors = []
         self._warnings = []
+        self._requests = []
+        self._failed = []
+        self._reqmap = {}
 
     async def __aenter__(self):
         await self.start()
@@ -47,8 +55,24 @@ class ChromeSession:
         await self.stop()
 
     async def start(self):
-        profile = f"/tmp/cdp-{os.getpid()}-{self.port}"
-        self._log_path = f"/tmp/chrome-{os.getpid()}-{self.port}.log"
+        # Refuse to attach to a browser that is already listening on the port:
+        # a leftover instance would answer with its own (stale) cache.
+        try:
+            urllib.request.urlopen(
+                f"http://localhost:{self.port}/json/version", timeout=1
+            ).read()
+            raise RuntimeError(
+                f"Something already answers on DevTools port {self.port}; "
+                f"stop the stale Chrome (pkill -f remote-debugging-port={self.port}) "
+                "or use another port"
+            )
+        except RuntimeError:
+            raise
+        except Exception:
+            pass
+        self._profile = tempfile.mkdtemp(prefix="cdp-")
+        profile = self._profile
+        self._log_path = os.path.join(profile, "chrome.log")
         log_fh = open(self._log_path, "wb")
         self.proc = subprocess.Popen(
             [
@@ -97,6 +121,8 @@ class ChromeSession:
         )
         await self.call("Runtime.enable")
         await self.call("Page.enable")
+        await self.call("Network.enable")
+        await self.call("Network.setCacheDisabled", {"cacheDisabled": True})
 
     async def stop(self):
         if self.ws:
@@ -109,6 +135,9 @@ class ChromeSession:
             except Exception:
                 self.proc.kill()
             self.proc = None
+        profile = getattr(self, "_profile", None)
+        if profile and os.path.isdir(profile):
+            shutil.rmtree(profile, ignore_errors=True)
 
     def _raise_with_log(self, message):
         tail = ""
@@ -139,6 +168,19 @@ class ChromeSession:
 
     def _capture(self, msg):
         m = msg.get("method")
+        if m == "Network.requestWillBeSent":
+            p = msg["params"]
+            self._reqmap[p["requestId"]] = p["request"]["url"]
+            self._requests.append(p["request"]["url"])
+        elif m == "Network.responseReceived":
+            r = msg["params"]["response"]
+            if r.get("status", 0) >= 400:
+                self._failed.append(f"{r['status']} {r['url']}")
+        elif m == "Network.loadingFailed":
+            p = msg["params"]
+            self._failed.append(
+                f"FAILED {p.get('errorText')} {self._reqmap.get(p.get('requestId'), '?')}"
+            )
         if m == "Runtime.exceptionThrown":
             self._errors.append(msg["params"]["exceptionDetails"]["text"])
         elif m == "Runtime.consoleAPICalled":
@@ -170,6 +212,9 @@ class ChromeSession:
         """Navigate to url. If clear_storage, wipe localStorage and reload."""
         self._errors.clear()
         self._warnings.clear()
+        self._requests.clear()
+        self._failed.clear()
+        self._reqmap.clear()
         self._id += 1
         await self.ws.send(
             json.dumps(
@@ -201,74 +246,41 @@ class ChromeSession:
         result = r["result"].get("result", {})
         return result.get("value")
 
-    async def swipe(self, direction="left", pid=None, start_y=400):
-        """Simulate a fast 'full swipe' touch flick that satisfies the
-        thresholds in the home-page swipe handler.
-        """
-        import random
+    async def emulate_media(self, media="", features=None):
+        """Emulate print/screen media and media features such as
+        prefers-reduced-motion or prefers-color-scheme."""
+        params = {"media": media}
+        if features is not None:
+            params["features"] = features
+        await self.call("Emulation.setEmulatedMedia", params)
 
-        pid = pid or random.randint(100, 99999)
-        layouts = {
-            "left": (900, 80, start_y, start_y + 8),
-            "right": (80, 900, start_y, start_y + 8),
-            "up": (640, 645, 700, 100),
-            "down": (640, 645, 100, 700),
-        }
-        sx, ex, sy, ey = layouts[direction]
-        return await self.eval(
-            "(function(){"
-            f"var pid={pid};"
-            "var f=function(t,x,y){document.dispatchEvent(new PointerEvent(t,"
-            "{pointerType:'touch',clientX:x,clientY:y,button:0,pointerId:pid,"
-            "isPrimary:true,bubbles:true}));};"
-            f"f('pointerdown',{sx},{sy});"
-            f"f('pointermove',{(sx*2+ex)//3},{(sy*2+ey)//3});"
-            f"f('pointermove',{(sx+ex*2)//3},{(sy+ey*2)//3});"
-            f"f('pointermove',{ex},{ey});"
-            f"f('pointerup',{ex},{ey});"
-            "})()"
+    async def add_init_script(self, source):
+        """Run `source` before every subsequent page load; returns an id for
+        remove_init_script()."""
+        r = await self.call("Page.addScriptToEvaluateOnNewDocument", {"source": source})
+        return r["result"]["identifier"]
+
+    async def remove_init_script(self, identifier):
+        await self.call(
+            "Page.removeScriptToEvaluateOnNewDocument", {"identifier": identifier}
         )
 
-    async def slow_drag(self, dx=-800, dy=8, pid=200):
-        """Slow horizontal drag spanning >900ms — should NOT be detected as a swipe."""
-        return await self.eval(
-            "(async function(){"
-            f"var pid={pid};"
-            "var f=function(t,x,y){document.dispatchEvent(new PointerEvent(t,"
-            "{pointerType:'touch',clientX:x,clientY:y,button:0,pointerId:pid,"
-            "isPrimary:true,bubbles:true}));};"
-            "var s=function(ms){return new Promise(function(r){setTimeout(r,ms);});};"
-            f"var sx=900, sy=400; var ex=sx+({dx}); var ey=sy+({dy});"
-            "f('pointerdown',sx,sy);"
-            "await s(350); f('pointermove',(sx*2+ex)/3,(sy*2+ey)/3);"
-            "await s(350); f('pointermove',(sx+ex*2)/3,(sy+ey*2)/3);"
-            "await s(350); f('pointerup',ex,ey);"
-            "return 'done';"
-            "})()",
-            await_promise=True,
+    async def set_viewport(self, width, height, mobile=False):
+        await self.call(
+            "Emulation.setDeviceMetricsOverride",
+            {"width": width, "height": height, "deviceScaleFactor": 1, "mobile": mobile},
         )
 
-    async def click_target(self, selector, pid=300):
-        """Simulate a pointerdown→up on an element (for testing the
-        'interactive target' exclusion in the swipe handler).
-        """
-        return await self.eval(
-            "(function(){"
-            f"var el = document.querySelector({json.dumps(selector)});"
-            "if(!el) return false;"
-            "var r = el.getBoundingClientRect();"
-            "var cx = r.left + r.width/2, cy = r.top + r.height/2;"
-            f"var pid={pid};"
-            "var f=function(t,x,y){var ev = new PointerEvent(t,"
-            "{pointerType:'touch',clientX:x,clientY:y,button:0,pointerId:pid,"
-            "isPrimary:true,bubbles:true}); el.dispatchEvent(ev); "
-            "document.dispatchEvent(ev);};"
-            "f('pointerdown', cx, cy);"
-            "f('pointermove', cx - 600, cy + 4);"
-            "f('pointerup', cx - 600, cy + 4);"
-            "return true;"
-            "})()"
-        )
+    async def clear_viewport(self):
+        await self.call("Emulation.clearDeviceMetricsOverride")
+
+    @property
+    def requests(self):
+        return list(self._requests)
+
+    @property
+    def failed_requests(self):
+        return list(self._failed)
 
     @property
     def errors(self):
@@ -282,8 +294,19 @@ class ChromeSession:
 def serve_directory(path, port=8766):
     """Spawn a `python3 -m http.server` in the background and return the Popen.
 
-    Caller is responsible for terminating it.
+    Caller is responsible for terminating it. Refuses to reuse a port that is
+    already being served, so tests never run against a stale server.
     """
+    try:
+        urllib.request.urlopen(f"http://localhost:{port}/", timeout=1).read()
+        raise RuntimeError(
+            f"Port {port} is already served; stop the stale server first "
+            f"(pkill -f 'http.server {port}')"
+        )
+    except RuntimeError:
+        raise
+    except Exception:
+        pass
     proc = subprocess.Popen(
         [sys.executable, "-m", "http.server", str(port)],
         cwd=path,
