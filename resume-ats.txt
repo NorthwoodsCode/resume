@@ -17,7 +17,7 @@ CERTIFICATIONS
 - AWS Certified Solutions Architect - Associate (SAA-C03) | HashiCorp Terraform Associate (003) | AWS Certified Cloud Practitioner (CLF-C01)
 
 EXPERIENCE
-Milwaukee Tool - Senior Software Engineer | IoT Platform | 2025-Present | Remote, WI
+Milwaukee Tool - Senior Software Engineer | Digital IoT Service | 2025-Present | Remote, WI
 - Delivered a greenfield secure IoT device-provisioning solution (Python CLI plus supporting APIs) that automated device registration, certificate generation, and bootstrapping across dev, test, and prod.
 - Cut provisioning from roughly 10 minutes manual to under 1 minute per device by replacing console-driven onboarding with a repeatable workflow aligned to AWS IoT Core and enterprise security practices.
 - Integrated AWS Secrets Manager and Auth0-based credential handling into provisioning workflows; implemented MQTT delta updates that reduced constrained-device payload size by about 40%, with one example dropping from 476 bytes to 15 bytes.
@@ -31,7 +31,7 @@ Milwaukee Tool - Software Engineer II | Tool Data Foundations | 2024 | Remote, W
 - Improved TypeScript reusability and OpenAPI documentation quality to make APIs and related workflows easier to maintain and consume.
 - Supported data-foundation modernization through AWS DocumentDB research, data scripting, and planning for cleaner migration / parity across legacy and new data flows.
 
-Milwaukee Tool - Software Engineer | Integrations / Serverless | 2021-2023 | Remote, WI
+Milwaukee Tool - Software Engineer | One-Key Integrations | 2021-2023 | Remote, WI
 - Built and supported AWS serverless partner integrations using API Gateway, Step Functions, Lambda, DynamoDB, and Terraform.
 - Prototyped an external API gateway and request-bus flow that filtered, transformed, validated, and augmented requests through API Gateway -> Step Functions -> multi-Lambda orchestration, returning results in seconds.
 - Produced a formal security risk assessment of Oracle authentication, including an executive-ready PowerPoint and written report for stakeholders.
