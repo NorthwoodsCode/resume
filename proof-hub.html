@@ -7,20 +7,20 @@
   <link rel="icon" href="favicon.ico" sizes="any" />
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
   <title>Brandon S. Clark — Proof Hub (Resume + Case Studies)</title>
-  <meta name="description" content="Impact-focused resume bullet inventory with JD matching, role filters, skills pack, and ATS-friendly copy/export tools. Optimized for LinkedIn link previews (Open Graph).">
+  <meta name="description" content="Case studies and searchable accomplishments behind Brandon S. Clark's resume: AWS backend, serverless, IoT and cloud platform work.">
 
   <!-- Open Graph tags (LinkedIn + others) -->
-  <meta property="og:title" content="Brandon S. Clark — Senior Software Engineer (AWS Backend / Platform)" />
+  <meta property="og:title" content="Brandon S. Clark — Senior Software Engineer • AWS Backend / Cloud Platform" />
   <meta property="og:type" content="website" />
-  <meta property="og:description" content="Impact-focused accomplishments + resume bullets with JD match + copy tools (AWS, Terraform, serverless, APIs, data platforms)." />
+  <meta property="og:description" content="Case studies and searchable accomplishments (AWS, Terraform, serverless, APIs, data platforms)." />
   <meta property="og:url" content="https://northwoodscode.github.io/resume/proof-hub.html" />
   <meta property="og:image" content="https://northwoodscode.github.io/resume/og-image.png" />
-  <meta property="og:image:alt" content="Brandon S. Clark — Senior Software Engineer (AWS Backend / Platform)" />
+  <meta property="og:image:alt" content="Brandon S. Clark — Senior Software Engineer • AWS Backend / Cloud Platform" />
 
   <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Brandon S. Clark — Senior Software Engineer (AWS Backend / Platform)" />
-  <meta name="twitter:description" content="Resume bullets + JD match + ATS copy tools. Cloud/backend/platform engineering impact." />
+  <meta name="twitter:title" content="Brandon S. Clark — Senior Software Engineer • AWS Backend / Cloud Platform" />
+  <meta name="twitter:description" content="Case studies and searchable accomplishments. Cloud, backend and platform engineering impact." />
   <meta name="twitter:image" content="https://northwoodscode.github.io/resume/og-image.png" />
 
   <link rel="canonical" href="https://northwoodscode.github.io/resume/proof-hub.html" />
@@ -59,8 +59,6 @@
       --shadow2: 0 10px 24px rgba(15, 23, 42, 0.08);
       --accent: #2563eb; /* calm blue */
       --accent2: #16a34a; /* calm green */
-      --warn: #f59e0b;
-      --danger: #ef4444;
       --maxw: 980px;
       --radius: 16px;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -76,8 +74,6 @@
       --shadow2: 0 14px 30px rgba(0,0,0,0.45);
       --accent: #60a5fa;
       --accent2: #34d399;
-      --warn: #fbbf24;
-      --danger: #fb7185;
     }
 
     html, body { height: 100%; }
@@ -340,7 +336,7 @@
 
     .bullet {
       position: relative;
-      padding: 12px 88px 12px 12px;
+      padding: 12px;
       border: 1px solid var(--border);
       border-radius: 14px;
       background: rgba(148, 163, 184, 0.05);
@@ -363,12 +359,6 @@
     .bullet-text {
       white-space: normal;
       word-break: break-word;
-    }
-
-    .bullet.spotlight {
-      border-color: rgba(37,99,235,0.55);
-      background: rgba(37, 99, 235, 0.12);
-      box-shadow: 0 0 0 3px rgba(37,99,235,0.18);
     }
 
     .footer {
@@ -401,26 +391,6 @@
       transform: translateX(-50%) translateY(-4px);
     }
 
-    /* Confetti canvas */
-    #confetti {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 1000;
-    }
-
-    /* Print */
-    @media print {
-      header, .year-nav, .copy-btn, .controls, .stats, #confetti, .toast {
-        display: none !important;
-      }
-      body { background: #fff; color: #000; }
-      details.year { box-shadow: none; }
-      details.year summary { border-bottom: 1px solid #ddd; }
-      .bullet { border: 1px solid #ddd; background: #fff; }
-    }
   
     /* ------------------------------------------------------------
        Turbo Tools (job-search accelerators)
@@ -636,10 +606,6 @@
       box-shadow: 0 0 0 3px rgba(37,99,235,0.14);
     }
 
-    @media print {
-      #turbo { display: none !important; }
-    }
-
   
     /* ------------------------------------------------------------
        v8 additions — quick start, lanes, recruiter pack, case studies
@@ -789,169 +755,131 @@
     .cred-list { margin: 0; padding-left: 18px; }
     .cred-list li { margin: 0 0 8px; }
 
+    .btn[hidden] { display: none; }
+    .print-identity { display: none; }
+    details.tools > summary { cursor: pointer; font-weight: 700; padding: 4px 2px; }
+    details.tools[open] > summary { margin-bottom: 4px; }
+    :target { scroll-margin-top: 12px; }
+
+    /* ------------------------------------------------------------
+       Mobile: bullet actions flow below the text
+       ------------------------------------------------------------ */
+    @media (max-width: 640px) {
+      .wrap { padding: 14px 12px 64px; }
+      header { padding: 14px 14px 12px; }
+      h1 { font-size: 18px; }
+      .badges { justify-content: flex-start; }
+      .search .hint { display: none; }
+      .control-row .btn { flex: 1 1 auto; text-align: center; }
+      .bullet {
+        padding-right: 12px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+      }
+      .bullet .bullet-text { order: 1; flex: 1 1 100%; }
+      .bullet .copy-btn,
+      .bullet .pick-btn,
+      .bullet .match-badge {
+        position: static;
+        order: 2;
+      }
+      .bullet .match-badge { margin-left: auto; }
+      .stats { justify-content: flex-start; }
+    }
+
+    /* ------------------------------------------------------------
+       Print: identity block, light tokens, white tiles
+       ------------------------------------------------------------ */
+    @media print {
+      .quick-actions, #laneBar, #laneHighlights, .search-chips, [data-case-share] { display: none !important; }
+
+      html, html[data-theme="dark"] {
+        --bg: #f8fafc;
+        --card: #ffffff;
+        --text: #0f172a;
+        --muted: #475569;
+        --border: #e2e8f0;
+        --shadow: none;
+        --shadow2: none;
+        --accent: #2563eb;
+        --accent2: #16a34a;
+      }
+      body { background: #fff; color: #000; }
+      .wrap { padding: 0; }
+      .controls, .stats, nav.year-nav, section#turbo, .bsc-dock, .toast,
+      .search-chip, .search-chips, .copy-btn, .pick-btn, .match-badge, .copy-link,
+      .badges, .meta, .hint, .tailored-badge {
+        display: none !important;
+      }
+      header { border: 0; box-shadow: none; padding: 0 0 8px; background: #fff; color: #000; }
+      .print-identity { display: block; margin-top: 4px; font-size: 12px; color: #000; }
+      .print-identity .pi-title { font-weight: 700; }
+      .card, .subcard, .bullet, details, details.year, details.case, .metric, .impact-mini, .lane-highlights {
+        background: #fff !important;
+        color: #000 !important;
+        box-shadow: none !important;
+      }
+      .bullet { padding-right: 0; border: 1px solid #ddd; break-inside: avoid; }
+      details.year summary { border-bottom: 1px solid #ddd; }
+      details.year { break-inside: auto; }
+      .bullet-text, .card h2, .case-body { color: #000; }
+    }
+
   </style>
 
-<style id="bsc-resume-dock-style">
-  .bsc-dock{
-    position: fixed;
-    right: 16px;
-    bottom: 16px;
-    z-index: 9999;
-    font-family: var(--sans, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif);
-  }
-  .bsc-dock summary{
-    list-style: none;
-    cursor: pointer;
-    user-select: none;
-    border: 1px solid var(--border, #dbe1ea);
-    background: var(--card, var(--bg, #ffffff));
-    color: var(--fg, var(--text, #0f172a));
-    padding: .62rem .9rem;
-    border-radius: 999px;
-    font-weight: 800;
-    box-shadow: var(--shadow, 0 12px 28px rgba(0,0,0,.14));
-  }
-  .bsc-dock summary::-webkit-details-marker{ display:none; }
-  .bsc-dock[open] summary{
-    border-bottom-left-radius: 16px;
-    border-bottom-right-radius: 16px;
-  }
-  .bsc-dock-panel{
-    width: min(340px, calc(100vw - 32px));
-    margin-top: .55rem;
-    border: 1px solid var(--border, #dbe1ea);
-    border-radius: 18px;
-    background: var(--card, var(--bg, #ffffff));
-    color: var(--fg, var(--text, #0f172a));
-    box-shadow: var(--shadow, 0 16px 36px rgba(0,0,0,.18));
-    padding: 12px;
-    backdrop-filter: blur(12px);
-  }
-  .bsc-dock-kicker{
-    margin: 0 0 10px;
-    font-size: .8rem;
-    font-weight: 800;
-    letter-spacing: .05em;
-    text-transform: uppercase;
-    color: var(--muted, #64748b);
-  }
-  .bsc-dock-grid{
-    display: grid;
-    gap: 8px;
-  }
-  .bsc-dock-link{
-    display: block;
-    padding: .72rem .8rem;
-    border: 1px solid var(--border, #dbe1ea);
-    border-radius: 14px;
-    background: color-mix(in srgb, var(--bg, #ffffff) 70%, var(--card, #ffffff));
-    color: inherit !important;
-    text-decoration: none !important;
-    transition: transform .08s ease, box-shadow .2s ease, border-color .2s ease;
-  }
-  .bsc-dock-link:hover{
-    transform: translateY(-1px);
-    box-shadow: var(--shadow, 0 12px 28px rgba(0,0,0,.14));
-    text-decoration: none !important;
-  }
-  .bsc-dock-link strong{
-    display: block;
-    font-size: .95rem;
-    letter-spacing: -.01em;
-  }
-  .bsc-dock-link span{
-    display: block;
-    margin-top: 2px;
-    font-size: .82rem;
-    color: var(--muted, #64748b);
-  }
-  .bsc-dock-link[aria-current="page"]{
-    border-color: color-mix(in srgb, var(--accent, #2563eb) 55%, var(--border, #dbe1ea));
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent, #2563eb) 25%, transparent);
-  }
-  @media (max-width: 640px){
-    .bsc-dock{ right: 12px; bottom: 12px; }
-    .bsc-dock-panel{ width: min(320px, calc(100vw - 24px)); }
-  }
-  @media print{
-    .bsc-dock{ display: none !important; }
-  }
-</style>
-<style>
-  /* command palette */
-  #cmd-pal{position:fixed;inset:0;z-index:99998;display:flex;align-items:flex-start;justify-content:center;padding-top:clamp(48px,9vh,130px)}
-  #cmd-pal[hidden]{display:none !important}
-  #cmd-pal{--cp-bg:#fff;--cp-border:#e5e7eb;--cp-text:#111827;--cp-muted:#6b7280;--cp-sub:#f9fafb;--cp-hover:#eff6ff;--cp-cat:#9ca3af;--cp-bdrop:rgba(0,0,0,.48)}
-  html[data-theme="dark"] #cmd-pal{--cp-bg:#0f172a;--cp-border:#1e3a5f;--cp-text:#e2e8f0;--cp-muted:#64748b;--cp-sub:#071224;--cp-hover:rgba(37,99,235,.15);--cp-cat:#475569;--cp-bdrop:rgba(0,0,0,.72)}
-  @media(prefers-color-scheme:dark){html:not([data-theme="light"]) #cmd-pal{--cp-bg:#0f172a;--cp-border:#1e3a5f;--cp-text:#e2e8f0;--cp-muted:#64748b;--cp-sub:#071224;--cp-hover:rgba(37,99,235,.15);--cp-cat:#475569;--cp-bdrop:rgba(0,0,0,.72)}}
-  #cmd-bg{position:absolute;inset:0;background:var(--cp-bdrop);backdrop-filter:blur(4px)}
-  #cmd-box{position:relative;width:min(620px,92vw);background:var(--cp-bg);border-radius:16px;box-shadow:0 28px 70px rgba(0,0,0,.22);overflow:hidden;border:1px solid var(--cp-border)}
-  #cmd-sr{display:flex;align-items:center;gap:.65rem;padding:.9rem 1rem;border-bottom:1px solid var(--cp-border)}
-  #cmd-sr svg{flex-shrink:0;color:var(--cp-muted)}
-  #cmd-q{flex:1;border:none;outline:none;font-size:1rem;background:transparent;color:var(--cp-text);font-family:inherit}
-  #cmd-q::placeholder{color:var(--cp-cat)}
-  #cmd-esk{font-size:.7rem;padding:.18rem .42rem;border:1px solid var(--cp-border);border-radius:4px;color:var(--cp-cat);background:var(--cp-sub);font-family:inherit;white-space:nowrap;cursor:pointer}
-  #cmd-list{margin:0;padding:.3rem 0;list-style:none;max-height:min(380px,52vh);overflow-y:auto}
-  #cmd-list:empty::after{content:'No results';display:block;padding:.9rem 1.1rem;color:var(--cp-cat);font-size:.88rem}
-  .cpcat{padding:.5rem 1.1rem .15rem;font-size:.7rem;font-weight:760;letter-spacing:.1em;text-transform:uppercase;color:var(--cp-cat)}
-  .cpi{display:flex;align-items:center;gap:.65rem;padding:.58rem 1.1rem;cursor:pointer;user-select:none}
-  .cpi:hover,.cpi[aria-selected="true"]{background:var(--cp-hover)}
-  .cpi-lbl{font-size:.93rem;font-weight:560;color:var(--cp-text)}
-  .cpi-desc{font-size:.8rem;color:var(--cp-muted);margin-left:auto;white-space:nowrap;padding-left:.5rem}
-  #cmd-foot{display:flex;gap:1rem;padding:.5rem 1rem;border-top:1px solid var(--cp-border);background:var(--cp-sub)}
-  #cmd-foot span{font-size:.73rem;color:var(--cp-cat);display:flex;align-items:center;gap:.25rem}
-  #cmd-foot kbd{font-size:.69rem;padding:.12rem .32rem;border:1px solid var(--cp-border);border-radius:4px;background:var(--cp-bg);font-family:inherit}
-</style>
 </head>
 <body>
-  <canvas id="confetti" aria-hidden="true"></canvas>
-
   <div class="wrap">
     <header>
       <div class="topline">
         <h1>Brandon S. Clark — Proof Hub (Resume + Case Studies)</h1>
         <div class="badges">
-          <span class="badge">v8</span>
           <span class="badge"><span id="totalCount">105</span> bullets</span>
-          <span class="badge">Wausau, WI friendly</span>
+          <span class="badge">Wisconsin (Remote)</span>
         </div>
       </div>
 
+      <div class="print-identity">
+        <div class="pi-title">Senior Software Engineer • AWS Backend / Cloud Platform</div>
+        <div>Wisconsin (Remote) · bsc_pro@protonmail.com · linkedin.com/in/brandon-c-it-industry · github.com/NorthwoodsCode</div>
+      </div>
+
       <div class="meta">
-        <span>Last updated: 2026-02-27</span>
+        <span>Last updated: <time id="lastUpdated" datetime="2026-11-11">2026-11-11</time></span>
         <span>·</span>
         <span>LinkedIn: <a href="https://www.linkedin.com/in/brandon-c-it-industry" target="_blank" rel="noopener">linkedin.com/in/brandon-c-it-industry</a></span>
         <span>·</span>
-        <span class="mono">Shortcuts: <b>/</b> search · <b>C</b> celebrate · <b>S</b> spotlight · <b>T</b> theme · <b>P</b> public</span>
+        <span class="mono">Press <b>/</b> to search</span>
       </div>
 
       <div class="controls">
         <div class="search" role="search">
           <span aria-hidden="true">🔎</span>
-          <input id="search" type="search" placeholder="Filter bullets by keyword (AWS, Terraform, IoT, Step Functions…)" autocomplete="off">
+          <input id="search" type="search" aria-label="Filter bullets by keyword" placeholder="Filter bullets by keyword (AWS, Terraform, IoT, Step Functions…)" autocomplete="off">
           <span class="hint">Tip: try “aws iot”</span>
         </div>
         <div class="control-row">
-          <button id="celebrateBtn" class="btn primary" type="button">🎉 Celebrate</button>
-          <button id="spotlightBtn" class="btn" type="button">✨ Spotlight a win</button>
           <button id="expandBtn" class="btn" type="button">Expand all</button>
           <button id="collapseBtn" class="btn" type="button">Collapse all</button>
           <button id="themeBtn" class="btn" type="button">Theme: Auto</button>
-          <button id="publicBtn" class="btn" type="button">Public Mode: Off</button>
+          <button id="publicBtn" class="btn" type="button" hidden>Public Mode: On</button>
         </div>
       </div>
 
       <div class="stats">
-        <span>Showing <b id="visibleCount">105</b> of <b>105</b> bullets</span>
+        <span role="status" aria-live="polite">Showing <b id="visibleCount">105</b> of <b>105</b> bullets</span>
         <span class="mono" id="searchStatus">No filter</span>
       </div>
     </header>
 
     <nav class="year-nav" aria-label="Jump to year">
       <a class="chip" href="#start" title="Recruiter quick start">Start</a>
-      <a class="chip" href="#turbo" title="Job search turbo tools">Turbo</a>
       <a class="chip" href="#cases" title="Architecture case studies">Cases</a>
+      <a class="chip" href="#timeline" title="Role timeline">Timeline</a>
       <a class="chip" href="#cred" title="Credentials">Cred</a>
+      <a class="chip" href="#turbo" title="Tailoring tools">Tools</a>
       <a class="chip" href="#y2025" title="Jump to 2025">2025</a>
 <a class="chip" href="#y2024" title="Jump to 2024">2024</a>
 <a class="chip" href="#y2023" title="Jump to 2023">2023</a>
@@ -976,74 +904,163 @@
 
           <ul class="timeline" style="margin-top:10px;">
             <li><b>Target roles:</b> Senior Software Engineer — Backend / Platform / Cloud</li>
-            <li><b>Location:</b> Wausau, WI (Central Time) · Remote-friendly</li>
+            <li><b>Location:</b> Wisconsin (Remote)</li>
             <li><b>Core themes:</b> AWS serverless · Terraform/IaC · API design · Data foundations/ETL · Security-first automation · Enablement</li>
           </ul>
 
           <div class="quick-actions" aria-label="Quick actions">
             <a class="btn primary" href="https://www.linkedin.com/in/brandon-c-it-industry" target="_blank" rel="noopener">💬 Message on LinkedIn</a>
             <button id="copyPackTopBtn" class="btn primary" type="button">📎 Copy Recruiter Pack</button>
-            <a class="btn" href="resume-atlas.html">📄 Open Atlas / Print PDF</a>
+            <a class="btn" href="resume-atlas.html?print=1">📄 Print / Save PDF (Atlas)</a>
             <a class="btn" href="resume-signal.html">🎯 Open Signal</a>
           </div>
 
-          <div class="small muted" style="margin-top:10px;">
-            Sharing tip: Toggle <b>Public Mode</b> before sharing outside your current org (sanitizes internal team names).
-          </div>
         </div>
 
         <div>
-          <div class="small muted">Proof points (auto-generated from your bullets):</div>
+          <div class="small muted">Proof points</div>
           <div id="impactStrip" class="impact-strip" aria-label="Proof points"></div>
 
           <div class="divider" role="separator" aria-hidden="true"></div>
 
-          <div class="small muted">Role lanes (one click = smarter filtering + better highlights):</div>
+          <div class="small muted">Pick a focus</div>
           <div id="laneBar" class="lane-bar" aria-label="Role lanes"></div>
 
           <div id="laneHighlights" class="lane-highlights" aria-label="Lane highlights">
-            <div class="small muted">Pick a lane to see curated highlights.</div>
+            <div class="small muted">Pick a focus to see highlights.</div>
           </div>
         </div>
       </div>
     </section>
 
 
+    <section class="card" id="cases">
+      <h2>Case Studies (architecture + outcomes)</h2>
+
+      <div class="case-grid">
+        <details class="case" open id="case-payment-portal">
+          <summary>💳 $85M Payment Portal — Full-Stack AWS Web Application</summary>
+          <div class="case-body">
+            <p><b>Problem:</b> Needed a client-facing payment portal that was reliable, secure, and scalable enough to handle high-volume production traffic.</p>
+            <p><b>Approach:</b> Designed and delivered a full-stack AWS-hosted web application with CI/CD pipelines, role-based access, and secure payment processing. Delivered with maintainability and operational readiness in mind.</p>
+            <p><b>Results:</b> Processed ~250,000 payments totaling ~$85M. Zero reported payment failures attributable to the platform. Still in production after handoff.</p>
+            <p class="mini"><b>Relevant to:</b> full-stack or backend SWE, fintech, high-reliability systems, cloud-hosted web apps, CI/CD.</p>
+            <div class="search-chips" aria-label="Find related bullets">
+              <button class="search-chip" type="button" data-query="payment">🔎 Find bullets: payment portal</button>
+              <button class="search-chip" type="button" data-query="foundation finance">🔎 Find bullets: Foundation Finance</button>
+              <button class="search-chip" type="button" data-query="ci/cd">🔎 Find bullets: CI/CD</button>
+            </div>
+          </div>
+        </details>
+
+        <details class="case" id="case-java-etl">
+          <summary>⚙️ 1,200-Hour Automation — Java + SQL Server ETL Program</summary>
+          <div class="case-body">
+            <p><b>Problem:</b> A manual data-entry process consumed a large amount of repetitive effort and introduced error risk.</p>
+            <p><b>Approach:</b> Built an automated data-entry program using Java and MS SQL Server that handled the full ingestion pipeline — parsing, validation, transformation, and persistence — without human intervention.</p>
+            <p><b>Results:</b> Saved more than 1,200 hours of manual work and about $40K. Delivered as a standalone tool with zero ongoing support burden.</p>
+            <p class="mini"><b>Relevant to:</b> backend automation, ETL/data engineering, operational efficiency, enterprise tooling, cost reduction.</p>
+            <div class="search-chips" aria-label="Find related bullets">
+              <button class="search-chip" type="button" data-query="automation">🔎 Find bullets: automation</button>
+              <button class="search-chip" type="button" data-query="1,200">🔎 Find bullets: 1,200 hours</button>
+              <button class="search-chip" type="button" data-query="sql server">🔎 Find bullets: SQL Server</button>
+            </div>
+          </div>
+        </details>
+
+        <details class="case" id="case-secure-provisioning">
+          <summary>🔐 Secure Provisioning Automation — Python CLI + AWS</summary>
+          <div class="case-body">
+            <p><b>Problem:</b> Onboarding new devices was slow (~10 min/device), manual, and inconsistent across dev, test, and prod environments.</p>
+            <p><b>Approach:</b> Built a Python CLI + supporting APIs that automated registration, certificate generation, credential handling, and multi-environment bootstrapping. Integrated Secrets Manager and Auth0 for security-first credential hygiene.</p>
+            <p><b>Results:</b> Reduced provisioning from about 10 minutes of manual work to under 1 minute per device. Published a comprehensive README and demo assets that cut onboarding time for new engineers by about 30%.</p>
+            <p class="mini"><b>Relevant to:</b> cloud platform, backend tooling, security-minded automation, DevOps/platform engineering.</p>
+            <div class="search-chips" aria-label="Find related bullets">
+              <button class="search-chip" type="button" data-query="provisioning">🔎 Find bullets: provisioning</button>
+              <button class="search-chip" type="button" data-query="secrets manager">🔎 Find bullets: Secrets Manager</button>
+              <button class="search-chip" type="button" data-query="certificate">🔎 Find bullets: certificate</button>
+            </div>
+          </div>
+        </details>
+
+        <details class="case" id="case-serverless-bus">
+          <summary>🧩 Serverless Request Bus — API Gateway → Step Functions → Lambda</summary>
+          <div class="case-body">
+            <p><b>Problem:</b> Needed reliable, observable partner integrations with validation, flexible transformation, and auditability — without coupling to a single Lambda.</p>
+            <p><b>Approach:</b> Prototyped an end-to-end request bus: API Gateway → Step Functions → multiple Lambdas, each responsible for a single concern (filter, validate, transform, augment, respond). Each step was independently testable and the full workflow was observable via CloudWatch.</p>
+            <p><b>Results:</b> End-to-end requests completed in seconds. Packaged reusable state machine definitions, Postman collections, and runbooks — reducing tribal knowledge and enabling faster onboarding for the next engineer.</p>
+            <p class="mini"><b>Relevant to:</b> distributed systems, serverless backend, integration platforms, API design, workflow orchestration, system design interviews.</p>
+            <div class="search-chips">
+              <button class="search-chip" type="button" data-query="api gateway">🔎 Find bullets: API Gateway</button>
+              <button class="search-chip" type="button" data-query="step functions">🔎 Find bullets: Step Functions</button>
+              <button class="search-chip" type="button" data-query="request bus">🔎 Find bullets: Request Bus</button>
+            </div>
+          </div>
+        </details>
+
+        <details class="case" id="case-data-foundations">
+          <summary>🗄️ Data Foundations — Parallel DB migration + ETL parity</summary>
+          <div class="case-body">
+            <p><b>Problem:</b> Modernizing a rigid legacy tool-data-reads storage system without disrupting critical operations.</p>
+            <p><b>Approach:</b> Designed a risk-managed “run in parallel” approach with ETL/backfill planning to maintain old vs new parity; implemented a flexible document database (DocumentDB) POC + schema design and integrated it into existing APIs/workflows.</p>
+            <p><b>Results:</b> Enabled safer migration, improved data flexibility, and strengthened long-term maintainability.</p>
+            <p class="mini"><b>Relevant to:</b> data platforms, migrations, reliability, system design, ETL/DB work.</p>
+            <div class="search-chips">
+              <button class="search-chip" type="button" data-query="documentdb">🔎 Find bullets: DocumentDB</button>
+              <button class="search-chip" type="button" data-query="etl">🔎 Find bullets: ETL</button>
+              <button class="search-chip" type="button" data-query="tagging system">🔎 Find bullets: tagging system</button>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
     <section class="card" id="timeline">
       <h2>Role Timeline (Milwaukee Tool)</h2>
       <ul class="timeline">
-        <li>ONE‑KEY Integrations — Software Engineer II (through Jan 2023)</li>
-<li>JEDI — Data Engineering Team — Data Engineer II (Jan 2023–Mar 2024)</li>
-<li>JEDI — Data Engineering Team — Software Engineer II (Apr 2024–Dec 2024)</li>
-<li>JEDI — Digital IoT Services Team — Senior Software Engineer (Jan 2025–Dec 2025)</li>
-<li>JEDI — Telemetry Team — Senior Software Engineer (Jan 2026–Present)</li>
+        <li>Milwaukee Tool (Digital IoT Service) — Senior Software Engineer (2025–Present)</li>
+        <li>Milwaukee Tool (Tool Data Foundations) — Software Engineer II (2024)</li>
+        <li>Milwaukee Tool (One-Key Integrations) — Software Engineer (2021–2023)</li>
       </ul>
     </section>
 
 
+
+
+
+
+
+    <section class="card" id="cred">
+      <h2>Credentials (quick verification signals)</h2>
+      <ul class="cred-list">
+        <li>AWS Certified Solutions Architect – Associate (SAA‑C03)</li>
+        <li>HashiCorp Terraform Associate (003)</li>
+        <li>AWS Certified Cloud Practitioner (CLF‑C01)</li>
+        <li>University of Wisconsin–River Falls — B.S. Finance, Minor in Computer Science</li>
+      </ul>
+    </section>
+
     <section class="card" id="turbo">
-      <h2>Turbo Tools (tailor faster + share better)</h2>
+      <details class="tools">
+        <summary>Tailoring tools: recruiter pack, skills pack, JD match, bullet picker</summary>
 
       <div class="subgrid">
 
         <div class="subcard">
           <h3>Recruiter Pack (fast copy/paste)</h3>
-          <div class="small muted">One message you can paste into a LinkedIn DM, email, or recruiter intake form. Updates based on <b>lane</b> + <b>Public Mode</b>.</div>
+          <div class="small muted">A short summary of background, proof points and top skills, ready to copy. Updates with the selected focus.</div>
 
           <div class="builder-actions" style="margin-top:10px;">
             <button id="copyPackBtn" class="btn tiny primary" type="button">Copy recruiter pack</button>
             <button id="copyPitchBtn" class="btn tiny" type="button">Copy 60-sec pitch</button>
           </div>
 
-          <textarea id="recruiterPackOut" class="selected-out" rows="12" readonly placeholder="Recruiter pack will appear here…"></textarea>
-
-          <div class="small muted">Next steps: <a class="btn tiny" href="resume-atlas.html">Atlas</a> <a class="btn tiny" href="resume-signal.html">Signal</a></div>
+          <textarea id="recruiterPackOut" aria-label="Recruiter pack text" class="selected-out" rows="12" readonly placeholder="Recruiter pack will appear here…"></textarea>
         </div>
 
         <div class="subcard">
           <h3>Impact Snapshot</h3>
-          <div class="small muted">Fast-scan proof points recruiters love (pulled from your bullet inventory when possible).</div>
-          <div class="small muted">Sharing tip: validate your link preview with <a href="https://www.linkedin.com/post-inspector/" target="_blank" rel="noopener">LinkedIn Post Inspector</a>.</div>
+          <div class="small muted">Fast-scan proof points.</div>
           <div id="impactGrid" class="impact-grid" aria-label="Impact metrics"></div>
         </div>
 
@@ -1055,7 +1072,7 @@
           <div class="divider" role="separator" aria-hidden="true"></div>
 
           <h3>Top Skills Pack</h3>
-          <div class="small muted">Copy/paste into Skills sections (resume + LinkedIn).</div>
+          <div class="small muted">Most frequent skills across the bullets.</div>
           <div class="skill-row">
             <button id="copySkillsBtn" class="btn tiny" type="button">Copy skills</button>
             <span class="pill" id="skillsStatus">—</span>
@@ -1066,7 +1083,7 @@
         <div class="subcard">
           <h3>Job Description Match</h3>
           <div class="small muted">Paste a job description to highlight the bullets that match the role’s keywords.</div>
-          <textarea id="jd" class="jd" rows="7" placeholder="Paste the job description here…"></textarea>
+          <textarea id="jd" aria-label="Job description text" class="jd" rows="7" placeholder="Paste the job description here…"></textarea>
 
           <div class="jd-actions">
             <label class="check">
@@ -1085,8 +1102,8 @@
         </div>
 
         <div class="subcard">
-          <h3>Selected Bullets → Resume Paste</h3>
-          <div class="small muted">Use the <b>Pick</b> button on any bullet to build a tailored set. Then copy as ATS text or Markdown.</div>
+          <h3>Selected bullets</h3>
+          <div class="small muted">Use <b>Pick</b> on any bullet to build a set, then copy it as plain text or Markdown.</div>
 
           <div class="builder-actions">
             <span class="pill"><span id="selectedCount">0</span> selected</span>
@@ -1096,108 +1113,12 @@
             <button id="printBtn" class="btn tiny" type="button">Print / Save PDF</button>
           </div>
 
-          <textarea id="selectedOut" class="selected-out" rows="10" readonly placeholder="Your selected bullets will appear here…"></textarea>
+          <textarea id="selectedOut" aria-label="Selected bullets text" class="selected-out" rows="10" readonly placeholder="Your selected bullets will appear here…"></textarea>
 
-          <div class="small muted">
-            ATS tip: Keep resumes simple (single-column, no tables/text boxes). Use <b>Copy ATS text</b> when pasting into applications.
-          </div>
         </div>
       </div>
+      </details>
     </section>
-
-
-    <section class="card" id="cases">
-      <h2>Case Studies (architecture + outcomes)</h2>
-      <div class="small muted">These are intentionally written “public safe” (use <b>Public Mode</b> + avoid internal URLs when sharing externally).</div>
-
-      <div class="case-grid">
-        <details class="case" open id="case-payment-portal">
-          <summary>💳 $85M Payment Portal — Full-Stack AWS Web Application</summary>
-          <div class="case-body">
-            <p><b>Problem:</b> Needed a client-facing payment portal that was reliable, secure, and scalable enough to handle high-volume production traffic.</p>
-            <p><b>Approach:</b> Designed and delivered a full-stack AWS-hosted web application with CI/CD pipelines, role-based access, and secure payment processing. Built from scratch with maintainability and operational readiness in mind.</p>
-            <p><b>Results:</b> Processed ~250,000 payments totaling ~$85M. Zero reported payment failures attributable to the platform. Still in production after handoff.</p>
-            <p class="mini"><b>Use it when interviewing for:</b> full-stack or backend SWE, fintech, high-reliability systems, cloud-hosted web apps, CI/CD.</p>
-            <div class="search-chips" aria-label="Find related bullets">
-              <button class="search-chip" type="button" data-query="payment">🔎 Find bullets: payment portal</button>
-              <button class="search-chip" type="button" data-query="foundation finance">🔎 Find bullets: Foundation Finance</button>
-              <button class="search-chip" type="button" data-query="ci/cd">🔎 Find bullets: CI/CD</button>
-            </div>
-          </div>
-        </details>
-
-        <details class="case" id="case-java-etl">
-          <summary>⚙️ 1,200-Hour Automation — Java + SQL Server ETL Program</summary>
-          <div class="case-body">
-            <p><b>Problem:</b> A manual data-entry process consumed thousands of engineering hours per year and introduced error risk through repetition.</p>
-            <p><b>Approach:</b> Built an automated data-entry program using Java and MS SQL Server that handled the full ingestion pipeline — parsing, validation, transformation, and persistence — without human intervention.</p>
-            <p><b>Results:</b> Saved more than 1,200 hours of manual work and approximately $40K annually. Delivered as a standalone tool with zero ongoing support burden.</p>
-            <p class="mini"><b>Use it when interviewing for:</b> backend automation, ETL/data engineering, operational efficiency, enterprise tooling, cost reduction.</p>
-            <div class="search-chips" aria-label="Find related bullets">
-              <button class="search-chip" type="button" data-query="automation">🔎 Find bullets: automation</button>
-              <button class="search-chip" type="button" data-query="1200">🔎 Find bullets: 1,200 hours</button>
-              <button class="search-chip" type="button" data-query="sql server">🔎 Find bullets: SQL Server</button>
-            </div>
-          </div>
-        </details>
-
-        <details class="case" id="case-secure-provisioning">
-          <summary>🔐 Secure Provisioning Automation — Python CLI + AWS</summary>
-          <div class="case-body">
-            <p><b>Problem:</b> Onboarding new devices was slow (~10 min/device), manual, and inconsistent across dev, test, and prod environments.</p>
-            <p><b>Approach:</b> Built a Python CLI + supporting APIs that automated registration, certificate generation, credential handling, and multi-environment bootstrapping. Integrated Secrets Manager and Auth0 for security-first credential hygiene.</p>
-            <p><b>Results:</b> Reduced provisioning from ~10 minutes/manual to &lt;1 minute/device. Estimated ~100 hours saved in a 100-device rollout. Published a comprehensive README and demo assets that cut onboarding time for new engineers by ~30%.</p>
-            <p class="mini"><b>Use it when interviewing for:</b> cloud platform, backend tooling, security-minded automation, DevOps/platform engineering.</p>
-            <div class="search-chips" aria-label="Find related bullets">
-              <button class="search-chip" type="button" data-query="provisioning">🔎 Find bullets: provisioning</button>
-              <button class="search-chip" type="button" data-query="secrets manager">🔎 Find bullets: Secrets Manager</button>
-              <button class="search-chip" type="button" data-query="certificate">🔎 Find bullets: certificate</button>
-            </div>
-          </div>
-        </details>
-
-        <details class="case" id="case-serverless-bus">
-          <summary>🧩 Serverless Request Bus — API Gateway → Step Functions → Lambda</summary>
-          <div class="case-body">
-            <p><b>Problem:</b> Needed reliable, observable partner integrations with validation, flexible transformation, and auditability — without coupling to a single Lambda.</p>
-            <p><b>Approach:</b> Prototyped an end-to-end request bus: API Gateway → Step Functions → multiple Lambdas, each responsible for a single concern (filter, validate, transform, augment, respond). Each step was independently testable and the full workflow was observable via CloudWatch.</p>
-            <p><b>Results:</b> End-to-end requests completed in seconds. Packaged reusable state machine definitions, Postman collections, and runbooks — reducing tribal knowledge and enabling faster onboarding for the next engineer.</p>
-            <p class=”mini”><b>Use it when interviewing for:</b> distributed systems, serverless backend, integration platforms, API design, workflow orchestration, system design interviews.</p>
-            <div class="search-chips">
-              <button class="search-chip" type="button" data-query="api gateway">🔎 Find bullets: API Gateway</button>
-              <button class="search-chip" type="button" data-query="step functions">🔎 Find bullets: Step Functions</button>
-              <button class="search-chip" type="button" data-query="request bus">🔎 Find bullets: Request Bus</button>
-            </div>
-          </div>
-        </details>
-
-        <details class="case" id="case-data-foundations">
-          <summary>🗄️ Data Foundations — Parallel DB migration + ETL parity</summary>
-          <div class="case-body">
-            <p><b>Problem:</b> Modernizing a rigid legacy tool-data-reads storage system without disrupting critical operations.</p>
-            <p><b>Approach:</b> Designed a risk-managed “run in parallel” approach with ETL/backfill planning to maintain old vs new parity; implemented a flexible document database (DocumentDB) POC + schema design and integrated it into existing APIs/workflows.</p>
-            <p><b>Results:</b> Enabled safer migration, improved data flexibility, and strengthened long-term maintainability.</p>
-            <p class="mini"><b>Use it when interviewing for:</b> data platforms, migrations, reliability, system design, ETL/DB work.</p>
-            <div class="search-chips">
-              <button class="search-chip" type="button" data-query="documentdb">🔎 Find bullets: DocumentDB</button>
-              <button class="search-chip" type="button" data-query="etl">🔎 Find bullets: ETL</button>
-              <button class="search-chip" type="button" data-query="tagging system">🔎 Find bullets: tagging system</button>
-            </div>
-          </div>
-        </details>
-      </div>
-    </section>
-
-    <section class="card" id="cred">
-      <h2>Credentials (quick verification signals)</h2>
-      <ul class="cred-list">
-        <li>AWS Certified Solutions Architect – Associate (SAA‑C03) — earned 08/25/2022</li>
-        <li>AWS Certified Cloud Practitioner (CLF‑C01)</li>
-        <li>Terraform Associate (003) — completed 12/27/2023</li>
-      </ul>
-      <div class="small muted">Tip: Put certs near the top of LinkedIn if the target roles are cloud/platform heavy.</div>
-    </section>
-
 
     <main id="content">
       
@@ -1207,9 +1128,9 @@
         <span class="pill"><span class="count">20</span> bullets</span>
       </summary>
       <ul class="bullets">
-        <li class="bullet" data-text="milwaukee tool (jedi — digital iot services team) — senior software engineer — delivered a greenfield secure iot device provisioning solution (python cli + supporting apis) automating device registration, certificate generation, and secure bootstrapping aligned to aws iot core + enterprise security standards; cut provisioning from ~10 min/manual to &lt;1 min per device.">
+        <li class="bullet" data-text="milwaukee tool (digital iot service) — senior software engineer — delivered a greenfield secure iot device provisioning solution (python cli + supporting apis) automating device registration, certificate generation, and secure bootstrapping aligned to aws iot core + enterprise security standards; cut provisioning from ~10 min/manual to &lt;1 min per device.">
       <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
-      <div class="bullet-text">Milwaukee Tool (JEDI — Digital IoT Services Team) — Senior Software Engineer — Delivered a greenfield secure IoT device provisioning solution (Python CLI + supporting APIs) automating device registration, certificate generation, and secure bootstrapping aligned to AWS IoT Core + enterprise security standards; cut provisioning from ~10 min/manual to &lt;1 min per device.</div>
+      <div class="bullet-text">Milwaukee Tool (Digital IoT Service) — Senior Software Engineer — Delivered a greenfield secure IoT device provisioning solution (Python CLI + supporting APIs) automating device registration, certificate generation, and secure bootstrapping aligned to AWS IoT Core + enterprise security standards; cut provisioning from ~10 min/manual to &lt;1 min per device.</div>
     </li>
 <li class="bullet" data-text="implemented mqtt delta updates for constrained-device messaging, reducing payload size by ~40% overall and up to ~97% in an example (476b → 15b).">
       <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
@@ -1223,21 +1144,21 @@
       <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
       <div class="bullet-text">Served as the first implementer/pilot for the provisioning solution; surfaced systemic blockers (e.g., cloud governance permission constraints), partnered with governance/security to resolve them, and documented standards for future contributors.</div>
     </li>
-<li class="bullet" data-text="authored a comprehensive readme.md for the diots iot-testing repo / iot provisioning tool (install steps, cli examples, security guidance), reducing onboarding time for new engineers by an estimated ~30%.">
+<li class="bullet" data-text="authored a comprehensive readme.md for the iot provisioning tool (install steps, cli examples, security guidance), reducing onboarding time for new engineers by an estimated ~30%.">
       <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
-      <div class="bullet-text">Authored a comprehensive README.md for the DIoTS iot-testing repo / IoT provisioning tool (install steps, CLI examples, security guidance), reducing onboarding time for new engineers by an estimated ~30%.</div>
+      <div class="bullet-text">Authored a comprehensive README.md for the IoT provisioning tool (install steps, CLI examples, security guidance), reducing onboarding time for new engineers by an estimated ~30%.</div>
     </li>
-<li class="bullet" data-text="authored diots service sla definitions documentation and performed sla gap identification, improving operational clarity and expectations.">
+<li class="bullet" data-text="authored service sla definitions documentation and performed sla gap identification, improving operational clarity and expectations.">
       <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
-      <div class="bullet-text">Authored DIoTS service SLA definitions documentation and performed SLA gap identification, improving operational clarity and expectations.</div>
+      <div class="bullet-text">Authored service SLA definitions documentation and performed SLA gap identification, improving operational clarity and expectations.</div>
     </li>
 <li class="bullet" data-text="supported implementation of an sla dashboard tracking three key metrics, enabling consistent measurement and incremental service improvement.">
       <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
       <div class="bullet-text">Supported implementation of an SLA dashboard tracking three key metrics, enabling consistent measurement and incremental service improvement.</div>
     </li>
-<li class="bullet" data-text="built sr-feedback-workflow-v3 (slack workflow automation for structured sprint-review feedback), secured cross-pod volunteer support, and validated stakeholder interest for broader adoption.">
+<li class="bullet" data-text="built a slack workflow automation (for structured sprint-review feedback), secured cross-pod volunteer support, and validated stakeholder interest for broader adoption.">
       <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
-      <div class="bullet-text">Built SR-Feedback-Workflow-V3 (Slack workflow automation for structured sprint-review feedback), secured cross-pod volunteer support, and validated stakeholder interest for broader adoption.</div>
+      <div class="bullet-text">Built a Slack workflow automation (for structured sprint-review feedback), secured cross-pod volunteer support, and validated stakeholder interest for broader adoption.</div>
     </li>
 <li class="bullet" data-text="designed and deployed an ai-assisted feedback collection + analytics pipeline using slack workflow forms + microsoft forms; enriched results via emotion detection; used copilot/genai to produce an executive-style pdf report and q4 2025 readout deck shared with leadership.">
       <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
@@ -1279,9 +1200,9 @@
       <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
       <div class="bullet-text">Championed adoption of DiSC Profiles within the POD by creating/shareable enablement assets (template, PowerPoint, how-to video) and influencing leadership alignment—resulting in scheduled Q1 2026 implementation.</div>
     </li>
-<li class="bullet" data-text="represented jedi/cpp &amp; diots in the extreme ownership challenge by setting a time-bound goal, tracking progress, and reporting outcomes—reinforcing accountability and continuous improvement.">
+<li class="bullet" data-text="took part in a company-wide accountability challenge by setting a time-bound goal, tracking progress, and reporting outcomes—reinforcing accountability and continuous improvement.">
       <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
-      <div class="bullet-text">Represented JEDI/CPP &amp; DIoTS in the Extreme Ownership Challenge by setting a time-bound goal, tracking progress, and reporting outcomes—reinforcing accountability and continuous improvement.</div>
+      <div class="bullet-text">Took part in a company-wide accountability challenge by setting a time-bound goal, tracking progress, and reporting outcomes—reinforcing accountability and continuous improvement.</div>
     </li>
 <li class="bullet" data-text="operationalized innovation and genai adoption by running monthly ai-assisted communication reviews, participating in 2+ innovation sprints, sharing learnings, and automating repetitive tasks.">
       <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
@@ -1296,9 +1217,9 @@
         <span class="pill"><span class="count">9</span> bullets</span>
       </summary>
       <ul class="bullets">
-        <li class="bullet" data-text="milwaukee tool (jedi — data engineering team) — software engineer ii — advanced the tool data foundations project by delivering a comprehensive tool-data tagging system and collaborating on quicklink integrations with the eda team.">
+        <li class="bullet" data-text="milwaukee tool (tool data foundations) — software engineer ii — advanced the tool data foundations project by delivering a comprehensive tool-data tagging system and collaborating on quicklink integrations with a partner data team.">
       <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
-      <div class="bullet-text">Milwaukee Tool (JEDI — Data Engineering Team) — Software Engineer II — Advanced the Tool Data Foundations Project by delivering a comprehensive tool-data tagging system and collaborating on QuickLink integrations with the EDA team.</div>
+      <div class="bullet-text">Milwaukee Tool (Tool Data Foundations) — Software Engineer II — Advanced the Tool Data Foundations Project by delivering a comprehensive tool-data tagging system and collaborating on QuickLink integrations with a partner data team.</div>
     </li>
 <li class="bullet" data-text="improved delivery execution and organization by leveraging github to streamline task management and increase work clarity/trackability.">
       <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
@@ -1324,13 +1245,13 @@
       <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
       <div class="bullet-text">Demonstrated proactive communication and problem-solving—addressed challenges effectively to maintain momentum toward shared objectives.</div>
     </li>
-<li class="bullet" data-text="received “exceeds expectations” manager ratings in key leadership behaviors, including candid communication, one team mentality, and build collaborative relationships.">
+<li class="bullet" data-text="recognized for candid communication, a one-team mentality, and building collaborative relationships.">
       <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
-      <div class="bullet-text">Received “Exceeds Expectations” manager ratings in key leadership behaviors, including Candid communication, One Team Mentality, and Build Collaborative Relationships.</div>
+      <div class="bullet-text">Recognized for candid communication, a one-team mentality, and building collaborative relationships.</div>
     </li>
-<li class="bullet" data-text="delivered consistently strong overall performance as a software engineer ii (meets expectations overall), with standout strengths in operational improvements, partner enablement, and collaboration.">
+<li class="bullet" data-text="delivered consistently strong overall performance as a software engineer ii, with standout strengths in operational improvements, partner enablement, and collaboration.">
       <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
-      <div class="bullet-text">Delivered consistently strong overall performance as a Software Engineer II (Meets Expectations overall), with standout strengths in operational improvements, partner enablement, and collaboration.</div>
+      <div class="bullet-text">Delivered consistently strong overall performance as a Software Engineer II, with standout strengths in operational improvements, partner enablement, and collaboration.</div>
     </li>
       </ul>
     </details>
@@ -1341,9 +1262,9 @@
         <span class="pill"><span class="count">9</span> bullets</span>
       </summary>
       <ul class="bullets">
-        <li class="bullet" data-text="milwaukee tool (jedi — data engineering team) — data engineer ii — drove a risk-managed transition to stand up a new, more flexible tool-data-reads system in parallel with the legacy database, aiming to avoid disruption while ensuring old vs. new reads stayed in parity.">
+        <li class="bullet" data-text="milwaukee tool (tool data foundations) — drove a risk-managed transition to stand up a new, more flexible tool-data-reads system in parallel with the legacy database, aiming to avoid disruption while ensuring old vs. new reads stayed in parity.">
       <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
-      <div class="bullet-text">Milwaukee Tool (JEDI — Data Engineering Team) — Data Engineer II — Drove a risk-managed transition to stand up a new, more flexible tool-data-reads system in parallel with the legacy database, aiming to avoid disruption while ensuring old vs. new reads stayed in parity.</div>
+      <div class="bullet-text">Milwaukee Tool (Tool Data Foundations) — Drove a risk-managed transition to stand up a new, more flexible tool-data-reads system in parallel with the legacy database, aiming to avoid disruption while ensuring old vs. new reads stayed in parity.</div>
     </li>
 <li class="bullet" data-text="completed a deep ramp-up on the tool data domain being transferred into ownership, building a foundation to support long-term customer needs and future improvements.">
       <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
@@ -1426,9 +1347,9 @@
       <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
       <div class="bullet-text">Performed deep-dive research on connecting Swagger/OpenAPI/CodeGen into AWS (API Gateway/Lambda) and shared practical resources to enable future client SDK generation.</div>
     </li>
-<li class="bullet" data-text="jumped outside core responsibilities to assist pt4 in a time-boxed bug-fixing effort; ramped quickly in a new language/repo and resolved key hydraulic reports defects.">
+<li class="bullet" data-text="jumped outside core responsibilities to assist another team in a time-boxed bug-fixing effort; ramped quickly in a new language/repo and resolved key hydraulic reports defects.">
       <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
-      <div class="bullet-text">Jumped outside core responsibilities to assist PT4 in a time-boxed bug-fixing effort; ramped quickly in a new language/repo and resolved key Hydraulic Reports defects.</div>
+      <div class="bullet-text">Jumped outside core responsibilities to assist another team in a time-boxed bug-fixing effort; ramped quickly in a new language/repo and resolved key Hydraulic Reports defects.</div>
     </li>
 <li class="bullet" data-text="created visual solution designs/diagrams for the best approach to export the transfer report to an external integration partner (high-level aws flow + visio).">
       <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
@@ -1458,9 +1379,9 @@
       <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
       <div class="bullet-text">Scaled team effectiveness by setting up teammates’ Postman environments (dynamic variables, Runner automation), sharing short how-to videos, and curating Confluence documentation/research spikes to reduce tribal knowledge.</div>
     </li>
-<li class="bullet" data-text="earned aws certified solutions architect – associate (saa‑c03) on 08/25/2022 (128 days early), received “exceeds expectations” for the goal, and proactively shared study resources with the broader one‑key engineering group.">
+<li class="bullet" data-text="earned aws certified solutions architect – associate (saa‑c03) on 08/25/2022, well ahead of the goal date, and proactively shared study resources with the broader one‑key engineering group.">
       <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
-      <div class="bullet-text">Earned AWS Certified Solutions Architect – Associate (SAA‑C03) on 08/25/2022 (128 days early), received “Exceeds Expectations” for the goal, and proactively shared study resources with the broader ONE‑KEY engineering group.</div>
+      <div class="bullet-text">Earned AWS Certified Solutions Architect – Associate (SAA‑C03) on 08/25/2022, well ahead of the goal date, and proactively shared study resources with the broader ONE‑KEY engineering group.</div>
     </li>
       </ul>
     </details>
@@ -1520,9 +1441,9 @@
         <span class="pill"><span class="count">10</span> bullets</span>
       </summary>
       <ul class="bullets">
-        <li class="bullet" data-text="foundation finance — developed and deployed a client-facing payment portal that processed ~250,000 payments totaling ~$85,000,000.">
+        <li class="bullet" data-text="foundation finance — developed and deployed a client-facing payment portal that processed ~250,000 payments totaling ~$85M.">
       <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
-      <div class="bullet-text">Foundation Finance — Developed and deployed a client-facing payment portal that processed ~250,000 payments totaling ~$85,000,000.</div>
+      <div class="bullet-text">Foundation Finance — Developed and deployed a client-facing payment portal that processed ~250,000 payments totaling ~$85M.</div>
     </li>
 <li class="bullet" data-text="integrated ci/cd pipelines using bitbucket pipelines to automatically build, run qa tests, and deploy web applications.">
       <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
@@ -1569,9 +1490,9 @@
         <span class="pill"><span class="count">9</span> bullets</span>
       </summary>
       <ul class="bullets">
-        <li class="bullet" data-text="foundation finance — built an automated data-entry program (java + ms sql server), saving 1,200+ human hours and ~$40,000.">
+        <li class="bullet" data-text="foundation finance — built an automated data-entry program (java + ms sql server), saving 1,200+ human hours and ~$40K.">
       <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
-      <div class="bullet-text">Foundation Finance — Built an automated data-entry program (Java + MS SQL Server), saving 1,200+ human hours and ~$40,000.</div>
+      <div class="bullet-text">Foundation Finance — Built an automated data-entry program (Java + MS SQL Server), saving 1,200+ human hours and ~$40K.</div>
     </li>
 <li class="bullet" data-text="developed a new client portal from scratch using the mern stack (mongodb, express, react, node.js) with features such as dependency injection, driver’s license scanning, passport-jwt authentication, and more.">
       <button class="btn tiny copy-btn" type="button" aria-label="Copy bullet" title="Copy this bullet">Copy</button>
@@ -1713,7 +1634,7 @@
     
     </main>
 
-    <div class="footer">Tip: Use this as your master inventory. Copy the strongest bullets into your ATS resume + LinkedIn Experience.</div>
+    <div class="footer">Brandon S. Clark · Wisconsin (Remote) · <a href="mailto:bsc_pro@protonmail.com">bsc_pro@protonmail.com</a> · <a href="https://github.com/NorthwoodsCode" target="_blank" rel="noopener">github.com/NorthwoodsCode</a></div>
   </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -1727,13 +1648,16 @@
       const root = document.documentElement;
       const themeBtn = document.getElementById('themeBtn');
 
-      // mr_theme stores proof-hub's 3-state pick ('light' | 'dark' | 'auto').
-      // bsc_theme is the cross-page shared key written by the other resume pages.
-      let theme = localStorage.getItem('mr_theme');
-      if(theme !== 'auto' && theme !== 'light' && theme !== 'dark'){
-        const bsc = localStorage.getItem('bsc_theme');
-        theme = (bsc === 'light' || bsc === 'dark') ? bsc : 'auto';
-      }
+      // Safe storage wrappers (storage can be blocked)
+      function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+      function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+      const reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+      const authorMode = new URLSearchParams(location.search).get('author') === '1';
+
+      // bsc_theme: 'light' | 'dark' | 'auto' (auto follows prefers-color-scheme)
+      let theme = lsGet('bsc_theme');
+      if (theme !== 'auto' && theme !== 'light' && theme !== 'dark') theme = 'auto';
 
       function applyTheme() {
         let t = theme;
@@ -1741,14 +1665,13 @@
           t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
         }
         root.setAttribute('data-theme', t);
-        try{ localStorage.setItem('bsc_theme', t); }catch(e){}
         const label = (theme === 'auto') ? 'Auto' : (theme === 'dark' ? 'Dark' : 'Light');
         themeBtn.textContent = 'Theme: ' + label;
       }
 
       function cycleTheme() {
         theme = (theme === 'auto') ? 'light' : (theme === 'light' ? 'dark' : 'auto');
-        localStorage.setItem('mr_theme', theme);
+        lsSet('bsc_theme', theme);
         applyTheme();
         toast('Theme set to ' + (theme === 'auto' ? 'Auto (system)' : theme));
       }
@@ -1771,28 +1694,42 @@
       /* ------------------------------------------------------------
          Copy helper
          ------------------------------------------------------------ */
-      function copyText(text) {
-        if (!text) return Promise.resolve();
-        if (navigator.clipboard && window.isSecureContext) {
-          return navigator.clipboard.writeText(text);
+      function fallbackCopy(text) {
+        let ok = false;
+        let ta = null;
+        try {
+          ta = document.createElement('textarea');
+          ta.value = text;
+          ta.setAttribute('readonly', '');
+          ta.style.position = 'fixed';
+          ta.style.left = '-9999px';
+          ta.style.top = '-9999px';
+          document.body.appendChild(ta);
+          ta.focus();
+          ta.select();
+          ok = document.execCommand('copy') === true;
+        } catch (e) {
+          ok = false;
         }
-        return new Promise((resolve, reject) => {
-          try {
-            const ta = document.createElement('textarea');
-            ta.value = text;
-            ta.style.position = 'fixed';
-            ta.style.left = '-9999px';
-            ta.style.top = '-9999px';
-            document.body.appendChild(ta);
-            ta.focus();
-            ta.select();
-            document.execCommand('copy');
-            document.body.removeChild(ta);
-            resolve();
-          } catch (e) {
-            reject(e);
-          }
-        });
+        if (ta && ta.parentNode) ta.parentNode.removeChild(ta);
+        return ok;
+      }
+
+      // Resolves true on success; rejects when nothing was copied.
+      function copyText(text) {
+        if (!text) return Promise.reject(new Error('empty'));
+        const fb = () => (fallbackCopy(text) ? Promise.resolve(true) : Promise.reject(new Error('failed')));
+        if (navigator.clipboard && window.isSecureContext) {
+          return navigator.clipboard.writeText(text).then(() => true, fb);
+        }
+        return fb();
+      }
+
+      function copyWithToast(text, okMsg) {
+        copyText(text).then(
+          () => toast(okMsg),
+          (err) => toast(err && err.message === 'empty' ? 'Nothing to copy yet' : 'Copy failed. Select the text and copy it manually.')
+        );
       }
 
       function debounce(fn, wait) {
@@ -1835,13 +1772,13 @@
         }
       });
 
-      let publicMode = false;
+      // Public Mode defaults ON; only author mode (?author=1) can turn it off.
+      let publicMode = !(authorMode && lsGet('bsc_public') === '0');
       const publicBtn = document.getElementById('publicBtn');
 
       const SANITIZE_MAP = [
         [/\bJEDI\b/gi, 'Platform Org'],
         [/\bDIoTS\b/gi, 'Digital IoT Services'],
-        [/\bONE[-‑]KEY\b/gi, 'Enterprise IoT Platform'],
         [/\bQuickLink\b/gi, 'internal integration'],
         [/\bCCOE\b/gi, 'cloud governance'],
         [/\bPlatform Cluster Sync\b/gi, 'Platform Sync'],
@@ -1873,8 +1810,9 @@
         b.dataset.publicLower = (b.dataset.public || '').toLowerCase();
       });
 
-      function applyPublicMode(on) {
+      function applyPublicMode(on, silent) {
         publicMode = !!on;
+        if (!silent) lsSet('bsc_public', publicMode ? '1' : '0');
 
         bullets.forEach(b => {
           const textEl = b.querySelector('.bullet-text');
@@ -1895,9 +1833,11 @@
         if (typeof applyFilters === 'function') applyFilters();
 
         if (publicBtn) publicBtn.textContent = publicMode ? 'Public Mode: On' : 'Public Mode: Off';
-        toast(publicMode ? 'Public Mode ON' : 'Public Mode OFF');
+        if (!silent) toast(publicMode ? 'Public Mode ON' : 'Public Mode OFF');
       }
 
+      if (publicBtn && !authorMode) publicBtn.hidden = true;
+      if (publicBtn && authorMode) publicBtn.hidden = false;
       if (publicBtn) {
         publicBtn.addEventListener('click', () => applyPublicMode(!publicMode));
       }
@@ -1945,6 +1885,7 @@
           btn.type = 'button';
           btn.className = 'chip-btn';
           btn.dataset.tag = def.key;
+          btn.setAttribute('aria-pressed', 'false');
           btn.innerHTML = def.label + ' <span class="count">' + count + '</span>';
           btn.addEventListener('click', () => {
             if (activeTags.has(def.key)) activeTags.delete(def.key);
@@ -1955,13 +1896,6 @@
           tagFiltersEl.appendChild(btn);
         });
 
-        // quick clear (double click anywhere on tag bar)
-        tagFiltersEl.addEventListener('dblclick', () => {
-          activeTags.clear();
-          updateTagButtons();
-          applyFilters();
-          toast('Cleared category filters');
-        });
       }
 
       function updateTagButtons() {
@@ -1969,6 +1903,7 @@
         Array.from(tagFiltersEl.querySelectorAll('.chip-btn')).forEach(btn => {
           const k = btn.dataset.tag;
           btn.classList.toggle('active', activeTags.has(k));
+          btn.setAttribute('aria-pressed', activeTags.has(k) ? 'true' : 'false');
         });
       }
 
@@ -2050,7 +1985,7 @@
       if (copySkillsBtn) {
         copySkillsBtn.addEventListener('click', () => {
           const top = skillsComputed.slice(0, 16).map(s => s.term).join(', ');
-          copyText(top).then(() => toast('Copied skills ✔')).catch(() => toast('Copy failed'));
+          copyWithToast(top, 'Copied skills ✔');
         });
       }
 
@@ -2079,7 +2014,7 @@
         const pay = findFirstText(/processed\s*~?\s*\d[\d,]*\s*payments/i);
         if (pay) {
           const m1 = pay.match(/processed\s*~?\s*([\d,]+)\s*payments/i);
-          const m2 = pay.match(/\$\s*([\d,]+)\s*/);
+          const m2 = pay.match(/\$\s*([\d,.]+\s*[MK]?)/);
           const v = (m1 ? (m1[1] + ' payments') : 'Payments') + (m2 ? (' · $' + m2[1]) : '');
           metrics.push({ k: 'Customer payments', v, s: 'End-to-end portal impact' });
         }
@@ -2087,7 +2022,7 @@
         const save = findFirstText(/saving\s*\d[\d,]*\+?\s*human hours/i);
         if (save) {
           const h = save.match(/saving\s*([\d,]+\+?)\s*human hours/i);
-          const m = save.match(/\$\s*([\d,]+)\s*/);
+          const m = save.match(/\$\s*([\d,.]+\s*[MK]?)/);
           metrics.push({ k: 'Automation savings', v: (h ? h[1] + ' hrs' : 'Hours') + (m ? (' · $' + m[1]) : ''), s: 'Eliminated manual work' });
         }
 
@@ -2111,11 +2046,11 @@
 
         const cert = findFirstText(/AWS Certified Solutions Architect/i);
         if (cert) {
-          metrics.push({ k: 'AWS certs', v: 'SAA-C03 + CLF', s: 'Validated cloud fundamentals' });
+          metrics.push({ k: 'Certifications', v: 'SAA-C03 + Terraform + CLF', s: 'Three certifications' });
         }
 
         impactGrid.innerHTML = '';
-        (metrics.length ? metrics : [{k:'Add metrics', v:'(edit bullets)', s:'Your snapshot auto-updates'}]).slice(0, 8).forEach(m => {
+        metrics.slice(0, 8).forEach(m => {
           const el = document.createElement('div');
           el.className = 'metric';
           el.innerHTML = '<div class="k">' + m.k + '</div><div class="v">' + m.v + '</div><div class="s">' + m.s + '</div>';
@@ -2135,7 +2070,7 @@
         if (!impactStrip) return;
         const items = (impactMetrics && impactMetrics.length) ? impactMetrics.slice(0, 4) : [];
         impactStrip.innerHTML = '';
-        (items.length ? items : [{k:'Proof', v:'(auto)', s:'Add metrics in bullets'}]).forEach(m => {
+        items.forEach(m => {
           const el = document.createElement('div');
           el.className = 'impact-mini';
           el.innerHTML = '<div class="k">' + m.k + '</div><div class="v">' + m.v + '</div><div class="s">' + m.s + '</div>';
@@ -2163,6 +2098,7 @@
         if (laneBar) {
           Array.from(laneBar.querySelectorAll('button.lane-btn')).forEach(btn => {
             btn.classList.toggle('active', btn.dataset.lane === activeLane);
+            btn.setAttribute('aria-pressed', btn.dataset.lane === activeLane ? 'true' : 'false');
           });
         }
 
@@ -2188,7 +2124,7 @@
 
         const label = document.createElement('span');
         label.className = 'label';
-        label.textContent = 'Lane';
+        label.textContent = 'Focus';
         laneBar.appendChild(label);
 
         LANES.forEach(l => {
@@ -2196,6 +2132,7 @@
           btn.type = 'button';
           btn.className = 'lane-btn';
           btn.dataset.lane = l.key;
+          btn.setAttribute('aria-pressed', 'false');
           btn.textContent = l.label;
           btn.addEventListener('click', () => setLane(l.key));
           laneBar.appendChild(btn);
@@ -2251,7 +2188,7 @@
         if (!laneHighlightsEl) return;
 
         if (!activeLane) {
-          laneHighlightsEl.innerHTML = '<div class="small muted">Pick a lane to see curated highlights. (This will also set the category filters automatically.)</div>';
+          laneHighlightsEl.innerHTML = '<div class="small muted">Pick a focus to see highlights.</div>';
           return;
         }
 
@@ -2309,11 +2246,11 @@
 
       function buildPitch() {
         const laneLabel = activeLane ? (LANES.find(x => x.key === activeLane)?.label || '') : '';
-        const laneLine = laneLabel ? ('Focus lane: ' + laneLabel) : 'Focus lane: (pick one for tailored highlights)';
+        const laneLine = laneLabel ? ('Focus: ' + laneLabel) : '';
         const proof = (impactMetrics && impactMetrics.length) ? impactMetrics.slice(0, 2) : [];
         const proofLine = proof.length ? ('Proof: ' + proof.map(p => p.k + ' ' + p.v).join(' | ')) : '';
         return [
-          'Senior Software Engineer (AWS Backend / Platform) — Wausau, WI (Central) · Remote-friendly',
+          'Senior Software Engineer • AWS Backend / Cloud Platform — Wisconsin (Remote)',
           laneLine,
           'I build secure, automation-heavy backend/platform systems on AWS, and I scale teams through docs/demos/enablement.',
           proofLine
@@ -2322,8 +2259,9 @@
 
       function buildRecruiterPack() {
         const lines = [];
-        lines.push('Brandon S. Clark — Senior Software Engineer (AWS Backend / Platform)');
-        lines.push('Wausau, WI (Central Time) · Remote-friendly');
+        lines.push('Brandon S. Clark — Senior Software Engineer • AWS Backend / Cloud Platform');
+        lines.push('Wisconsin (Remote)');
+        lines.push('Email: bsc_pro@protonmail.com');
         lines.push('LinkedIn: https://www.linkedin.com/in/brandon-c-it-industry');
         lines.push('');
 
@@ -2373,12 +2311,12 @@
 
       function copyRecruiterPack() {
         const txt = renderRecruiterPack();
-        copyText(txt).then(() => toast('Copied recruiter pack ✔')).catch(() => toast('Copy failed'));
+        copyWithToast(txt, 'Copied recruiter pack ✔');
       }
 
       function copyPitch() {
         const txt = buildPitch();
-        copyText(txt).then(() => toast('Copied pitch ✔')).catch(() => toast('Copy failed'));
+        copyWithToast(txt, 'Copied pitch ✔');
       }
 
       if (copyPackBtn) copyPackBtn.addEventListener('click', copyRecruiterPack);
@@ -2484,7 +2422,7 @@
           e.stopPropagation();
           const li = btn.closest('.bullet');
           const text = li ? getActiveText(li) : '';
-          copyText(text).then(() => toast('Copied bullet ✔')).catch(() => toast('Copy failed'));
+          copyWithToast(text, 'Copied bullet ✔');
         });
       });
 
@@ -2505,14 +2443,14 @@
       if (copyATSBtn) {
         copyATSBtn.addEventListener('click', () => {
           const txt = selectedAsATS();
-          copyText(txt).then(() => toast('Copied ATS text ✔')).catch(() => toast('Copy failed'));
+          copyWithToast(txt, 'Copied ATS text ✔');
         });
       }
 
       if (copyMdBtn) {
         copyMdBtn.addEventListener('click', () => {
           const txt = selectedAsMarkdown();
-          copyText(txt).then(() => toast('Copied Markdown ✔')).catch(() => toast('Copy failed'));
+          copyWithToast(txt, 'Copied Markdown ✔');
         });
       }
 
@@ -2770,300 +2708,67 @@
       });
 
       /* ------------------------------------------------------------
-         Confetti (burst style)
-         ------------------------------------------------------------ */
-      const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const canvas = document.getElementById('confetti');
-      const ctx = canvas.getContext('2d');
-      let pieces = [];
-      let anim = null;
-      let lastTime = 0;
-
-      function resize() {
-        const dpr = window.devicePixelRatio || 1;
-        canvas.width = Math.floor(window.innerWidth * dpr);
-        canvas.height = Math.floor(window.innerHeight * dpr);
-        canvas.style.width = window.innerWidth + 'px';
-        canvas.style.height = window.innerHeight + 'px';
-        ctx.setTransform(dpr,0,0,dpr,0,0);
-      }
-      window.addEventListener('resize', resize);
-      resize();
-
-      function rand(min, max) { return Math.random() * (max - min) + min; }
-
-      function burst(x, y) {
-        if (reduceMotion) { toast('🎉 Nice.'); return; }
-
-        const colors = [
-          getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#2563eb',
-          getComputedStyle(document.documentElement).getPropertyValue('--accent2').trim() || '#16a34a',
-          '#f59e0b', '#ef4444', '#a855f7'
-        ];
-
-        const count = 120;
-        pieces = [];
-        for (let i=0;i<count;i++) {
-          const angle = rand(-Math.PI, 0); // upward semicircle
-          const speed = rand(4, 12);
-          pieces.push({
-            x, y,
-            vx: Math.cos(angle) * speed,
-            vy: Math.sin(angle) * speed,
-            g: rand(0.18, 0.30),
-            rot: rand(0, Math.PI*2),
-            vr: rand(-0.18, 0.18),
-            w: rand(6, 10),
-            h: rand(3, 6),
-            color: colors[Math.floor(Math.random()*colors.length)],
-            life: rand(900, 1400),
-            age: 0,
-            alpha: 1
-          });
-        }
-
-        lastTime = performance.now();
-        if (anim) cancelAnimationFrame(anim);
-        anim = requestAnimationFrame(tick);
-      }
-
-      function tick(now) {
-        const dt = Math.min(32, now - lastTime);
-        lastTime = now;
-
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-        let alive = 0;
-
-        for (const p of pieces) {
-          p.age += dt;
-          if (p.age > p.life) continue;
-          alive++;
-
-          p.vy += p.g;
-          p.x += p.vx;
-          p.y += p.vy;
-          p.rot += p.vr;
-
-          const t = p.age / p.life;
-          p.alpha = t < 0.75 ? 1 : (1 - (t - 0.75) / 0.25);
-
-          ctx.save();
-          ctx.globalAlpha = p.alpha;
-          ctx.translate(p.x, p.y);
-          ctx.rotate(p.rot);
-          ctx.fillStyle = p.color;
-          ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
-          ctx.restore();
-        }
-
-        if (alive > 0) anim = requestAnimationFrame(tick);
-        else ctx.clearRect(0,0,canvas.width,canvas.height);
-      }
-
-      document.getElementById('celebrateBtn').addEventListener('click', () => {
-        burst(window.innerWidth * 0.5, window.innerHeight * 0.18);
-        toast('🎉 Celebrate!');
-      });
-
-      /* ------------------------------------------------------------
-         Spotlight
-         ------------------------------------------------------------ */
-      function clearSpotlights() {
-        document.querySelectorAll('.bullet.spotlight').forEach(b => b.classList.remove('spotlight'));
-      }
-
-      document.getElementById('spotlightBtn').addEventListener('click', () => {
-        const visible = bullets.filter(b => b.style.display !== 'none' && b.offsetParent !== null);
-        if (!visible.length) { toast('No visible bullets to spotlight'); return; }
-        clearSpotlights();
-        const pick = visible[Math.floor(Math.random()*visible.length)];
-        pick.classList.add('spotlight');
-        const parentDetails = pick.closest('details.year');
-        if (parentDetails) parentDetails.open = true;
-        pick.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
-        const r = pick.getBoundingClientRect();
-        burst(r.left + r.width/2, r.top + r.height/2);
-        toast('✨ Spotlight!');
-      });
-
-      /* ------------------------------------------------------------
-         Keyboard shortcuts
+         Keyboard: "/" focuses search (not while typing, no modifiers)
          ------------------------------------------------------------ */
       document.addEventListener('keydown', (e) => {
-        if (e.key === '/' && document.activeElement !== search) {
-          e.preventDefault();
-          search.focus();
+        if (e.key !== '/' || e.ctrlKey || e.metaKey || e.altKey) return;
+        const a = document.activeElement;
+        const tag = a && a.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (a && a.isContentEditable)) return;
+        e.preventDefault();
+        search.focus();
+      });
+
+      /* ------------------------------------------------------------
+         Deep links: open and scroll to #case-*, and any target inside a <details>
+         ------------------------------------------------------------ */
+      function revealHash() {
+        let id = '';
+        try { id = decodeURIComponent(location.hash.slice(1)); } catch (e) { id = location.hash.slice(1); }
+        if (!id) return;
+        const el = document.getElementById(id);
+        if (!el) return;
+        let n = el;
+        let inDetails = false;
+        while (n && n !== document.body) {
+          if (n.tagName === 'DETAILS') { n.open = true; inDetails = true; }
+          n = n.parentElement;
         }
-        if (e.key === 'c' || e.key === 'C') {
-          burst(window.innerWidth * 0.5, window.innerHeight * 0.18);
-          toast('🎉 Celebrate!');
+        if (inDetails || /^case-/.test(id)) {
+          el.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
         }
-        if (e.key === 's' || e.key === 'S') document.getElementById('spotlightBtn').click();
-        if (e.key === 't' || e.key === 'T') cycleTheme();
-        if (e.key === 'p' || e.key === 'P') applyPublicMode(!publicMode);
+      }
+      window.addEventListener('hashchange', revealHash);
+      document.addEventListener('click', (e) => {
+        const a = e.target && e.target.closest ? e.target.closest('a[href^="#"]') : null;
+        if (!a) return;
+        const href = a.getAttribute('href');
+        if (href && href.length > 1 && href === location.hash) revealHash();
+      });
+
+      /* ------------------------------------------------------------
+         Print: open every <details>, then restore
+         ------------------------------------------------------------ */
+      let printRestore = null;
+      window.addEventListener('beforeprint', () => {
+        printRestore = Array.from(document.querySelectorAll('details')).map(d => [d, d.open]);
+        printRestore.forEach(([d]) => { d.open = true; });
+      });
+      window.addEventListener('afterprint', () => {
+        if (printRestore) printRestore.forEach(([d, o]) => { d.open = o; });
+        printRestore = null;
       });
 
       // Initial state
       updateSelectedUI();
       applyFilters();
       updateVisibleCount();
+      applyPublicMode(publicMode, true);
+      revealHash();
     })();
   </script>
 
 
-<details class="bsc-dock">
-  <summary>Resume modes</summary>
-  <div class="bsc-dock-panel">
-    <div class="bsc-dock-kicker">One story, five entry points</div>
-    <div class="bsc-dock-grid">
-      <a class="bsc-dock-link" href="index.html" data-page="index.html">
-        <strong>Home</strong>
-        <span>Vanta fog landing page</span>
-      </a>
-      <a class="bsc-dock-link" href="resume-atlas.html" data-page="resume-atlas.html">
-        <strong>Atlas</strong>
-        <span>Classic recruiter / PDF view</span>
-      </a>
-      <a class="bsc-dock-link" href="resume-signal.html" data-page="resume-signal.html">
-        <strong>Signal</strong>
-        <span>Interactive tailored resume</span>
-      </a>
-      <a class="bsc-dock-link" href="proof-hub.html" data-page="proof-hub.html">
-        <strong>Proof Hub</strong>
-        <span>Bullets, cases, and hard evidence</span>
-      </a>
-      <a class="bsc-dock-link" href="resume-switchboard.html" data-page="resume-switchboard.html">
-        <strong>Switchboard</strong>
-        <span>Low-motion fallback hub</span>
-      </a>
-    </div>
-  </div>
-</details>
-<script id="bsc-resume-dock-script">
-  (function(){
-    const current = location.pathname.split('/').pop() || 'index.html';
-    document.querySelectorAll('.bsc-dock-link').forEach(function(link){
-      const page = link.getAttribute('data-page');
-      if(page === current || (!current && page === 'index.html')){
-        link.setAttribute('aria-current', 'page');
-      }
-      link.addEventListener('click', function(){
-        try{ localStorage.setItem('bsc_last_resume_mode', page || link.getAttribute('href')); }catch(e){}
-      });
-    });
-  })();
-</script>
-
-<!-- command palette -->
-<div id="cmd-pal" role="dialog" aria-modal="true" aria-label="Command palette" hidden>
-  <div id="cmd-bg"></div>
-  <div id="cmd-box">
-    <div id="cmd-sr">
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input id="cmd-q" type="text" placeholder="Search commands, navigate, jump to section…" autocomplete="off" spellcheck="false" aria-label="Command search" aria-controls="cmd-list" aria-autocomplete="list" />
-      <kbd id="cmd-esk">ESC</kbd>
-    </div>
-    <ul id="cmd-list" role="listbox" aria-label="Commands" aria-live="polite"></ul>
-    <div id="cmd-foot" aria-hidden="true">
-      <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
-      <span><kbd>↵</kbd> open</span>
-      <span><kbd>esc</kbd> close</span>
-    </div>
-  </div>
-</div>
-<script>
-(function(){
-  var pal=document.getElementById('cmd-pal'),bg=document.getElementById('cmd-bg'),inp=document.getElementById('cmd-q'),lst=document.getElementById('cmd-list');
-  if(!pal||!bg||!inp||!lst) return;
-  var page=(location.pathname.split('/').pop()||'index.html').replace(/[?#].*/,'');
-  var NAV=[
-    {cat:'Navigate',label:'Home',desc:'Landing page',url:'index.html'},
-    {cat:'Navigate',label:'Atlas — Recruiter Resume',desc:'Clean PDF-ready',url:'resume-atlas.html'},
-    {cat:'Navigate',label:'Signal — Interactive Resume',desc:'Filters + search',url:'resume-signal.html'},
-    {cat:'Navigate',label:'Proof Hub — Case Studies',desc:'ATS export + evidence',url:'proof-hub.html'},
-    {cat:'Navigate',label:'Switchboard',desc:'Low-motion hub',url:'resume-switchboard.html'},
-  ];
-  var ACT=[
-    {cat:'Action',label:'Print / Download PDF',desc:'Open print dialog',action:'print'},
-    {cat:'Action',label:'Copy email address',desc:'bsc_pro@protonmail.com',action:'copy-email'},
-    {cat:'Action',label:'View GitHub',desc:'NorthwoodsCode',url:'https://github.com/NorthwoodsCode',ext:true},
-    {cat:'Action',label:'View LinkedIn',desc:'brandon-c-it-industry',url:'https://www.linkedin.com/in/brandon-c-it-industry',ext:true},
-  ];
-  var JMP={
-    'index.html':[
-      {cat:'Jump to',label:'Resume Modes',desc:'All format cards',anchor:'#formats'},
-      {cat:'Jump to',label:'Tailor Tools',desc:'Build a Signal link',anchor:'#tailorTools'},
-    ],
-    'resume-atlas.html':[
-      {cat:'Jump to',label:'Summary',desc:'Professional summary',anchor:'#summary'},
-      {cat:'Jump to',label:'Core Skills',desc:'Technology stack',anchor:'#skills'},
-      {cat:'Jump to',label:'Experience',desc:'Work history',anchor:'#experience'},
-      {cat:'Jump to',label:'Certifications',desc:'AWS + Terraform',anchor:'#certs'},
-      {cat:'Jump to',label:'Education',desc:'UWRF, Finance + CS',anchor:'#education'},
-    ],
-    'proof-hub.html':[
-      {cat:'Jump to',label:'Overview',desc:'Impact strip + metrics',anchor:'#start'},
-      {cat:'Jump to',label:'Timeline',desc:'Career timeline',anchor:'#timeline'},
-      {cat:'Jump to',label:'Turbo Pack',desc:'Bullet builder + export',anchor:'#turbo'},
-      {cat:'Jump to',label:'Case Studies',desc:'Project narratives',anchor:'#cases'},
-      {cat:'Jump to',label:'Credentials',desc:'Certs + education',anchor:'#cred'},
-    ],
-  };
-  var CMDS=NAV.concat(ACT).concat(JMP[page]||[]);
-  var activeIdx=-1,prevFocus=null,filtered=[];
-  function flt(q){q=(q||'').toLowerCase().trim();if(!q)return CMDS.slice();return CMDS.filter(function(c){return(c.label+' '+(c.desc||'')+' '+(c.cat||'')).toLowerCase().indexOf(q)>-1;});}
-  function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-  function mkItem(c,i){
-    var li=document.createElement('li');li.className='cpi';li.setAttribute('role','option');li.setAttribute('id','cpi-'+i);li.setAttribute('aria-selected','false');
-    li.innerHTML='<span class="cpi-lbl">'+esc(c.label)+'</span>'+(c.desc?'<span class="cpi-desc">'+esc(c.desc)+'</span>':'');
-    li.addEventListener('mousedown',function(e){e.preventDefault();execute(c);});
-    return li;
-  }
-  function render(q){
-    filtered=flt(q);lst.innerHTML='';var lastCat=null;
-    filtered.forEach(function(c,i){
-      if(c.cat!==lastCat){var h=document.createElement('li');h.className='cpcat';h.setAttribute('role','presentation');h.textContent=c.cat;lst.appendChild(h);lastCat=c.cat;}
-      lst.appendChild(mkItem(c,i));
-    });
-    setActive(-1);
-  }
-  function setActive(i){
-    activeIdx=i;
-    var items=lst.querySelectorAll('.cpi');
-    items.forEach(function(el,j){el.setAttribute('aria-selected',j===i?'true':'false');});
-    if(i>=0&&items[i])items[i].scrollIntoView({block:'nearest'});
-    inp.setAttribute('aria-activedescendant',i>=0?'cpi-'+i:'');
-  }
-  function execute(cmd){
-    closePal();
-    if(cmd.action==='print'){window.print();return;}
-    if(cmd.action==='copy-email'){
-      var t='bsc_pro@protonmail.com';
-      if(navigator.clipboard){navigator.clipboard.writeText(t);}
-      else{var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}
-      return;
-    }
-    if(cmd.anchor){var el=document.querySelector(cmd.anchor);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});return;}
-    if(cmd.url){if(cmd.ext){window.open(cmd.url,'_blank','noopener');}else{location.href=cmd.url;}}
-  }
-  function openPal(){prevFocus=document.activeElement;pal.hidden=false;render('');inp.value='';setTimeout(function(){inp.focus();},30);document.body.style.overflow='hidden';}
-  function closePal(){pal.hidden=true;document.body.style.overflow='';if(prevFocus)prevFocus.focus();}
-  inp.addEventListener('input',function(){render(inp.value);});
-  inp.addEventListener('keydown',function(e){
-    var items=lst.querySelectorAll('.cpi');
-    if(e.key==='ArrowDown'){e.preventDefault();setActive(Math.min(activeIdx+1,items.length-1));}
-    else if(e.key==='ArrowUp'){e.preventDefault();setActive(Math.max(activeIdx-1,0));}
-    else if(e.key==='Enter'){if(activeIdx>=0&&filtered[activeIdx])execute(filtered[activeIdx]);else if(filtered[0])execute(filtered[0]);}
-    else if(e.key==='Escape'){closePal();}
-  });
-  bg.addEventListener('mousedown',closePal);
-  document.getElementById('cmd-esk').addEventListener('click',closePal);
-  document.addEventListener('keydown',function(e){
-    if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();if(pal.hidden){openPal();}else{closePal();}}
-    if(!pal.hidden&&e.key==='Escape')closePal();
-  });
-})();
-</script>
 <script src="shared-enhancements.js"></script>
 </body>
 </html>
