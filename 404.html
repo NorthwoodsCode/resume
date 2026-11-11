@@ -15,7 +15,9 @@
       var p = location.pathname;
       var m = p.match(/^(.*?)\/for\/([^\/?#]+)\/?$/);
       if (m) {
-        location.replace((m[1] || '') + '/?for=' + encodeURIComponent(decodeURIComponent(m[2])) + location.hash);
+        var slug = m[2];
+        try { slug = decodeURIComponent(m[2]); } catch (e) {}
+        location.replace((m[1] || '') + '/?for=' + encodeURIComponent(slug) + location.hash);
         return;
       }
       /* Plain 404: point "back" at the site root (project-pages path or domain root). */
@@ -23,6 +25,11 @@
       document.addEventListener('DOMContentLoaded', function () {
         var a = document.getElementById('home');
         if (a) a.setAttribute('href', base);
+        var map = {atlas: 'resume-atlas.html', signal: 'resume-signal.html', proof: 'proof-hub.html'};
+        Object.keys(map).forEach(function (k) {
+          var l = document.getElementById('go-' + k);
+          if (l) l.setAttribute('href', base + map[k]);
+        });
       });
     })();
   </script>
@@ -36,6 +43,7 @@
   <main>
     <h1>Not found</h1>
     <p>That page doesn't exist. <a id="home" href="/resume/">Back to the resume</a>.</p>
+    <p><a id="go-atlas" href="/resume/resume-atlas.html">Atlas</a> &middot; <a id="go-signal" href="/resume/resume-signal.html">Signal</a> &middot; <a id="go-proof" href="/resume/proof-hub.html">Proof Hub</a></p>
   </main>
 </body>
 </html>
