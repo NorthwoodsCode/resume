@@ -10,7 +10,7 @@
   <meta name="theme-color" content="#04070f" />
 
   <title>Brandon S. Clark — Resume Home</title>
-  <meta name="description" content="Cinematic resume homepage for Brandon S. Clark with Atlas, Signal, Proof Hub, tailored links, and a low-motion switchboard." />
+  <meta name="description" content="Resume site for Brandon S. Clark, Senior Software Engineer (AWS backend / cloud platform): a classic PDF-ready resume, a focus-filtered version for hiring managers, and case studies with hard evidence." />
   <link rel="canonical" href="https://northwoodscode.github.io/resume/" />
   <meta property="og:title" content="Brandon S. Clark — Resume Home" />
   <meta property="og:description" content="Secure AWS systems, maintainable APIs, and calm operational delivery for backend, cloud, and data platforms." />
@@ -34,7 +34,6 @@
       --border:rgba(86,109,145,.20);
       --accent:#2f64ff;
       --accent2:#67e8c8;
-      --accent-soft:rgba(47,100,255,.16);
       --shadow:0 26px 80px rgba(11,18,38,.17);
       --shadow-soft:0 14px 40px rgba(11,18,38,.10);
       --shadow-hover:0 22px 58px rgba(11,18,38,.18);
@@ -54,70 +53,78 @@
       --border:rgba(203,220,255,.12);
       --accent:#86a6ff;
       --accent2:#6fffd1;
-      --accent-soft:rgba(120,162,255,.16);
       --shadow:0 28px 90px rgba(0,0,0,.44);
       --shadow-soft:0 14px 50px rgba(0,0,0,.28);
       --shadow-hover:0 22px 68px rgba(0,0,0,.36);
     }
 
-    html[data-atmosphere="blue"]{
+    html:not([data-theme="light"])[data-atmosphere="blue"]{
       --accent:#86a6ff;
       --accent2:#6fffd1;
-      --accent-soft:rgba(120,162,255,.16);
     }
-    html[data-atmosphere="crimson"]{
+    html:not([data-theme="light"])[data-atmosphere="crimson"]{
       --accent:#ff6b8e;
       --accent2:#ffb38a;
-      --accent-soft:rgba(255,107,142,.18);
     }
-    html[data-atmosphere="emerald"]{
+    html:not([data-theme="light"])[data-atmosphere="emerald"]{
       --accent:#45e3a4;
       --accent2:#9dffe2;
-      --accent-soft:rgba(69,227,164,.18);
     }
-    html[data-atmosphere="violet"]{
+    html:not([data-theme="light"])[data-atmosphere="violet"]{
       --accent:#b287ff;
       --accent2:#ff9bf0;
-      --accent-soft:rgba(178,135,255,.18);
     }
-    html[data-atmosphere="ghost"]{
-      --accent:#909098;--accent2:#606068;--accent-soft:rgba(144,144,152,.16);
+    html:not([data-theme="light"])[data-atmosphere="ghost"]{
+      --accent:#909098;--accent2:#606068;
       --bg:#080808;--fg:#c8c8cc;--muted:#606068;
       --panel:rgba(20,20,22,.44);--panel-strong:rgba(20,20,22,.62);--border:rgba(200,200,204,.10);
     }
-    html[data-atmosphere="void"]{
-      --accent:#e8e8e8;--accent2:#a0a0a0;--accent-soft:rgba(232,232,232,.14);
+    html:not([data-theme="light"])[data-atmosphere="void"]{
+      --accent:#e8e8e8;--accent2:#a0a0a0;
       --bg:#000000;--fg:#f0f0f0;--muted:#707070;
       --panel:rgba(16,16,16,.48);--panel-strong:rgba(16,16,16,.68);--border:rgba(240,240,240,.12);
     }
-    html[data-atmosphere="amethyst"]{
-      --accent:#b04fff;--accent2:#7c3aed;--accent-soft:rgba(176,79,255,.18);
+    html:not([data-theme="light"])[data-atmosphere="amethyst"]{
+      --accent:#b04fff;--accent2:#7c3aed;
       --bg:#080012;--fg:#e8d4ff;--muted:#8a68b0;
       --panel:rgba(18,4,32,.46);--panel-strong:rgba(18,4,32,.64);--border:rgba(176,79,255,.14);
     }
 
     /* Refined v2 atmospheres — restrained, material-named, editorial */
-    html[data-atmosphere="graphite"]{
-      --accent:#98a8c2;--accent2:#c2cad8;--accent-soft:rgba(152,168,194,.14);
+    html:not([data-theme="light"])[data-atmosphere="graphite"]{
+      --accent:#98a8c2;--accent2:#c2cad8;
       --bg:#08090d;--fg:#d8dde6;--muted:#6f7a8c;
       --panel:rgba(14,16,22,.46);--panel-strong:rgba(14,16,22,.66);--border:rgba(176,188,210,.10);
     }
-    html[data-atmosphere="ink"]{
-      --accent:#7c8cb8;--accent2:#4a567a;--accent-soft:rgba(124,140,184,.12);
+    html:not([data-theme="light"])[data-atmosphere="ink"]{
+      --accent:#7c8cb8;--accent2:#4a567a;
       --bg:#04060c;--fg:#c8cee0;--muted:#5a6480;
       --panel:rgba(8,10,18,.50);--panel-strong:rgba(8,10,18,.70);--border:rgba(120,140,180,.10);
     }
-    html[data-atmosphere="bronze"]{
-      --accent:#c8924a;--accent2:#8a5e2c;--accent-soft:rgba(200,146,74,.14);
+    html:not([data-theme="light"])[data-atmosphere="bronze"]{
+      --accent:#c8924a;--accent2:#8a5e2c;
       --bg:#0c0805;--fg:#e8d8c0;--muted:#8a6850;
       --panel:rgba(20,14,8,.46);--panel-strong:rgba(20,14,8,.66);--border:rgba(200,146,74,.12);
     }
     /* Autumn — modern editorial fall: clay, oxblood, dusk. Not pumpkin-cartoon. */
-    html[data-atmosphere="autumn"]{
-      --accent:#d97a4a;--accent2:#8e3a2a;--accent-soft:rgba(217,122,74,.16);
+    html:not([data-theme="light"])[data-atmosphere="autumn"]{
+      --accent:#d97a4a;--accent2:#8e3a2a;
       --bg:#0d0907;--fg:#f0d8b8;--muted:#9a6a52;
       --panel:rgba(22,14,10,.48);--panel-strong:rgba(22,14,10,.68);--border:rgba(217,122,74,.14);
     }
+
+    /* Light-theme atmospheres: darker accents, same families */
+    html[data-theme="light"][data-atmosphere="blue"]{--accent:#2f64ff;--accent2:#0f7a5c}
+    html[data-theme="light"][data-atmosphere="crimson"]{--accent:#b3123f;--accent2:#0f7a5c}
+    html[data-theme="light"][data-atmosphere="emerald"]{--accent:#0b7a4b;--accent2:#1d4ed8}
+    html[data-theme="light"][data-atmosphere="violet"]{--accent:#6d28d9;--accent2:#0f7a5c}
+    html[data-theme="light"][data-atmosphere="ghost"]{--accent:#374151;--accent2:#0f7a5c}
+    html[data-theme="light"][data-atmosphere="void"]{--accent:#111827;--accent2:#0f7a5c}
+    html[data-theme="light"][data-atmosphere="amethyst"]{--accent:#7e22ce;--accent2:#0f7a5c}
+    html[data-theme="light"][data-atmosphere="graphite"]{--accent:#374151;--accent2:#1d4ed8}
+    html[data-theme="light"][data-atmosphere="ink"]{--accent:#1e3a8a;--accent2:#0f7a5c}
+    html[data-theme="light"][data-atmosphere="bronze"]{--accent:#92400e;--accent2:#1d4ed8}
+    html[data-theme="light"][data-atmosphere="autumn"]{--accent:#b45309;--accent2:#1d4ed8}
 
     *{box-sizing:border-box}
     html,body{min-height:100%}
@@ -190,6 +197,7 @@
       animation:fog-fallback-drift 26s ease-in-out infinite;
     }
     html.plain .atmosphere-fallback{ animation:none; }
+    html[data-effect="still"] .atmosphere-fallback{animation:none}
     @media(prefers-reduced-motion:reduce){
       html.use-fallback .atmosphere-fallback{ animation:none; }
     }
@@ -206,18 +214,6 @@
     }
     html.plain #vanta{display:none}
     html.plain .scrim{opacity:.68}
-    #cursor-glow{
-      position:fixed;pointer-events:none;
-      width:320px;height:320px;border-radius:50%;
-      background:radial-gradient(circle, color-mix(in srgb, var(--accent) 16%, transparent) 0%, transparent 65%);
-      transform:translate(-50%,-50%);
-      z-index:2;
-      transition:left .1s linear,top .1s linear,opacity .4s ease;
-      mix-blend-mode:screen;opacity:0;will-change:left,top;
-    }
-    html[data-theme="light"] #cursor-glow{display:none}
-    @media(prefers-color-scheme:light){html:not([data-theme="dark"]) #cursor-glow{display:none}}
-    @media(prefers-reduced-motion:reduce){#cursor-glow{display:none}}
     #confetti{
       position:fixed;
       inset:0;
@@ -729,6 +725,8 @@
       text-transform:uppercase;
       margin-bottom:1rem;
     }
+    html[data-theme="light"] .avail-badge{color:#047857;background:rgba(4,120,87,.10);border-color:rgba(4,120,87,.35)}
+    html[data-theme="light"] .avail-badge .dot{background:#047857}
     .avail-badge[hidden]{display:none}
     .avail-badge .dot{
       width:7px;
@@ -752,24 +750,6 @@
       align-items:center;
       flex-wrap:wrap;
       gap:.82rem;
-    }
-    .subtle-note{
-      margin:1.2rem auto 0;
-      max-width:33rem;
-      color:var(--muted);
-      font-weight:690;
-      font-size:.96rem;
-      text-wrap:pretty;
-    }
-    .hero-link{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      margin-top:1.05rem;
-      font-size:.95rem;
-      font-weight:780;
-      letter-spacing:.04em;
-      text-transform:uppercase;
     }
 
     .hero-utilities{
@@ -798,18 +778,6 @@
       color:var(--fg);
       transform:translateY(-1px);
     }
-    .continue{
-      margin-top:1.05rem;
-      display:inline-flex;
-      align-items:center;
-      flex-wrap:wrap;
-      justify-content:center;
-      gap:.55rem;
-      color:var(--muted);
-      font-weight:700;
-    }
-    .continue[hidden]{display:none}
-    .continue.show{display:inline-flex}
 
     .meta-row{
       width:min(940px, calc(100vw - 40px));
@@ -855,8 +823,7 @@
     }
     .card > *{position:relative; z-index:1}
     .kicker,
-    .previewMeta,
-    h3{
+    .previewMeta{
       margin:0 0 8px;
       font-size:.78rem;
       font-weight:840;
@@ -1382,7 +1349,6 @@
     .w90{width:90%}
     .w88{width:88%}
     .w86{width:86%}
-    .w85{width:85%}
     .w78{width:78%}
     .w74{width:74%}
     .w72{width:72%}
@@ -1643,7 +1609,6 @@
         grid-template-columns:repeat(2, minmax(0, 1fr));
       }
       .cta-row .btn{width:100%}
-      .subtle-note{font-size:.92rem}
       .formats-grid{
         grid-auto-flow:column;
         grid-template-columns:none;
@@ -1664,12 +1629,12 @@
     @media (max-width: 520px){
       .top-actions{width:100%; justify-content:center}
       .top-actions .btn{flex:1 1 calc(50% - .45rem)}
-      #cmdPalBtn{display:none}
+      #cmdPalBtn{padding:.28rem .55rem; font-size:.78rem; flex:0 0 auto}
       .route-actions,
       .rowBtns,
       .cta-row{grid-template-columns:1fr}
-      .formats-grid{grid-auto-columns:minmax(90vw, 1fr)}
-      .presets{grid-auto-columns:minmax(84vw, 1fr)}
+      .formats-grid{grid-auto-columns:minmax(78vw, 1fr); padding-right:12vw; scroll-padding-left:0}
+      .presets{grid-auto-columns:minmax(78vw, 1fr); padding-right:12vw}
       .tools-summary{align-items:flex-start; flex-direction:column}
       .summaryMeta{width:100%; justify-content:center}
     }
@@ -1681,7 +1646,9 @@
     }
 
     @media print{
-      #vanta,.atmosphere-fallback,.scrim,#confetti,.topbar,.warn,.toast,.bsc-dock{display:none !important}
+      #vanta,.atmosphere-fallback,.scrim,#confetti,.topbar,.warn,.toast,.bsc-dock,.fx-menu,.appearance-menu,#fxPanel,#cursor-glow,[data-for-badge],[data-bsc-stack]{display:none !important}
+      .section-shell > .card, .formats-grid > .card, .section-shell > .grid > .card, #tailorTools{opacity:1 !important; transform:none !important; transition:none !important}
+      .hero-shell, .hero-shell *{color:#111 !important}
       body{background:#fff;color:#111}
       .site{padding:0}
       .hero-shell,.card{
@@ -1752,12 +1719,11 @@
   <div id="vanta" aria-hidden="true"></div>
   <div class="atmosphere-fallback" aria-hidden="true"></div>
   <div class="scrim" aria-hidden="true"></div>
-  <div id="cursor-glow" aria-hidden="true"></div>
   <canvas id="confetti" aria-hidden="true"></canvas>
 
   <div class="site">
     <header class="topbar" aria-label="Page utilities">
-      <div class="brand-tag"><span class="brand-dot" aria-hidden="true"></span> Brandon S. Clark · Cinematic Resume Home</div>
+      <div class="brand-tag"><span class="brand-dot" aria-hidden="true"></span> Brandon S. Clark · Resume</div>
       <div class="top-actions">
         <button class="btn lift small" id="cmdPalBtn" type="button" aria-label="Open command palette">⌘K</button>
         <a class="btn lift small" href="?plain=1" id="plainModeLink" aria-label="Toggle plain mode">Plain mode</a>
@@ -1812,7 +1778,7 @@
                   <span class="fx-icon" aria-hidden="true">🎉</span>
                   <span class="fx-text">
                     <span class="fx-name">Confetti bursts</span>
-                    <span class="fx-desc">Welcome burst on first visit.</span>
+                    <span class="fx-desc">Pops every time this page loads.</span>
                   </span>
                   <input class="fx-toggle" type="checkbox" role="switch" data-fx="confetti">
                   <span class="fx-switch" aria-hidden="true"></span>
@@ -1900,7 +1866,7 @@
           <div class="kicker">Reader routing</div>
           <h2 class="section-title">Choose the mode that matches how they review</h2>
           <p class="route-copy">
-            The homepage stays cinematic and clean. This section handles the practical handoff once someone wants specifics. Toggle motion: <a class="plainLink mono" href="?plain=1" id="plainModeLinkInline">plain mode</a>
+            Pick the view that fits how you review. Prefer no motion? Use <a class="plainLink mono" href="?plain=1" id="plainModeLinkInline">plain mode</a>.
           </p>
           <div class="route-actions" role="group" aria-label="Audience shortcuts">
             <a class="btn lift cta small" href="resume-atlas.html" data-mode="resume-atlas.html">Recruiter / ATS → Atlas</a>
@@ -1964,7 +1930,6 @@
 
             <div class="rowBtns">
               <a class="btn lift cta small" href="resume-signal.html" data-mode="resume-signal.html">Open Signal</a>
-              <a class="btn lift small" download="BrandonClark_Resume_Signal.html" href="resume-signal.html">Download HTML</a>
               <button class="btn lift small" data-open-preset="cloud" type="button">Open: Cloud / Platform</button>
               <button class="btn lift small" data-open-preset="iot" type="button">Open: IoT / Devices</button>
             </div>
@@ -2015,8 +1980,7 @@
 
             <div class="rowBtns">
               <a class="btn lift cta small" href="resume-atlas.html" data-mode="resume-atlas.html">Open Atlas</a>
-              <a class="btn lift small" download="BrandonClark_Resume_Atlas.html" href="resume-atlas.html">Download HTML</a>
-              <button class="btn lift small" id="openAtlasAndPrint" type="button">Open &amp; Print PDF</button>
+              <a class="btn lift small" id="openAtlasAndPrint" href="resume-atlas.html?print=1">Open &amp; Print PDF</a>
             </div>
             <p class="hint">If you are short on time, Atlas is the fastest classic read.</p>
           </section>
@@ -2078,9 +2042,8 @@
 
             <div class="rowBtns">
               <a class="btn lift cta small" href="proof-hub.html" data-mode="proof-hub.html">Open Proof Hub</a>
-              <a class="btn lift small" download="BrandonClark_Proof_Hub.html" href="proof-hub.html">Download HTML</a>
             </div>
-            <p class="hint">Think of this as the “show your work” version of the resume.</p>
+            <p class="hint">The evidence behind the headline bullets.</p>
           </section>
 
           <section aria-label="Static switchboard" class="card">
@@ -2132,9 +2095,8 @@
 
             <div class="rowBtns">
               <a class="btn lift cta small" href="resume-switchboard.html" data-mode="resume-switchboard.html">Open Switchboard</a>
-              <a class="btn lift small" download="BrandonClark_Resume_Switchboard.html" href="resume-switchboard.html">Download HTML</a>
             </div>
-            <p class="hint">Send this when you want the ecosystem without the cinematic layer.</p>
+            <p class="hint">A plain route list for conservative browsers.</p>
           </section>
         </div>
 
@@ -2159,7 +2121,7 @@
               <button class="btn lift small" data-open-focus="lead,enable,opex" type="button">Leadership / Enablement</button>
               <button class="btn lift small" data-open-focus="ai,enable,lead" type="button">GenAI / Automation Mindset</button>
             </div>
-            <p class="hint">Use these when you want the first screen to feel intentionally tailored.</p>
+            <p class="hint">Open Signal with a focus already applied.</p>
           </section>
 
           <section aria-label="Custom Signal link builder" class="card custom">
@@ -2199,7 +2161,7 @@
         </details>
 
         <footer>
-          <p style="margin:0">Privacy by default: no analytics, no cookies, no session replay, no ad tracking. Use <a class="plainLink mono" href="?plain=1" id="plainModeLinkFooter">?plain=1</a> for a recruiter-safe, no-animation version, or jump into the Switchboard from the mode dock.</p>
+          <p style="margin:0">Privacy by default: no analytics, no cookies, no session replay, no ad tracking. Use <a class="plainLink mono" href="?plain=1" id="plainModeLinkFooter">?plain=1</a> for a recruiter-safe, no-animation version, or open the Switchboard.</p>
         </footer>
       </div>
     </main>
@@ -2207,11 +2169,6 @@
 
   <div aria-live="polite" class="toast" id="toast" role="status"></div>
 
-  <script defer src="https://cdn.jsdelivr.net/npm/three@0.154.0/build/three.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.fog.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.clouds.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.waves.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.ripple.min.js"></script>
   <script>
     (function(){
       const html = document.documentElement;
@@ -2227,7 +2184,7 @@
 
       // BSC_FX: runtime feature toggles persisted to localStorage. Defined before
       // any feature script runs so they can gate behavior via window.BSC_FX.get().
-      const BSC_FX_DEFAULTS = { spotlight:false, tilt:false, sparks:false, confetti:false };
+      const BSC_FX_DEFAULTS = { spotlight:false, tilt:false, sparks:false, confetti:true };
       let fxState = (function(){
         try{
           const raw = localStorage.getItem('bsc_fx');
@@ -2425,6 +2382,7 @@
       function applyEffect(name){
         var next = VALID_EFFECTS.indexOf(name) > -1 ? name : 'fog';
         html.setAttribute('data-vanta-effect', next);
+        html.setAttribute('data-effect', next);
         try{ localStorage.setItem('bsc_vanta_effect', next); }catch(e){}
         syncEffectButtons();
         startVanta();
@@ -2487,6 +2445,7 @@
       applyTheme(getPreferredTheme(), true);
       applyAtmosphere(getPreferredAtmosphere(), true);
       html.setAttribute('data-vanta-effect', getPreferredEffect());
+      html.setAttribute('data-effect', getPreferredEffect());
       syncEffectButtons();
 
       function updatePlainLinks(){
@@ -2537,36 +2496,11 @@
         });
       }
 
-      var ATM_PREVIEW = {
-        blue:      { accent:'#86a6ff', accent2:'#6fffd1', accentSoft:'rgba(120,162,255,.16)' },
-        crimson:   { accent:'#ff6b8e', accent2:'#ffb38a', accentSoft:'rgba(255,107,142,.18)' },
-        emerald:   { accent:'#45e3a4', accent2:'#9dffe2', accentSoft:'rgba(69,227,164,.18)'  },
-        violet:    { accent:'#b287ff', accent2:'#ff9bf0', accentSoft:'rgba(178,135,255,.18)' },
-        ghost:     { accent:'#909098', accent2:'#606068', accentSoft:'rgba(144,144,152,.16)' },
-        void:      { accent:'#e8e8e8', accent2:'#a0a0a0', accentSoft:'rgba(232,232,232,.14)' },
-        amethyst:  { accent:'#b04fff', accent2:'#7c3aed', accentSoft:'rgba(176,79,255,.18)'  },
-        graphite:  { accent:'#98a8c2', accent2:'#c2cad8', accentSoft:'rgba(152,168,194,.14)' },
-        ink:       { accent:'#7c8cb8', accent2:'#4a567a', accentSoft:'rgba(124,140,184,.12)' },
-        bronze:    { accent:'#c8924a', accent2:'#8a5e2c', accentSoft:'rgba(200,146,74,.14)'  },
-        autumn:    { accent:'#d97a4a', accent2:'#8e3a2a', accentSoft:'rgba(217,122,74,.16)'  }
-      };
       atmosphereButtons.forEach(function(btn){
         btn.addEventListener('click', function(){
           const next = btn.getAttribute('data-atmosphere-btn');
           applyAtmosphere(next);
           if(appearancePanel) appearancePanel.open = false;
-        });
-        btn.addEventListener('mouseenter', function(){
-          var atm = ATM_PREVIEW[btn.getAttribute('data-atmosphere-btn')];
-          if(!atm) return;
-          html.style.setProperty('--accent',      atm.accent);
-          html.style.setProperty('--accent2',     atm.accent2);
-          html.style.setProperty('--accent-soft', atm.accentSoft);
-        });
-        btn.addEventListener('mouseleave', function(){
-          html.style.removeProperty('--accent');
-          html.style.removeProperty('--accent2');
-          html.style.removeProperty('--accent-soft');
         });
       });
 
@@ -2608,7 +2542,6 @@
         });
       });
 
-      const openAtlasAndPrint = document.getElementById('openAtlasAndPrint');
       const exampleUrl = document.getElementById('exampleUrl');
       const chipLabels = Array.from(document.querySelectorAll('.chip[data-tag]'));
       const chipInputs = Array.from(document.querySelectorAll('.chip input[type="checkbox"][value]'));
@@ -2629,7 +2562,7 @@
         if(selected.length) p.set('focus', selected.join(','));
         if((q.value || '').trim()) p.set('q', (q.value || '').trim());
         if(only.checked) p.set('only', '1');
-        const qs = p.toString();
+        const qs = p.toString().replace(/%2C/gi, ',');
         return PAGES.signal + (qs ? ('?' + qs) : '');
       }
 
@@ -2651,9 +2584,10 @@
           ta.style.left = '-9999px';
           document.body.appendChild(ta);
           ta.select();
-          document.execCommand('copy');
+          var ok = false;
+          try{ ok = document.execCommand('copy'); }catch(e2){ ok = false; }
           document.body.removeChild(ta);
-          toastMsg('Copied!');
+          toastMsg(ok ? 'Copied!' : 'Copy failed. Select the text and copy it manually.');
         }
       }
 
@@ -2713,19 +2647,6 @@
           openSignalWithFocus(map[preset] || '');
         });
       });
-
-      if(openAtlasAndPrint){
-        openAtlasAndPrint.addEventListener('click', function(){
-          rememberMode(PAGES.atlas);
-          const w = window.open(PAGES.atlas, '_blank');
-          if(!w){
-            toastMsg('Popup blocked — opening Atlas in this tab');
-            window.location.href = PAGES.atlas;
-            return;
-          }
-          w.addEventListener('load', function(){ w.print(); });
-        });
-      }
 
       const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       let vanta = null;
@@ -2922,8 +2843,32 @@
         });
       }
 
+      var VANTA_SRC = {
+        FOG:'vanta.fog.min.js', CLOUDS:'vanta.clouds.min.js', WAVES:'vanta.waves.min.js', RIPPLE:'vanta.ripple.min.js'
+      };
+      var scriptPromises = {};
+      function loadScriptOnce(url){
+        if(!scriptPromises[url]){
+          scriptPromises[url] = new Promise(function(resolve, reject){
+            var sc = document.createElement('script');
+            sc.src = url;
+            sc.crossOrigin = 'anonymous';
+            sc.onload = function(){ resolve(); };
+            sc.onerror = function(){ delete scriptPromises[url]; reject(new Error('load failed')); };
+            document.head.appendChild(sc);
+          });
+        }
+        return scriptPromises[url];
+      }
+      function loadVantaFor(key){
+        return loadScriptOnce('https://cdn.jsdelivr.net/npm/three@0.154.0/build/three.min.js').then(function(){
+          return loadScriptOnce('https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/' + VANTA_SRC[key]);
+        });
+      }
+
       function startVanta(){
         destroyVanta();
+        html.setAttribute('data-effect', currentEffect());
 
         if(plain){
           setAtmosphereState('fallback');
@@ -2958,35 +2903,49 @@
         }
 
         setWarn('');
-        let attempts = 0;
-        const maxAttempts = 20;
-
-        (function waitForVanta(){
-          attempts += 1;
-          var neededEffect = currentEffect();
-          var neededKey = neededEffect === 'ocean' ? 'WAVES' : neededEffect === 'depth' ? 'RIPPLE' : neededEffect === 'clouds' ? 'CLOUDS' : 'FOG';
-          if(window.VANTA && window.THREE && window.VANTA.FOG && (neededKey === 'FOG' || window.VANTA[neededKey])){
-            try{
-              var effectFn = window.VANTA[neededKey] || window.VANTA.FOG;
-              vanta = effectFn(buildEffectConfig());
-              setAtmosphereState('vanta');
-            }catch(err){
-              setAtmosphereState('fallback');
-              setWarn('Animated background could not start here. The static atmosphere fallback is active.');
-            }
-            return;
-          }
-          if(attempts < maxAttempts){
-            window.setTimeout(waitForVanta, 200);
-          }else{
+        var neededKey = eff === 'ocean' ? 'WAVES' : eff === 'depth' ? 'RIPPLE' : eff === 'clouds' ? 'CLOUDS' : 'FOG';
+        var requestedEffect = eff;
+        var timedOut = false;
+        var timer = window.setTimeout(function(){
+          timedOut = true;
+          if(!vanta){
             setAtmosphereState('fallback');
             setWarn('Animated background is unavailable in this preview. The static atmosphere fallback is active.');
           }
-        })();
+        }, 4000);
+        loadVantaFor(neededKey).then(function(){
+          window.clearTimeout(timer);
+          if(timedOut || currentEffect() !== requestedEffect || vanta) return;
+          try{
+            if(!(window.VANTA && window.THREE && window.VANTA[neededKey])) throw new Error('missing');
+            vanta = window.VANTA[neededKey](buildEffectConfig());
+            setAtmosphereState('vanta');
+          }catch(err){
+            setAtmosphereState('fallback');
+            setWarn('Animated background could not start here. The static atmosphere fallback is active.');
+          }
+        }).catch(function(){
+          window.clearTimeout(timer);
+          if(currentEffect() !== requestedEffect) return;
+          setAtmosphereState('fallback');
+          setWarn('Animated background is unavailable in this preview. The static atmosphere fallback is active.');
+        });
       }
 
       startVanta();
       updatePreview();
+
+      if(html.classList.contains('plain') || params.get('plain') === '1'){
+        document.querySelectorAll('a[href]').forEach(function(a){
+          var h = a.getAttribute('href');
+          if(!/^(resume-atlas|resume-signal|proof-hub|resume-switchboard)\.html/.test(h)) return;
+          if(/[?&]plain=1/.test(h)) return;
+          var hashAt = h.indexOf('#');
+          var base = hashAt > -1 ? h.slice(0, hashAt) : h;
+          var hash = hashAt > -1 ? h.slice(hashAt) : '';
+          a.setAttribute('href', base + (base.indexOf('?') > -1 ? '&' : '?') + 'plain=1' + hash);
+        });
+      }
 
       function syncDockVisibility(){
         html.classList.toggle('show-dock', window.scrollY > 160);
@@ -2994,14 +2953,16 @@
       syncDockVisibility();
       window.addEventListener('scroll', syncDockVisibility, { passive:true });
 
-      const current = location.pathname.split('/').pop() || 'index.html';
-      document.querySelectorAll('.bsc-dock-link').forEach(function(link){
-        const page = link.getAttribute('data-page');
-        if(page === current){
-          link.setAttribute('aria-current', 'page');
-        }
-        link.addEventListener('click', function(){
-          rememberMode(link.getAttribute('data-mode') || page || link.getAttribute('href'));
+      document.addEventListener('DOMContentLoaded', function(){
+        const current = location.pathname.split('/').pop() || 'index.html';
+        document.querySelectorAll('.bsc-dock-link').forEach(function(link){
+          const page = link.getAttribute('data-page');
+          if(page === current){
+            link.setAttribute('aria-current', 'page');
+          }
+          link.addEventListener('click', function(){
+            rememberMode(link.getAttribute('data-mode') || page || link.getAttribute('href'));
+          });
         });
       });
 
@@ -3089,11 +3050,11 @@
   <details class="bsc-dock">
     <summary>Mode dock</summary>
     <div class="bsc-dock-panel">
-      <div class="bsc-dock-kicker">One story, six entry points</div>
+      <div class="bsc-dock-kicker">Same story, five views</div>
       <div class="bsc-dock-grid">
         <a class="bsc-dock-link" href="index.html" data-page="index.html">
           <strong>Home</strong>
-          <span>Cinematic routing page</span>
+          <span>Routing page</span>
         </a>
         <a class="bsc-dock-link" href="resume-atlas.html" data-page="resume-atlas.html" data-mode="resume-atlas.html">
           <strong>Atlas</strong>
@@ -3129,9 +3090,6 @@
       const params = new URLSearchParams(location.search);
       const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const plain = html.classList.contains('plain') || params.get('plain') === '1';
-      const storageKey = 'bsc_resume_index_confetti_seen';
-      let seen = false;
-      try{ seen = sessionStorage.getItem(storageKey) === '1'; }catch(e){}
       if(prefersReduced || plain) return;
 
       const ctx = canvas.getContext('2d');
@@ -3144,6 +3102,7 @@
       let pieces = [];
       let active = false;
       let startTs = 0;
+      let lastTs = 0;
 
       function resize(){
         dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -3179,24 +3138,35 @@
           : ['rgba(134,166,255,0.94)', 'rgba(111,255,209,0.90)', 'rgba(255,255,255,0.86)', 'rgba(255,214,122,0.88)'];
       }
 
-      function makePiece(index){
+      // The explosion starts at the name in the hero (falls back to upper centre).
+      function origin(){
+        const headline = document.getElementById('heroHeadline');
+        if(headline){
+          const r = headline.getBoundingClientRect();
+          if(r.width && r.bottom > 0 && r.top < height){
+            return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+          }
+        }
+        return { x: width * 0.5, y: Math.min(height * 0.32, 320) };
+      }
+
+      function makePiece(index, o, power){
         const colors = palette();
-        const spread = Math.min(width * 0.18, 180);
-        const x = width * 0.5 + (Math.random() - 0.5) * spread;
-        const y = Math.max(120, height * 0.18) + Math.random() * 26;
-        const size = 5 + Math.random() * 7;
+        const angle = Math.random() * Math.PI * 2;
+        const speed = power * (0.45 + Math.random() * 0.75);
+        const size = 5 + Math.random() * 8;
         return {
-          x,
-          y,
-          vx: (Math.random() - 0.5) * 6.6,
-          vy: -6.8 - Math.random() * 4.6,
-          gravity: 0.17 + Math.random() * 0.08,
-          drag: 0.992,
+          x: o.x + (Math.random() - 0.5) * 24,
+          y: o.y + (Math.random() - 0.5) * 16,
+          vx: Math.cos(angle) * speed * 1.15,
+          vy: Math.sin(angle) * speed - power * 0.28,
+          gravity: 0.16 + Math.random() * 0.09,
+          drag: 0.985 + Math.random() * 0.008,
           size,
+          round: Math.random() < 0.22,
           rotation: Math.random() * Math.PI * 2,
-          spin: (Math.random() - 0.5) * 0.22,
-          tilt: Math.random() * 0.8,
-          alpha: 0.95,
+          spin: (Math.random() - 0.5) * 0.3,
+          alpha: 1,
           color: colors[index % colors.length]
         };
       }
@@ -3207,31 +3177,40 @@
         ctx.rotate(p.rotation);
         ctx.globalAlpha = Math.max(0, p.alpha);
         ctx.fillStyle = p.color;
-        ctx.fillRect(-p.size * 0.55, -p.size * 0.18, p.size * 1.1, p.size * 0.36);
+        if(p.round){
+          ctx.beginPath();
+          ctx.arc(0, 0, p.size * 0.32, 0, Math.PI * 2);
+          ctx.fill();
+        }else{
+          ctx.fillRect(-p.size * 0.55, -p.size * 0.2, p.size * 1.1, p.size * 0.4);
+        }
         ctx.restore();
       }
 
       function frame(ts){
         if(!active) return;
-        if(!startTs) startTs = ts;
+        if(!startTs){ startTs = ts; lastTs = ts; }
         const elapsed = ts - startTs;
+        const dt = Math.min(2.5, (ts - lastTs) / 16.67) || 1; // normalise to 60 fps
+        lastTs = ts;
         ctx.clearRect(0, 0, width, height);
 
         pieces.forEach(function(p){
-          p.vx *= p.drag;
-          p.vy += p.gravity;
-          p.x += p.vx;
-          p.y += p.vy;
-          p.rotation += p.spin;
-          if(elapsed > 520){ p.alpha *= 0.972; }
+          const drag = Math.pow(p.drag, dt);
+          p.vx *= drag;
+          p.vy = p.vy * drag + p.gravity * dt;
+          p.x += p.vx * dt;
+          p.y += p.vy * dt;
+          p.rotation += p.spin * dt;
+          if(elapsed > 700){ p.alpha *= Math.pow(0.975, dt); }
           drawPiece(p);
         });
 
         pieces = pieces.filter(function(p){
-          return p.alpha > 0.03 && p.y < height + 40 && p.x > -50 && p.x < width + 50;
+          return p.alpha > 0.03 && p.y < height + 40 && p.x > -60 && p.x < width + 60;
         });
 
-        if(elapsed < 1400 && pieces.length){
+        if(elapsed < 2200 && pieces.length){
           raf = window.requestAnimationFrame(frame);
         }else{
           stop();
@@ -3247,26 +3226,34 @@
         window.removeEventListener('resize', resize);
       }
 
-      function launch(){
+      function burst(){
         resize();
-        pieces = Array.from({ length: 56 }, function(_, index){ return makePiece(index); });
-        active = true;
-        startTs = 0;
-        canvas.classList.add('is-on');
-        window.addEventListener('resize', resize, { passive:true });
-        raf = window.requestAnimationFrame(frame);
-        try{ sessionStorage.setItem(storageKey, '1'); }catch(e){}
+        const o = origin();
+        const main = Array.from({ length: 120 }, function(_, index){ return makePiece(index, o, 15); });
+        pieces = active ? pieces.concat(main) : main;
+        if(!active){
+          active = true;
+          startTs = 0;
+          lastTs = 0;
+          canvas.classList.add('is-on');
+          window.addEventListener('resize', resize, { passive:true });
+          raf = window.requestAnimationFrame(frame);
+        }
+        // second, softer wave for the "pop-pop"
+        window.setTimeout(function(){
+          if(!active) return;
+          const o2 = origin();
+          pieces = pieces.concat(Array.from({ length: 48 }, function(_, index){ return makePiece(index + 7, o2, 10); }));
+        }, 170);
       }
+      window.bscConfettiBurst = burst;
 
-      window.bscLaunchConfetti = function(){
-        if(window.BSC_FX && !window.BSC_FX.get('confetti')) return;
-        if(active) stop();
-        startTs = 0;
-        launch();
-      };
-      if(!seen && (!window.BSC_FX || window.BSC_FX.get('confetti'))){
-        window.setTimeout(launch, 520);
-      }
+      function wanted(){ return !window.BSC_FX || window.BSC_FX.get('confetti'); }
+      if(wanted()){ window.setTimeout(burst, 450); }
+      // Switching the toggle on in the FX panel pops immediately, as feedback.
+      window.addEventListener('bsc-fx-change', function(ev){
+        if(ev.detail && ev.detail.key === 'confetti' && ev.detail.value) burst();
+      });
     })();
   </script>
 
@@ -3323,9 +3310,8 @@
   <script>
     /* availability badge: auto-hide after AVAILABLE_UNTIL date */
     (function(){
-      var AVAILABLE_UNTIL = '2026-12-31';
       var badge = document.getElementById('availBadge');
-      if(badge && new Date() > new Date(AVAILABLE_UNTIL)) badge.hidden = true;
+      if(badge && new Date() > new Date(2026, 11, 31, 23, 59, 59)) badge.hidden = true;
     })();
   </script>
 
@@ -3335,53 +3321,17 @@
       if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       var el = document.getElementById('hero-role');
       if(!el) return;
-      var locked = false;
-      el.style.cursor = 'pointer';
-      el.title = 'Click to lock / unlock';
-      el.addEventListener('click', function(){
-        locked = !locked;
-        var lockEl = document.getElementById('hero-role-lock');
-        if(!lockEl){
-          lockEl = document.createElement('span');
-          lockEl.id = 'hero-role-lock';
-          lockEl.setAttribute('aria-hidden','true');
-          lockEl.style.cssText = 'margin-left:.35em;font-size:.72em;opacity:0;transition:opacity .2s ease;vertical-align:middle;';
-          lockEl.textContent = '🔒';
-          el.parentNode.insertBefore(lockEl, el.nextSibling);
-        }
-        lockEl.style.opacity = locked ? '1' : '0';
-      });
-      var roles = [
-        'serverless backend systems',
-        'event-driven platforms',
-        'resilient cloud APIs',
-        'data pipeline backends',
-        'cloud-native services'
-      ];
-      var idx = 0, charIdx = roles[0].length, deleting = false, pausing = false;
+      var phrase = 'serverless backend systems';
+      var n = 0;
       function tick(){
-        var word = roles[idx];
-        if(pausing){ pausing = false; deleting = true; el.classList.add('typing'); if(!locked) setTimeout(tick, 60); return; }
-        if(!deleting){
-          el.textContent = word.slice(0, charIdx + 1);
-          charIdx++;
-          if(charIdx === word.length){ pausing = true; el.classList.remove('typing'); if(!locked) setTimeout(tick, 2000); return; }
-          if(!locked) setTimeout(tick, 68);
-        } else {
-          el.textContent = word.slice(0, charIdx - 1);
-          charIdx--;
-          if(charIdx === 0){
-            deleting = false;
-            idx = (idx + 1) % roles.length;
-            el.classList.add('typing');
-            if(!locked) setTimeout(tick, 380);
-            return;
-          }
-          if(!locked) setTimeout(tick, 38);
-        }
+        n++;
+        el.textContent = phrase.slice(0, n);
+        if(n < phrase.length){ setTimeout(tick, 68); }
+        else { el.classList.remove('typing'); }
       }
-      el.classList.remove('typing');
-      setTimeout(tick, 2200);
+      el.textContent = '';
+      el.classList.add('typing');
+      setTimeout(tick, 600);
     })();
   </script>
 
@@ -3467,18 +3417,18 @@
     }
     function execute(cmd){
       closePal();
-      if(cmd.action==='print'){window.print();return;}
+      if(cmd.action==='print'){location.href='resume-atlas.html?print=1';return;}
       if(cmd.action==='copy-email'){
         var t='bsc_pro@protonmail.com';
         var notify=function(){ if(typeof window.bscToast==='function') window.bscToast('Email copied!'); };
         if(navigator.clipboard){
           navigator.clipboard.writeText(t).then(notify).catch(function(){
-            var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();
-            notify();
+            var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();var ok=false;try{ok=document.execCommand('copy');}catch(x){}ta.remove();
+            if(ok){notify();}else if(typeof window.bscToast==='function'){window.bscToast('Copy failed. Select the text and copy it manually.');}
           });
         }else{
-          var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();
-          notify();
+          var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();var ok2=false;try{ok2=document.execCommand('copy');}catch(x){}ta.remove();
+          if(ok2){notify();}else if(typeof window.bscToast==='function'){window.bscToast('Copy failed. Select the text and copy it manually.');}
         }
         return;
       }
@@ -3515,6 +3465,14 @@
   (function(){
     if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     var items = document.querySelectorAll('.section-shell > .card, .formats-grid > .card, .section-shell > .grid > .card');
+    if(!('IntersectionObserver' in window)) return;
+    function revealAll(){
+      items.forEach(function(el){ el.style.opacity = '1'; el.style.transform = ''; });
+    }
+    window.addEventListener('beforeprint', revealAll);
+    window.setTimeout(function(){
+      items.forEach(function(el){ if(el.style.opacity === '0'){ el.style.opacity = '1'; el.style.transform = ''; } });
+    }, 4000);
     items.forEach(function(el, i){
       el.style.opacity = '0';
       el.style.transform = 'translateY(22px)';
@@ -3530,22 +3488,6 @@
       });
     }, { threshold: 0.08 });
     items.forEach(function(el){ obs.observe(el); });
-  })();
-  </script>
-
-  <script>
-  /* Konami code → re-launch confetti */
-  (function(){
-    var SEQ = [38,38,40,40,37,39,37,39,66,65];
-    var idx = 0;
-    document.addEventListener('keydown', function(e){
-      if(e.keyCode === SEQ[idx]){ idx++; }
-      else { idx = e.keyCode === SEQ[0] ? 1 : 0; }
-      if(idx === SEQ.length){
-        idx = 0;
-        if(typeof window.bscLaunchConfetti === 'function') window.bscLaunchConfetti();
-      }
-    });
   })();
   </script>
 
