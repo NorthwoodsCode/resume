@@ -1,17 +1,34 @@
-/* shared-enhancements.js — loaded by every page.
-   Provides: storage that never throws, a shared command palette (Ctrl/Cmd+K),
-   a shared "Resume modes" dock, ?for=<company> personalization, per-case share
-   links, honest clipboard feedback, and the optional desktop effects that Home's
-   FX panel can switch on (cursor glow, card tilt, click sparks). Pages without the
-   FX panel get no effects. */
+/* shared-enhancements.js — the one script every page loads (last in <body>).
+
+   What it provides, in the order it runs:
+     1. BSC_STORE   localStorage access that never throws (private mode, blocked
+                    storage) so a missing preference can never kill a page.
+     2. A print-only stylesheet that hides the overlays below.
+     3. A toast, and a clipboard helper (window.bscCopy) that reports failure
+        instead of pretending the copy worked.
+     4. A shared command palette (Ctrl/Cmd+K) on pages that have none of their own.
+     5. A shared "Resume modes" dock on pages that have none of their own.
+     6. Optional desktop effects (cursor glow, card tilt, click sparks), but only
+        on Home, where the FX panel exists and the reader can switch them on.
+     7. "Copy share link" buttons on each case study (ids case-<slug>).
+     8. ?for=<company> personalization driven by companies.json.
+     9. The "Built with…" line in Home's footer.
+
+   Everything is wrapped in one IIFE so nothing leaks except the few window.*
+   helpers that pages and tests use (BSC_STORE, bscCopy, bscOpenPalette,
+   bscSharedToast). Plain ES5-style code on purpose: no build step, old browsers
+   degrade gracefully. */
 (function(){
   'use strict';
   var html = document.documentElement;
   var params = new URLSearchParams(location.search);
+  // Readers who ask the OS for less motion, or who opened ?plain=1, get no effects.
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
   var plain = html.classList.contains('plain') || params.get('plain') === '1';
+  // The file name identifies the page ("" at the site root means index.html).
   var page = ((location.pathname.split('/').pop() || 'index.html').replace(/[?#].*/, '')) || 'index.html';
   var isHome = page === 'index.html';
+  // The site map used by the palette and the dock. Order is the reading order.
   var PAGES = [
     {file:'index.html',              label:'Home',        desc:'Routing page'},
     {file:'resume-atlas.html',       label:'Atlas',       desc:'Classic recruiter / PDF view'},
@@ -29,8 +46,10 @@
   };
   window.BSC_STORE = store;
 
+  // window.BSC_FX is defined by Home's inline script before this file runs and
+  // holds the FX panel toggles. Where it is absent (every other page) an effect
+  // is simply off; nothing here ever defaults an effect on.
   function fxOn(key){
-    // Effects are opt-in through Home's FX panel; pages without the panel get none.
     return !!(window.BSC_FX && window.BSC_FX.get(key));
   }
   function accentColor(){
@@ -41,11 +60,13 @@
     var st = document.createElement('style'); st.id = id; st.textContent = css;
     document.head.appendChild(st);
   }
+  // In-site links keep ?plain=1 so a reader who chose the calm mode keeps it
+  // when they move between pages.
   function siteLink(file){
-    // Carry plain mode across pages when the reader chose it.
     return plain ? file + (file.indexOf('?') > -1 ? '&' : '?') + 'plain=1' : file;
   }
 
+  // None of the overlays this script creates belong on paper.
   addStyle('bsc-shared-print-style',
     '@media print{.bsc-dock,#cmd-pal,#bsc-toast,#cursor-glow,[data-for-badge],[data-bsc-stack],[data-case-share]{display:none !important}}');
 
@@ -67,6 +88,9 @@
   window.bscSharedToast = toast;
 
   /* ── clipboard with honest feedback ──────────────────────────── */
+  // navigator.clipboard only exists in secure contexts (https, localhost) and can
+  // reject; execCommand('copy') is the fallback and returns false when it fails.
+  // Callers get a boolean promise and show a failure toast instead of "Copied".
   function legacyCopy(text){
     var ta = document.createElement('textarea');
     ta.value = text; ta.setAttribute('readonly',''); ta.setAttribute('aria-hidden','true');
@@ -87,6 +111,10 @@
   var COPY_FAIL = 'Copy failed. Select the text and copy it manually.';
 
   /* ── shared command palette (pages without their own) ────────── */
+  // Home has a richer palette of its own (atmosphere and effect actions), so this
+  // one injects itself only where no #cmd-pal exists. Commands come from three
+  // lists: NAV (the other pages), ACT (print, copy email, profiles) and JMP
+  // (this page's own h2 headings, discovered from the DOM at load time).
   (function palette(){
     if(document.getElementById('cmd-pal')) return; // Home ships its own palette
     addStyle('bsc-cp-style', [
@@ -191,7 +219,7 @@
       else if(e.key === 'ArrowUp'){ e.preventDefault(); setActive(Math.max(activeIdx - 1, 0)); }
       else if(e.key === 'Enter'){ if(activeIdx >= 0 && filtered[activeIdx]) execute(filtered[activeIdx]); else if(filtered[0]) execute(filtered[0]); }
       else if(e.key === 'Escape'){ closePal(); }
-      else if(e.key === 'Tab'){ e.preventDefault(); } // keep focus inside the dialog
+      else if(e.key === 'Tab'){ e.preventDefault(); } // the dialog is modal: Tab must not escape it
     });
     bg.addEventListener('mousedown', closePal);
     document.getElementById('cmd-esk').addEventListener('click', closePal);
@@ -203,6 +231,10 @@
   })();
 
   /* ── shared "Resume modes" dock (pages without their own) ─────── */
+  // A fixed <details> in the bottom-right corner listing all six pages, with
+  // aria-current on the one you are reading. It is a flex column that opens
+  // upward and is sized to the viewport, so the panel never spills off a phone.
+  // Clicking a link remembers it as bsc_last_resume_mode for the Switchboard.
   (function dock(){
     if(document.querySelector('.bsc-dock')) return; // Home ships its own dock markup
     addStyle('bsc-dock-style', [
@@ -237,6 +269,9 @@
   })();
 
   /* ── optional desktop effects (only where Home's FX panel exists) ── */
+  // All three effects are set up only on Home and only when motion is welcome.
+  // Each handler still checks fxOn() on every event, so toggling in the panel
+  // takes effect immediately without reloading.
   if(window.BSC_FX && !reduced && !plain){
     /* cursor glow (desktop only) */
     if(window.matchMedia('(pointer:fine)').matches){
@@ -304,7 +339,8 @@
       });
     })();
 
-    /* click sparks (click only; taps raise click too, and scroll gestures must not spark) */
+    /* click sparks. Listening to click only: a tap fires click as well, and a
+       touchend listener would also spark at the end of every scroll gesture. */
     (function sparks(){
       function spawnSparks(cx, cy){
         var count = 10, color = accentColor();
@@ -340,6 +376,9 @@
   }
 
   /* ── per-case "copy share link" buttons ─────────────────────── */
+  // Proof Hub's case studies carry ids like case-payment-portal. Each gets a
+  // small button that copies the short, unfurl-friendly URL /case/<slug>/
+  // (a stub page generated at deploy by scripts/gen_cases.py).
   (function caseShareLinks(){
     var cases = document.querySelectorAll('[id^="case-"]');
     if(!cases.length) return;
@@ -373,6 +412,10 @@
   })();
 
   /* ── ?for=<company> personalization ─────────────────────────── */
+  // Pretty links such as /for/stripe land on 404.html, which rewrites them to
+  // /?for=stripe. Here the slug is looked up in companies.json; a known company
+  // pins an atmosphere, pre-ticks matching focus chips on pages that have them,
+  // and shows a "Tailored for …" badge. Unknown slugs do nothing, silently.
   (function personalize(){
     var slug = (params.get('for') || '').toLowerCase().replace(/[^a-z0-9-]/g, '');
     if(!slug) return;
@@ -426,6 +469,8 @@
   })();
 
   /* ── stack-disclosure line (Home footer only; never printed) ──── */
+  // A one-line "how it is built" note for technical readers. It is appended by
+  // script so the resume pages themselves stay free of meta commentary.
   (function injectStack(){
     if(!isHome || document.querySelector('[data-bsc-stack]')) return;
     var footer = document.querySelector('footer');

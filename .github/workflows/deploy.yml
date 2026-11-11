@@ -1,15 +1,21 @@
 name: Deploy to GitHub Pages
 
+# Pipeline: test -> build -> deploy. Pull requests run only the tests; pushes to
+# main (and manual runs) also build the site and publish it to GitHub Pages.
 on:
   push:
     branches: [main]
   pull_request:
   workflow_dispatch:
 
+# Default for every job: read-only access to the repo. The deploy job adds the
+# extra permissions it needs itself.
 permissions:
   contents: read
 
 jobs:
+  # Runs on every trigger, including pull requests, so a change is checked
+  # before it can reach main. Nothing here publishes anything.
   test:
     runs-on: ubuntu-latest
     steps:
@@ -23,12 +29,17 @@ jobs:
       - name: Install Python test dependencies
         run: pip install --quiet "websockets>=10,<13"
 
+      # The CDP harness drives a real browser; GitHub's ubuntu-latest image
+      # includes Chrome, so this just fails fast with a clear message if not.
       - name: Verify Chrome is available
         run: google-chrome --version
 
       - name: Run UI test suite (headless Chrome via CDP)
         run: python3 tests/test_home.py
 
+  # Produces the deployable site as an artifact. Skipped on pull requests: PRs
+  # only need test results, and the build edits files (dates, generated pages)
+  # that should not be produced for unmerged code.
   build:
     # Pull requests only run the tests; build and deploy happen on main.
     if: github.event_name != 'pull_request'
@@ -44,15 +55,23 @@ jobs:
         with:
           python-version: '3.11'
 
+      # Pillow draws the Open Graph preview images in the next steps.
       - name: Install Pillow for OG generation
         run: pip install --quiet Pillow
 
+      # Rewrites "last updated" dates in the HTML pages and sitemap.xml from git
+      # history (hence fetch-depth: 0 above). Only the build copy changes.
       - name: Stamp last-updated dates from git history
         run: python3 scripts/stamp_dates.py
 
+      # Reads cases.json and creates og-case-<slug>.png plus case/<slug>/index.html
+      # stub pages, so shared case links unfurl with case-specific previews.
       - name: Generate per-case OG images and stub pages
         run: python3 scripts/gen_cases.py
 
+      # Copies the repo into _site/ minus developer-only files (git data, workflow,
+      # tests, scripts). .nojekyll tells Pages to serve files as-is, without Jekyll.
+      # The final find just lists the result in the log for inspection.
       - name: Assemble site
         run: |
           mkdir -p _site
@@ -62,6 +81,8 @@ jobs:
           touch _site/.nojekyll
           find _site -maxdepth 2 -type f | sort
 
+      # Standard Pages steps: configure the environment, then upload _site as the
+      # artifact that the deploy job publishes.
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
@@ -70,12 +91,19 @@ jobs:
         with:
           path: _site
 
+  # Publishes the uploaded artifact. The extra permissions and the concurrency
+  # group live here, not at workflow level, so test and build keep read-only
+  # access and PR test runs never queue behind a deploy.
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    # pages: write lets this job publish; id-token: write lets deploy-pages
+    # request an OIDC token proving the deployment came from this workflow.
     permissions:
       pages: write
       id-token: write
+    # One deploy at a time. cancel-in-progress: false lets a running deploy
+    # finish rather than being cut off mid-publish; a newer one waits its turn.
     concurrency:
       group: pages
       cancel-in-progress: false

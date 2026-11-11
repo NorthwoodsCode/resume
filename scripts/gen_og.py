@@ -15,6 +15,11 @@ Examples
         --tags AWS,React,Node.js,CI/CD,IAM \\
         --accent "47,100,255" \\
         --out og-case-payment-portal.png
+
+Where it runs: gen_cases.py calls this script once per case during the deploy
+build (see .github/workflows/deploy.yml). Run it by hand for og-image.png.
+Input is command-line flags; output is one 1200x630 PNG, the size social
+networks expect for link-preview cards. Requires Pillow.
 """
 
 import argparse, os, sys
@@ -22,6 +27,8 @@ from PIL import Image, ImageDraw, ImageFont
 
 W, H = 1200, 630
 
+# Liberation Sans is looked up at this Linux path; if the file is missing,
+# safe_font() falls back to Pillow's built-in font instead of crashing.
 FONTS_BASE = "/usr/share/fonts/truetype/liberation"
 FONT_BOLD = os.path.join(FONTS_BASE, "LiberationSans-Bold.ttf")
 FONT_REG  = os.path.join(FONTS_BASE, "LiberationSans-Regular.ttf")
@@ -37,6 +44,7 @@ TAG_BG      = (18, 28, 54)
 
 
 def parse_rgb(s):
+    """Parse an "R,G,B" string such as "47,100,255" into a 3-tuple of ints."""
     parts = [int(p.strip()) for p in s.split(",")]
     if len(parts) != 3:
         raise ValueError("expected R,G,B")
@@ -44,6 +52,7 @@ def parse_rgb(s):
 
 
 def safe_font(path, size, fallback):
+    """Load a TrueType font, or return `fallback` if the file cannot be read."""
     try:
         return ImageFont.truetype(path, size)
     except Exception:
@@ -51,10 +60,13 @@ def safe_font(path, size, fallback):
 
 
 def render(name, title, strap, tags, accent, accent2, url, out):
+    """Draw the card (gradient, glow, panel, text, tag chips) and save it to `out`."""
     img = Image.new("RGB", (W, H), BG)
     draw = ImageDraw.Draw(img, "RGBA")
 
-    # background gradient
+    # Drawing on an RGBA overlay lets the translucent fills below (glow, panel,
+    # outlines) blend with what is already on the canvas.
+    # background gradient (BG fading toward PANEL, top to bottom)
     for y in range(H):
         t = y / H
         r = int(BG[0] + (PANEL[0] - BG[0]) * t * 0.6)
@@ -109,7 +121,7 @@ def render(name, title, strap, tags, accent, accent2, url, out):
     div_y = 362
     draw.line([(cx + 60, div_y), (cx + cw - 60, div_y)], fill=(*accent, 40), width=1)
 
-    # skill tags row
+    # skill tags row: measure every chip first so the whole row can be centred
     tag_h = 38
     padding_x = 20
     gap = 14
@@ -148,6 +160,7 @@ def render(name, title, strap, tags, accent, accent2, url, out):
 
 
 def main(argv=None):
+    """Parse command-line flags (or `argv` when called from code) and render."""
     p = argparse.ArgumentParser()
     p.add_argument("--name",   default="Brandon S. Clark")
     p.add_argument("--title",  default="Senior Software Engineer")
@@ -165,6 +178,7 @@ def main(argv=None):
     accent  = parse_rgb(args.accent)
     accent2 = parse_rgb(args.accent2)
 
+    # Per-case runs only pass --slug; derive the conventional filename from it.
     out = args.out
     if args.slug and out == "og-image.png":
         out = f"og-case-{args.slug}.png"

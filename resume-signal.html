@@ -22,6 +22,9 @@
 <meta content="Tailor by focus area, search bullets, copy ATS text, and export a clean PDF view." name="twitter:description"/>
 <meta content="https://northwoodscode.github.io/resume/og-image.png" name="twitter:image"/>
 <style>
+    /* ── Theme tokens ──
+     Every colour, radius and font below is a custom property on :root (light theme).
+     The dark block overrides only the tokens, so rules elsewhere use var(--x) and never branch on theme. */
     :root{
       --bg:#f5f7fb;
       --surface:#ffffff;
@@ -54,6 +57,8 @@
       --focus:rgba(183,148,246,.30);
     }
 
+    /* ── Base and layout ──
+     Reset, page background, links, keyboard focus ring and the skip link. */
     *{box-sizing:border-box}
     html,body{min-height:100%}
     body{
@@ -96,6 +101,8 @@
       padding:20px 18px 78px;
     }
 
+    /* ── Hero (name, badges, KPI tiles) ──
+     Dark-theme overrides sit next to the rules they change because these gradients and translucent fills are not token-driven. */
     .top{
       display:flex;
       gap:14px;
@@ -214,6 +221,7 @@
       font-size:.95rem;
     }
 
+    /* ── Tailoring panel: focus chips, buttons, search ── */
     .panel{
       flex:1 1 390px;
       padding:16px;
@@ -242,6 +250,7 @@
       align-items:center;
     }
 
+    /* Chips are labels wrapping a checkbox. The script mirrors checked state to data-on, which the selected-chip styling below keys off. */
     .chip{
       display:inline-flex;
       align-items:center;
@@ -301,6 +310,8 @@
       font:inherit;
     }
 
+    /* ── Match hint and empty state ──
+     .matchHint reserves a line of height (min-height) so the layout does not jump when its text changes. */
     .matchHint{
       margin-top:10px;
       color:var(--muted);
@@ -308,6 +319,7 @@
       min-height:1.5em;
     }
 
+    /* Hidden by the hidden attribute until no bullet matches; display:flex would otherwise override that attribute, hence the explicit [hidden] rule below. */
     .emptyState{
       grid-column:1 / -1;
       margin:0;
@@ -324,6 +336,7 @@
     }
     .emptyState[hidden]{display:none}
 
+    /* ── Cards and bullet items ── */
     .row{
       display:grid;
       grid-template-columns:1fr 1fr;
@@ -362,6 +375,9 @@
       font-size:.95rem;
     }
 
+    /* ── .item states, set by applyFilters() in the script ──
+     data-match="true": highlighted with an accent bar. data-match="false": dimmed but still readable.
+     data-hidden="true": removed, which only happens when "Show only matches" is on. */
     .item{
       border-left:4px solid transparent;
       padding-left:.6rem;
@@ -391,6 +407,8 @@
   color:var(--text);
 }
 
+    /* ── Toast ──
+     Fixed status pill; pointer-events:none keeps it from blocking clicks while fading out. */
     .toast{
       position:fixed;
       bottom:18px;
@@ -412,6 +430,8 @@
       transform:translateX(-50%) translateY(-6px);
     }
 
+    /* ── Print header line ──
+     Hidden on screen; the print rules show it so a printed page records which filters produced it. */
     .printMeta{
       display:none;
       margin-bottom:12px;
@@ -420,10 +440,15 @@
       font-weight:800;
     }
 
+    /* ── Reduced motion ──
+     Honours the OS setting by disabling all transitions and smooth scrolling. */
     @media (prefers-reduced-motion: reduce){
       *{transition:none !important; scroll-behavior:auto !important}
     }
 
+    /* ── Print rules ──
+     Force the light tokens even when the dark theme is active (paper is white), drop interactive chrome,
+     and keep each bullet and heading together on a page. */
     @media print{
       html, html[data-theme="dark"]{
         --bg:#fff; --surface:#fff; --surface-2:#fff; --text:#000; --muted:#333; --border:#bbb;
@@ -441,11 +466,16 @@
       h3, h4, .roleTitle{break-after:avoid; page-break-after:avoid}
       .item{break-inside:avoid; page-break-inside:avoid}
       a{color:#000; text-decoration:none}
+      /* Print external link URLs after the badge text, since a printed page cannot be clicked. */
       .meta .badge a[href^="http"]:after{content:" (" attr(href) ")"; font-size:9pt}
+      /* The profile links are shown as URL badges in the hero, so the duplicate list is dropped from print. */
       #profilesLabel, #profilesList{display:none !important}
+      /* Bullets hidden by "Show only matches" stay out of print; non-matching bullets that remain print at full strength. */
       .item[data-hidden="true"]{display:none !important}
       .item{opacity:1 !important; border-left-color:transparent !important}
     }
+    /* ── Reading-progress bar ──
+     Width is set from the scroll position by the second script; hidden in print. */
     #read-progress{
       position:fixed;
       top:0;left:0;
@@ -482,10 +512,12 @@
 </script>
 </head>
 <body>
+<!-- Reading-progress bar: decorative, so it is hidden from assistive tech -->
 <div id="read-progress" role="progressbar" aria-hidden="true"></div>
 <a class="skip" href="#content">Skip to content</a>
 <div class="wrap">
 <div class="top">
+<!-- Hero: name, contact badges and headline KPIs -->
 <section aria-label="Resume header" class="hero">
 <h1>Brandon S. Clark</h1>
 <div class="tagline">Senior Software Engineer • AWS Backend / Cloud Platform</div>
@@ -503,6 +535,7 @@
 </div>
 <p class="screenNote hint">Pick focus areas to highlight the most relevant bullets, then print or copy the plain-text version.</p>
 </section>
+<!-- Tailoring panel: focus chips, presets, search and actions; scripted by the first inline script -->
 <aside aria-label="Tailoring controls" class="panel">
 <h2>Tailor this view</h2>
 <div aria-label="Focus areas" class="toggleRow" role="group">
@@ -541,8 +574,10 @@
 <div aria-live="polite" class="matchHint" id="matchHint"></div>
 </aside>
 </div>
+<!-- Main content. Each card is a section; bullets carry data-tags used by the focus filter -->
 <main class="row" id="content">
 <p class="emptyState" id="emptyState" hidden><span>No bullets match these filters.</span> <button class="btn" id="emptyReset" type="button">Reset filters</button></p>
+<!-- Summary and skills -->
 <section aria-label="Summary" class="card">
 <div class="printMeta" id="printMeta"></div>
 <h3>Summary</h3>
@@ -553,6 +588,7 @@
 <li class="item" data-tags="enable lead">Improves team velocity through documentation, demos, diagrams, onboarding assets, and strong technical communication.</li>
 <li class="item" data-tags="ai enable">Uses approved GenAI tools to improve communication quality, speed up knowledge sharing, and reduce friction in engineering workflows.</li>
 </ul>
+<!-- Skills sit inside the Summary card; the id lets the ATS text builder find them -->
 <div class="sectionGroup" id="skillsDetails" style="margin-top:10px"><h4 class="sectionLabel">Skills</h4>
 <ul style="margin-top:8px">
 <li class="item" data-tags="cloud api">AWS: Lambda, API Gateway, Step Functions, Secrets Manager, DynamoDB, CloudWatch</li>
@@ -566,6 +602,7 @@
 </ul>
 </div>
 </section>
+<!-- Professional experience: each .roleBlock is one role, and its .roleTitle becomes the heading in the copied text -->
 <section aria-label="Experience" class="card">
 <h3>Professional Experience</h3>
 <div class="sub">Recent roles. Highlighted bullets match the focus areas you picked.</div>
@@ -591,6 +628,7 @@
 <li class="item" data-tags="api data">Expanded TypeScript reusability, OpenAPI documentation, and data-platform practices to improve maintainability and technical clarity.</li>
 </ul>
 </div>
+<!-- Earlier roles have no .roleTitle, so copied text uses the fallback heading "Earlier experience" -->
 <div class="sectionGroup" id="earlierRoles" style="margin-top:10px"><h4 class="sectionLabel">Earlier roles (condensed)</h4>
 <div class="roleBlock">
 <ul style="margin-top:8px">
@@ -602,6 +640,7 @@
 </div>
 </div>
 </section>
+<!-- Selected impact -->
 <section aria-label="Projects and leadership signals" class="card">
 <h3>Selected Impact</h3>
 <div class="sub">Signals that reinforce scope, ownership, and technical range</div>
@@ -616,6 +655,7 @@
 </ul>
 <p class="screenNote hint">Copy ATS text gives a plain-text version of the current view.</p>
 </section>
+<!-- Education, certifications and profile links -->
 <section aria-label="Education, credentials, and profiles" class="card">
 <h3>Education &amp; Credentials</h3>
 <div class="sub">Education, certifications, and relevant profile links</div><div class="sectionGroup" id="certDetails" style="margin-top:10px"><h4 class="sectionLabel">Certifications</h4>
@@ -628,6 +668,7 @@
 <ul style="margin-top:8px">
 <li><b>University of Wisconsin–River Falls:</b> B.S. Finance, Minor in Computer Science</li>
 </ul>
+<!-- Profiles list: hidden in print (see print rules) because the same links are in the hero -->
 </div><h4 class="sectionLabel" id="profilesLabel">Profiles</h4><ul id="profilesList">
 <li><b>Email:</b> <a href="mailto:bsc_pro@protonmail.com">bsc_pro@protonmail.com</a></li>
 <li><b>GitHub:</b> <a href="https://github.com/NorthwoodsCode" rel="noopener noreferrer">github.com/NorthwoodsCode</a></li>
@@ -639,8 +680,12 @@
 </section>
 </main>
 </div>
+<!-- Toast: live region the script fills to confirm copy and reset actions -->
 <div aria-live="polite" class="toast" id="toast" role="status"></div>
 <script>
+      // Main script. Owns everything interactive on this page: theme, the focus/search/only-matches filter,
+      // URL state (so a tailored view can be shared as a link), and clipboard copy of the link or ATS text.
+      // It is wrapped in an IIFE so none of these helpers leak onto window.
     (function(){
       const html = document.documentElement;
       const chipLabels = Array.from(document.querySelectorAll('.chip[data-chip]'));
@@ -668,22 +713,29 @@
         return (text || '').replace(/\s+/g, ' ').trim();
       }
 
+      // Storage wrapper: localStorage can throw (blocked cookies, some private modes), so
+      // every access is guarded and failure just means the preference is not remembered.
       const store = {
         get(k){ try { return localStorage.getItem(k); } catch(e){ return null; } },
         set(k, v){ try { localStorage.setItem(k, v); } catch(e){} }
       };
       const emptyState = document.getElementById('emptyState');
       const emptyReset = document.getElementById('emptyReset');
+      // Friendly words accepted in ?focus= mapped to the real chip keys, so hand-written links still work.
       const FOCUS_ALIAS = {leadership:'lead', enablement:'enable', genai:'ai', ops:'opex', operations:'opex', devops:'opex', aws:'cloud', platform:'cloud', apis:'api', integrations:'api', devices:'iot'};
+      // Keys that are not chips are collected in unknownFocus and reported in the hint, not silently dropped.
       const KNOWN_FOCUS = chipInputs.map(i => i.value);
       let unknownFocus = [];
 
+      // The saved choice wins; otherwise follow the operating-system preference.
       function getPreferredTheme(){
         const v = store.get('bsc_theme');
         if(v === 'light' || v === 'dark') return v;
         return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
       }
 
+      // persist is true only for a button click. Automatic and OS-driven changes do not save,
+      // so a visitor who never chose a theme keeps following their system setting.
       function setTheme(theme, persist){
         html.dataset.theme = theme;
         themeBtn.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
@@ -702,6 +754,7 @@
         });
       }
 
+      // No selected chips means everything matches; otherwise an item needs at least one selected tag (OR logic).
       function matchesTags(itemTags, selected){
         if(selected.length === 0) return true;
         const set = new Set(itemTags);
@@ -712,6 +765,8 @@
         return getSelectedTags().length > 0 || (searchBox.value || '').trim() !== '';
       }
 
+      // Recomputes the view from the controls. Each item gets data-match (passes tag and text filter)
+      // and data-hidden (a non-match while "Show only matches" is on); CSS does the rest.
       function applyFilters(){
         const selected = getSelectedTags();
         const q = normalize(searchBox.value).toLowerCase();
@@ -732,6 +787,7 @@
 
         setChipsUI();
 
+        // Hint line: a tip when idle, otherwise a summary of the active filters and match count.
         if(!filtersActive()){
           matchHint.textContent = 'Tip: choose focus areas or search terms to highlight the strongest matching bullets.';
         }else{
@@ -745,15 +801,23 @@
         if(unknownFocus.length){
           matchHint.textContent += ' • Ignored unknown focus: ' + unknownFocus.join(', ') + ' (available: ' + KNOWN_FOCUS.join(', ') + ')';
         }
+        // Empty state appears only when filters are on and nothing matched.
         if(emptyState) emptyState.hidden = !(filtersActive() && matchCount === 0);
 
+        // printMeta is the line shown only in print, recording which filters were applied.
         const printParts = [];
         if(selected.length) printParts.push('Focus: ' + selected.join(', '));
         if(q) printParts.push('Search: "' + q + '"');
         printMeta.textContent = printParts.join(' • ');
       }
 
+      // Writes the current controls into the query string. push=true adds a history entry for deliberate
+      // actions (presets, reset, clear, share) so Back undoes them; typing and ticking boxes use replaceState
+      // to avoid flooding history. Returns the absolute URL so the Share button can copy it.
       function updateURL(push=false){
+        // Any change the reader makes supersedes a bad key that arrived in the URL,
+        // so the "ignored unknown focus" note goes away on the next applyFilters.
+        unknownFocus = [];
         const selected = getSelectedTags();
         const q = normalize(searchBox.value);
         const params = new URLSearchParams(window.location.search);
@@ -773,6 +837,8 @@
         return window.location.origin + newUrl;
       }
 
+      // Fallback copy for browsers without the async clipboard API or outside a secure context:
+      // selects text in an off-screen read-only textarea and uses the deprecated execCommand.
       function legacyCopy(text){
         const ta = document.createElement('textarea');
         ta.value = text;
@@ -787,6 +853,8 @@
         return ok;
       }
 
+      // Tries, in order: the shared helper window.bscCopy (from shared-enhancements.js) if loaded, the async
+      // clipboard API (secure contexts only), then legacyCopy. A thrown error also falls back to legacyCopy.
       async function copyToClipboard(text){
         let ok = false;
         try{
@@ -802,6 +870,7 @@
         return normalize(node.textContent || '');
       }
 
+      // What the copied text contains: with filters on, only matching bullets; otherwise everything not hidden.
       function includeItemForCopy(el){
         if(filtersActive()) return el.dataset.match === 'true';
         return el.dataset.hidden !== 'true';
@@ -815,6 +884,8 @@
         lines.push('');
       }
 
+      // Builds the plain-text (ATS-friendly) resume from the live DOM, so the copy always mirrors what the
+      // current filters show. The header lines are fixed text; sections with no chosen bullets are omitted.
       function buildAtsText(){
         const lines = [];
         lines.push('Brandon S. Clark — Senior Software Engineer (AWS Backend / Cloud Platform)');
@@ -847,9 +918,11 @@
         pushBulletGroup(lines, 'CERTIFICATIONS', Array.from(document.querySelectorAll('#certDetails .item')));
         pushBulletGroup(lines, 'EDUCATION', Array.from(document.querySelectorAll('#educationDetails .item')));
 
+        // Collapse runs of blank lines left by skipped sections.
         return lines.join('\n').replace(/\n{3,}/g, '\n\n').trim();
       }
 
+      // Reads ?focus=, ?q= and ?only=1 into the controls, resolving aliases and recording unknown keys.
       function initFromURL(){
         const params = new URLSearchParams(window.location.search);
         const raw = (params.get('focus') || '').split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
@@ -876,6 +949,8 @@
         updateURL(true);
       }
 
+      // Startup: apply the theme without saving, watch OS changes (addListener is the older Safari API),
+      // then load filters from the URL and render.
       setTheme(getPreferredTheme(), false);
       if(window.matchMedia){
         const mq = window.matchMedia('(prefers-color-scheme: dark)');
@@ -885,9 +960,11 @@
       initFromURL();
       applyFilters();
       updateURL();
+      // Back/Forward: reload the controls from the URL and re-filter. updateURL is not called, which would rewrite history.
       window.addEventListener('popstate', () => { initFromURL(); applyFilters(); });
       if(emptyReset) emptyReset.addEventListener('click', () => { resetFilters(); toastMsg('Filters reset'); });
 
+      // replace-state updates for continuous inputs; push-state (true) for discrete actions below.
       chipInputs.forEach(i => i.addEventListener('change', () => { applyFilters(); updateURL(); }));
       onlyMatches.addEventListener('change', () => { applyFilters(); updateURL(); });
       searchBox.addEventListener('input', () => { applyFilters(); updateURL(); });
@@ -926,6 +1003,8 @@
     })();
   </script>
   <script>
+      // Reading-progress bar. Scroll position divided by scrollable height, as a percentage;
+      // the listener is passive, which promises the browser it will not call preventDefault, so scrolling is never held up.
     (function(){
       var bar = document.getElementById('read-progress');
       if(!bar) return;

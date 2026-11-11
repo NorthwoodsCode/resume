@@ -21,6 +21,8 @@
   <meta name="twitter:description" content="AWS cloud, serverless APIs, backend platform engineering, data foundations, operational excellence, and enablement." />
   <meta name="twitter:image" content="https://northwoodscode.github.io/resume/og-image.png" />
   <style>
+    /* ── Theme tokens ──
+     Light values on :root; the dark block overrides only the tokens, and the rest of the CSS reads var(--x). */
     :root{
       --bg:#ffffff;
       --fg:#111827;
@@ -75,6 +77,8 @@
       margin:0 auto;
       padding:22px 18px 70px;
     }
+    /* ── Header ──
+     Sticky with a translucent, blurred background so it stays visible while scrolling. */
     header{
       position:sticky;
       top:0;
@@ -153,6 +157,7 @@
       padding:16px;
       box-shadow:var(--shadow);
     }
+    /* ── Summary card and KPI tiles ── */
     .summary{
       display:grid;
       grid-template-columns:1.2fr .8fr;
@@ -185,6 +190,8 @@
     @media (max-width: 860px){ .grid2{grid-template-columns:1fr} }
     ul{margin:.6rem 0 0; padding-left:1.1rem}
     li{margin:.35rem 0}
+    /* ── Skill chips ──
+     The chips are list items styled as pills. */
     .chips{
       list-style:none;
       padding:0;
@@ -202,6 +209,7 @@
       font-size:.92rem;
       color:color-mix(in srgb, var(--fg) 88%, var(--muted));
     }
+    /* ── Experience roles ── */
     .rolehead{
       display:flex;
       flex-wrap:wrap;
@@ -219,6 +227,8 @@
       font-weight:730;
       font-size:.95rem;
     }
+    /* ── Collapsible details ──
+     The default marker is hidden and replaced with a triangle drawn in summary:before. */
     details{
       margin-top:10px;
       border:1px solid var(--border);
@@ -249,9 +259,14 @@
       font-size:.9rem;
       color:color-mix(in srgb, var(--muted) 85%, var(--fg));
     }
+    /* ── Reduced motion ──
+     Honours the OS setting by disabling transitions and smooth scrolling. */
     @media (prefers-reduced-motion: reduce){
       *{transition:none !important; scroll-behavior:auto !important}
     }
+    /* ── Print rules ──
+     Force the light tokens even in the dark theme and drop the buttons. The header is kept (name and contact
+     details belong on the printed page) but made static with no blur, so it prints as an ordinary block. */
     @media print{
       html, html[data-theme="dark"]{
         --bg:#fff; --fg:#000; --muted:#333; --card:#fff; --border:#bbb;
@@ -271,10 +286,14 @@
       .rolehead,.kpi,.chips li,.summary > .card{break-inside:avoid;page-break-inside:avoid}
       h2,h3{break-after:avoid;page-break-after:avoid}
       a{color:#000;text-decoration:none}
+      /* Print external link URLs after the link text, since paper cannot be clicked. */
       a[href^="http"]:after{content:" (" attr(href) ")";font-size:9pt}
       details{border:1px solid #ddd}
+      /* The open/closed triangle is meaningless on paper (beforeprint opens every details). */
       summary:before{content:""}
     }
+    /* ── Reading-progress bar ──
+     Width is set by the second script; hidden in print. */
     #read-progress{
       position:fixed;
       top:0;left:0;
@@ -317,9 +336,11 @@
   </script>
 </head>
 <body>
+<!-- Reading-progress bar: decorative, so it is hidden from assistive tech -->
 <div id="read-progress" role="progressbar" aria-hidden="true"></div>
   <a class="skip" href="#content">Skip to content</a>
 
+<!-- Header: name, contact links and the theme/print buttons -->
   <header>
     <div class="head">
       <div class="who">
@@ -341,8 +362,10 @@
     </div>
   </header>
 
+<!-- Main content sections: summary with KPI tiles, skills, experience, certifications, education -->
   <div class="wrap">
     <main id="content">
+<!-- Summary and headline metrics -->
       <section aria-labelledby="summary">
         <h2 id="summary">Summary</h2>
         <div class="summary">
@@ -375,6 +398,7 @@
         </div>
       </section>
 
+<!-- Core skills -->
       <section aria-labelledby="skills">
         <h2 id="skills">Core Skills</h2>
         <div class="card">
@@ -394,6 +418,7 @@
         </div>
       </section>
 
+<!-- Experience: recent roles as cards, earlier roles collapsed in a details element (opened automatically when printing) -->
       <section aria-labelledby="experience">
         <h2 id="experience">Experience</h2>
 
@@ -488,6 +513,7 @@
         </details>
       </section>
 
+<!-- Certifications -->
       <section aria-labelledby="certs">
         <h2 id="certs">Certifications</h2>
         <div class="card">
@@ -499,6 +525,7 @@
         </div>
       </section>
 
+<!-- Education -->
       <section aria-labelledby="education">
         <h2 id="education">Education</h2>
         <div class="card">
@@ -509,6 +536,7 @@
         </div>
       </section>
 
+<!-- Footer: last-updated date and link to the plain-text resume -->
       <footer class="fine">
         Updated <time id="lastUpdated" datetime="2026-11-11">2026-11-11</time> · <a href="resume-ats.txt">Plain-text version</a>
       </footer>
@@ -516,22 +544,27 @@
   </div>
 
   <script>
+      // Atlas script. Owns the theme toggle, the Print button, the ?print=1 auto-print link and
+      // opening every details element for printing. Wrapped in an IIFE so nothing leaks onto window.
     (function(){
       const html = document.documentElement;
       const themeBtn = document.getElementById('themeBtn');
       const printBtn = document.getElementById('printBtn');
 
+      // Storage wrapper: localStorage can throw (blocked or private mode), so access is guarded and a failure just means nothing is remembered.
       const store = {
         get(k){ try { return localStorage.getItem(k); } catch(e){ return null; } },
         set(k, v){ try { localStorage.setItem(k, v); } catch(e){} }
       };
 
+      // The saved choice wins; otherwise follow the operating-system preference.
       function getPreferredTheme(){
         const v = store.get('bsc_theme');
         if(v === 'light' || v === 'dark') return v;
         return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
       }
 
+      // persist is true only for a button click, so a visitor who never chose a theme keeps following their system setting.
       function setTheme(theme, persist){
         html.dataset.theme = theme;
         themeBtn.textContent = theme === 'dark' ? 'Light theme' : 'Dark theme';
@@ -539,6 +572,7 @@
         if(persist) store.set('bsc_theme', theme);
       }
 
+      // Startup: apply the theme without saving, and follow OS changes only while no choice is saved (addListener is the older Safari API).
       setTheme(getPreferredTheme(), false);
       if(window.matchMedia){
         const mq = window.matchMedia('(prefers-color-scheme: dark)');
@@ -550,10 +584,13 @@
         setTheme(html.dataset.theme === 'dark' ? 'light' : 'dark', true);
       });
       printBtn.addEventListener('click', () => window.print());
+      // ?print=1 opens the print dialog after load; the 250 ms delay is a short pause after load before printing.
       if(new URLSearchParams(location.search).get('print') === '1'){
         window.addEventListener('load', () => setTimeout(() => window.print(), 250));
       }
 
+      // Collapsed details would print as closed and hide their content. Record each one's state, open all before printing,
+      // then restore afterwards (matched by position).
       let openState = null;
       function snapshot(){
         return Array.from(document.querySelectorAll('details')).map(d => d.open);
@@ -573,6 +610,8 @@
     })();
   </script>
   <script>
+      // Reading-progress bar. Scroll position divided by scrollable height, as a percentage;
+      // the listener is passive, which promises the browser it will not call preventDefault, so scrolling is never held up.
     (function(){
       var bar = document.getElementById('read-progress');
       if(!bar) return;
