@@ -125,7 +125,7 @@ Content is intentionally repeated across pages so each mode stays optimized for 
 
 After editing, verify:
 
-- [ ] `python3 tests/test_home.py` from the repo root — all 32 functional tests pass
+- [ ] `python3 tests/test_home.py` from the repo root — all 42 functional tests pass (ten of them emulate a phone: portrait and landscape, touch, no hover)
 - [ ] Home loads and routes correctly; `?plain=1` fallback works
 - [ ] FX panel toggles each persist + visibly turn the corresponding effect on/off
 - [ ] Signal presets open with the right focus areas active
