@@ -61,6 +61,7 @@ Focus keys: `cloud`, `api`, `iot`, `data`, `opex`, `lead`, `enable`, `ai`. Commo
 - **11 atmospheres** (blue, crimson, emerald, violet, ghost, void, amethyst, graphite, ink, bronze, autumn), each with light and dark tokens, across **6 visual effects** (still, leaves, fog, clouds, ocean, depth). Three.js and the one Vanta bundle an effect needs load on demand, only for fog, clouds, ocean and depth, and never under `?plain=1` or `prefers-reduced-motion`
 - **FX panel** on Home — a confetti burst pops on every load (skipped under `?plain=1` and `prefers-reduced-motion`), plus toggles for cursor spotlight, 3D card tilt and click sparks, which are off by default; choices persist to `localStorage`, and other pages run no effects
 - **Command palette** (`⌘K` / `Ctrl+K`) and **mode dock** on every page, provided by `shared-enhancements.js`
+- **Reach features**: cross-document View Transitions between modes (off under `prefers-reduced-motion` and `?plain=1`); **Save contact** (vCard) and **Share** (native share sheet, or copy the link) next to the contact details; mail links carry a subject naming the page; a **QR code** to the live site on the printed Atlas, Signal and Proof Hub; a web app manifest plus a service worker (`sw.js`, registered on HTTPS only) so the resume installs to a home screen and opens offline; and a **tailored one-pager** printed from Proof Hub's picked bullets or job-description matches
 - Hero typing animation (runs once), availability badge, scroll-reveal that fails open (print and no-observer browsers see everything)
 - Print stylesheets on Atlas, Signal and Proof Hub keep the name and contact block, force light tokens, and print link URLs; `resume-atlas.html?print=1` opens the print dialog directly
 - Local browser storage for theme, atmosphere, effect, and FX preferences, guarded so blocked storage never breaks a page
@@ -91,16 +92,22 @@ Or use VS Code Live Server. Avoid opening via `file://` — query-string feature
 ├── proof-hub.html             # Proof Hub — evidence layer + case studies
 ├── resume-switchboard.html    # Switchboard — low-motion fallback hub
 ├── now.html                   # /now page
-├── shared-enhancements.js     # Shared palette + dock, ?for= personalization, case share links, safe storage, opt-in FX
+├── shared-enhancements.js     # Shared palette + dock, ?for= personalization, case share links, safe storage, opt-in FX,
+│                              #   View Transitions, Share + mail subjects, service-worker registration
+├── sw.js / site.webmanifest / offline.html   # installable, works offline (VERSION stamped at deploy)
+├── brandon-clark.vcf          # "Save contact" vCard
+├── qr-resume.svg              # QR to the live site, printed on Atlas / Signal / Proof Hub (scripts/gen_qr.py)
 ├── resume-ats.txt             # Plain-text ATS-friendly resume
-├── favicon.ico / favicon.svg / apple-touch-icon.png / og-image.png
+├── favicon.ico / favicon.svg / apple-touch-icon.png / icon-192.png / icon-512.png / icon-512-maskable.png / og-image.png
 ├── robots.txt / sitemap.xml
 ├── 404.html                   # /for/<slug> pretty-URL redirect handler
 ├── cases.json / companies.json
 ├── scripts/
 │   ├── gen_og.py              # OG image renderer (Pillow)
 │   ├── gen_cases.py           # per-case OG art + /case/<slug>/ stub pages (run at deploy)
-│   └── stamp_dates.py         # writes last-updated dates from git history (run at deploy)
+│   ├── gen_qr.py              # qr-resume.svg (python qrcode module; run by hand)
+│   ├── gen_icons.py           # icon-192/512.png from the favicon mark (Pillow; run by hand)
+│   └── stamp_dates.py         # writes last-updated dates and the sw.js cache version from git (run at deploy)
 ├── tests/
 │   ├── harness.py             # CDP-over-websocket Chrome driver
 │   └── test_home.py           # functional UI tests
@@ -125,7 +132,7 @@ Content is intentionally repeated across pages so each mode stays optimized for 
 
 After editing, verify:
 
-- [ ] `python3 tests/test_home.py` from the repo root — all 42 functional tests pass (ten of them emulate a phone: portrait and landscape, touch, no hover)
+- [ ] `python3 tests/test_home.py` from the repo root — all 49 functional tests pass (ten emulate a phone; seven cover the reach features, including a real offline run)
 - [ ] Home loads and routes correctly; `?plain=1` fallback works
 - [ ] FX panel toggles each persist + visibly turn the corresponding effect on/off
 - [ ] Signal presets open with the right focus areas active
@@ -140,13 +147,13 @@ CI runs the test suite on every push and PR automatically; a regression blocks d
 
 ## Deployment
 
-Pushes to `main` deploy to GitHub Pages via the `.github/workflows/deploy.yml` workflow. The workflow first runs the headless-Chrome test suite — if any test fails, the deploy is skipped. Pull requests run the test suite only; the build and deploy jobs run on `main`. During the build, `scripts/stamp_dates.py` writes each page's last-updated date and the sitemap's `lastmod` values from git history, and per-case OG art and `/case/<slug>/` stub pages are generated, so none of those are committed.
+Pushes to `main` deploy to GitHub Pages via the `.github/workflows/deploy.yml` workflow. The workflow first runs the headless-Chrome test suite — if any test fails, the deploy is skipped. Pull requests run the test suite only; the build and deploy jobs run on `main`. During the build, `scripts/stamp_dates.py` writes each page's last-updated date, the sitemap's `lastmod` values and the service worker's cache `VERSION` from git history, and per-case OG art and `/case/<slug>/` stub pages are generated, so none of those are committed.
 
 ```text
 Production:  https://northwoodscode.github.io/resume/
 ```
 
-One-time setup: repo **Settings → Pages → Source → GitHub Actions** (already done for the live site).
+One-time setup: repo **Settings → Pages → Build and deployment → Source → GitHub Actions**. While the source is still "Deploy from a branch", GitHub's own "pages build and deployment" job runs on every push and races this workflow (it can fail at startup and hold the Actions deploy in the queue).
 
 Pretty `/for/<company>` links are handled by `404.html`, which redirects to `/?for=<company>` client-side (GitHub Pages has no server-side redirects).
 

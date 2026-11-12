@@ -8,6 +8,8 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml" />
 <link rel="icon" href="favicon.ico" sizes="any" />
 <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<link rel="manifest" href="site.webmanifest" />
+<meta name="theme-color" content="#04070f" />
 <title>Brandon S. Clark — Tailored Resume</title>
 <meta content="Tailorable resume for Brandon S. Clark. Senior Software Engineer focused on AWS backend/platform engineering, APIs, serverless architecture, and operational execution." name="description"/>
 <link href="https://northwoodscode.github.io/resume/resume-signal.html" rel="canonical"/>
@@ -180,6 +182,8 @@
       white-space:nowrap;
     }
 
+    /* The Share control is a <button> inside a badge: strip the native button look. */
+    .badgeBtn{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
     .dot{
       width:9px;
       height:9px;
@@ -351,6 +355,7 @@
       .badge{white-space:normal;min-width:0;max-width:100%}
       main li a{overflow-wrap:anywhere} /* long URLs in the contact list */
       .badge a{display:inline-flex;align-items:center;min-height:32px;overflow-wrap:anywhere}
+      .bsc-act a,.bsc-act .badgeBtn{display:inline-flex;align-items:center;min-height:40px}
     }
 
     .card{
@@ -457,6 +462,15 @@
     /* ── Print rules ──
      Force the light tokens even when the dark theme is active (paper is white), drop interactive chrome,
      and keep each bullet and heading together on a page. */
+    /* Print-only QR: lets a paper or PDF copy lead back to the interactive site.
+       Hidden on screen; the print block below floats it to the top-right of the header. */
+    .print-qr-wrap,.print-qr{display:none}
+    @media print{
+      .print-qr-wrap{display:block;float:right;width:1.25in;margin:0 0 6px 12px;text-align:center;break-inside:avoid}
+      .print-qr{display:block;width:84px;height:84px;margin:0 auto 3px}
+      .print-qr-cap{display:block;font-size:8pt;line-height:1.2;color:#000}
+    }
+    @media print{ .bsc-act{display:none !important} } /* Save contact / Share are screen-only */
     @media print{
       html, html[data-theme="dark"]{
         --bg:#fff; --surface:#fff; --surface-2:#fff; --text:#000; --muted:#333; --border:#bbb;
@@ -527,6 +541,7 @@
 <div class="top">
 <!-- Hero: name, contact badges and headline KPIs -->
 <section aria-label="Resume header" class="hero">
+<div class="print-qr-wrap"><img class="print-qr" src="qr-resume.svg" alt="QR code: northwoodscode.github.io/resume" width="84" height="84"><span class="print-qr-cap">Scan for the interactive version · northwoodscode.github.io/resume</span></div>
 <h1>Brandon S. Clark</h1>
 <div class="tagline">Senior Software Engineer • AWS Backend / Cloud Platform</div>
 <ul aria-label="Contact and profile links" class="meta">
@@ -534,7 +549,9 @@
 <li class="badge"><a href="mailto:bsc_pro@protonmail.com">bsc_pro@protonmail.com</a></li>
 <li class="badge"><a href="https://github.com/NorthwoodsCode" rel="noopener noreferrer">GitHub</a></li>
 <li class="badge"><a href="https://www.linkedin.com/in/brandon-c-it-industry" rel="noopener noreferrer">LinkedIn</a></li>
-<li class="badge"><a href="https://northwoodscode.github.io/resume/" rel="noopener noreferrer">Portfolio</a></li></ul>
+<li class="badge"><a href="https://northwoodscode.github.io/resume/" rel="noopener noreferrer">Portfolio</a></li>
+<li class="badge bsc-act"><a href="brandon-clark.vcf" download="brandon-clark.vcf" type="text/vcard">Save contact</a></li>
+<li class="badge bsc-act"><button class="badgeBtn" type="button" data-bsc-share>Share</button></li></ul>
 <div aria-label="Impact highlights" class="kpis">
 <div class="kpi"><b>$85M processed</b><small>Payment portal handling ~250K transactions</small></div>
 <div class="kpi"><b>1,200+ hrs saved</b><small>Automated data-entry eliminating manual work</small></div>

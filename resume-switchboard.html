@@ -7,6 +7,8 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="icon" href="favicon.ico" sizes="any" />
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="manifest" href="site.webmanifest" />
+  <meta name="theme-color" content="#04070f" />
   <title>Brandon S. Clark — Resume Switchboard</title>
   <meta name="description" content="Audience-first resume switchboard for Brandon S. Clark. Routes recruiters, hiring managers, technical leaders, and proof-first reviewers into the right resume mode fast." />
 
@@ -213,6 +215,8 @@
 
     .metaRow{margin-top:1rem}
     .metaPill a{color:inherit}
+    /* The Share control is a <button> inside a pill: strip the native button look. */
+    .metaBtn{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
 
     .actionRow{margin-top:1.1rem}
     /* ── Buttons and pills ── */
@@ -503,6 +507,7 @@
     @media (max-width:640px), (hover:none) and (pointer:coarse){
       .summaryCard textarea{font-size:16px}
       .metaPill a{display:inline-flex;align-items:center;min-height:32px}
+      .bsc-act a,.bsc-act .metaBtn{display:inline-flex;align-items:center;min-height:40px}
     }
     @media (max-width:640px){
       .shell{padding:0 14px 74px}
@@ -519,6 +524,7 @@
        link's URL after its text so a paper copy is still useful. */
     @media print{
       header .actionRow,
+      .bsc-act,
       .toast,
       #themeBtn,
       #copySummary,
@@ -572,6 +578,8 @@
           <span class="metaPill"><a href="mailto:bsc_pro@protonmail.com">bsc_pro@protonmail.com</a></span>
           <span class="metaPill"><a href="https://github.com/NorthwoodsCode">GitHub</a></span>
           <span class="metaPill"><a href="https://www.linkedin.com/in/brandon-c-it-industry">LinkedIn</a></span>
+          <span class="metaPill bsc-act"><a href="brandon-clark.vcf" download="brandon-clark.vcf" type="text/vcard">Save contact</a></span>
+          <span class="metaPill bsc-act"><button class="metaBtn" type="button" data-bsc-share>Share</button></span>
         </div>
 
         <div class="actionRow" aria-label="Primary actions">
