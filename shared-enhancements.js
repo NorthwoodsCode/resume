@@ -69,6 +69,12 @@
   // None of the overlays this script creates belong on paper.
   addStyle('bsc-shared-print-style',
     '@media print{.bsc-dock,#cmd-pal,#bsc-toast,#cursor-glow,[data-for-badge],[data-bsc-stack],[data-case-share]{display:none !important}}');
+  // The Proof Hub case share buttons (created further down) are small icons
+  // next to each case title; on phones and touch screens they grow to a 40px
+  // tap target. A stylesheet rule, not an inline style, so pages can override it.
+  addStyle('bsc-share-style',
+    '[data-case-share]{min-width:32px;min-height:28px}' +
+    '@media(max-width:640px),(hover:none) and (pointer:coarse){[data-case-share]{min-width:40px;min-height:40px}}');
 
   /* ── toast ───────────────────────────────────────────────────── */
   function toast(msg){
@@ -138,6 +144,7 @@
       '.cpi-desc{font-size:.8rem;color:var(--cp-muted);margin-left:auto;white-space:nowrap;padding-left:.5rem}',
       '#cmd-foot{display:flex;gap:1rem;padding:.5rem 1rem;border-top:1px solid var(--cp-border);background:var(--cp-sub)}',
       '#cmd-foot span{font-size:.73rem;color:var(--cp-cat);display:flex;align-items:center;gap:.25rem}',
+      '@media(hover:none) and (pointer:coarse){#cmd-foot{display:none}}',
       '#cmd-foot kbd{font-size:.69rem;padding:.12rem .32rem;border:1px solid var(--cp-border);border-radius:4px;background:var(--cp-bg);font-family:inherit}'
     ].join('\n'));
 
@@ -232,39 +239,58 @@
 
   /* ── shared "Resume modes" dock (pages without their own) ─────── */
   // A fixed <details> in the bottom-right corner listing all six pages, with
-  // aria-current on the one you are reading. It is a flex column that opens
-  // upward and is sized to the viewport, so the panel never spills off a phone.
+  // aria-current on the one you are reading. The panel is absolutely positioned
+  // above the pill (a <details> always renders its <summary> first, so flex
+  // order cannot do this), so the pill stays put under the thumb when it opens;
+  // the panel is capped to the dynamic viewport height and scrolls internally,
+  // so it never spills off a phone (even in landscape). A tap
+  // outside or Escape closes it, and a last "Search pages" button opens the
+  // command palette, since touch devices have no Ctrl/Cmd+K.
   // Clicking a link remembers it as bsc_last_resume_mode for the Switchboard.
   (function dock(){
     if(document.querySelector('.bsc-dock')) return; // Home ships its own dock markup
     addStyle('bsc-dock-style', [
-      '.bsc-dock{--dk-bg:#fff;--dk-fg:#111827;--dk-muted:#6b7280;--dk-border:#e5e7eb;--dk-hover:#eff6ff;--dk-accent:#2563eb;position:fixed;right:16px;bottom:16px;z-index:9990;width:min(300px,calc(100vw - 32px));display:flex;flex-direction:column;align-items:flex-end;pointer-events:none;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}',
+      '.bsc-dock{--dk-bg:#fff;--dk-fg:#111827;--dk-muted:#6b7280;--dk-border:#e5e7eb;--dk-hover:#eff6ff;--dk-accent:#2563eb;position:fixed;right:16px;bottom:16px;z-index:9990;padding:0;margin:0;border:0;background:none;pointer-events:none;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}',
       'html[data-theme="dark"] .bsc-dock{--dk-bg:#0f172a;--dk-fg:#e2e8f0;--dk-muted:#94a3b8;--dk-border:#1e3a5f;--dk-hover:rgba(37,99,235,.18);--dk-accent:#8ab4ff}',
       '@media(prefers-color-scheme:dark){html:not([data-theme="light"]) .bsc-dock{--dk-bg:#0f172a;--dk-fg:#e2e8f0;--dk-muted:#94a3b8;--dk-border:#1e3a5f;--dk-hover:rgba(37,99,235,.18);--dk-accent:#8ab4ff}}',
       '.bsc-dock summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;padding:.6rem .95rem;border-radius:999px;background:var(--dk-bg);color:var(--dk-fg);border:1px solid var(--dk-border);box-shadow:0 10px 30px rgba(0,0,0,.25);font-weight:700;font-size:.9rem;pointer-events:auto}',
       '.bsc-dock summary::-webkit-details-marker{display:none}',
       '.bsc-dock summary:focus-visible{outline:3px solid var(--dk-accent);outline-offset:3px}',
-      '.bsc-dock-panel{order:-1;margin:0 0 10px;width:100%;pointer-events:auto;background:var(--dk-bg);color:var(--dk-fg);border:1px solid var(--dk-border);border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.3);padding:12px}',
+      '.bsc-dock-panel{position:absolute;right:0;bottom:calc(100% + 10px);width:min(300px,calc(100vw - 32px));box-sizing:border-box;pointer-events:auto;background:var(--dk-bg);color:var(--dk-fg);border:1px solid var(--dk-border);border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.3);padding:12px;max-height:calc(100vh - 96px);max-height:calc(100dvh - 96px);overflow:auto;overscroll-behavior:contain}',
       '.bsc-dock-kicker{font-size:.68rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--dk-muted);margin:2px 4px 8px}',
       '.bsc-dock-grid{display:grid;gap:6px}',
       '.bsc-dock-link{display:grid;gap:1px;padding:8px 10px;border-radius:10px;text-decoration:none;color:var(--dk-fg);border:1px solid transparent}',
       '.bsc-dock-link:hover,.bsc-dock-link:focus-visible{background:var(--dk-hover);border-color:var(--dk-border);outline:none}',
+      'button.bsc-dock-link{width:100%;min-height:40px;font:inherit;text-align:left;background:none;cursor:pointer;margin-top:6px;border-top-color:var(--dk-border)}',
       '.bsc-dock-link strong{font-size:.9rem}',
       '.bsc-dock-link span{font-size:.76rem;color:var(--dk-muted)}',
       '.bsc-dock-link[aria-current="page"]{border-color:var(--dk-accent)}',
-      '.bsc-dock-link[aria-current="page"] strong::after{content:" • you are here";font-weight:500;color:var(--dk-muted);font-size:.74rem}'
+      '.bsc-dock-link[aria-current="page"] strong::after{content:" • you are here";font-weight:500;color:var(--dk-muted);font-size:.74rem}',
+      // phones: tighter rows so the six pages plus Search fit under the viewport
+      '@media(max-width:520px){.bsc-dock-panel{padding:8px}.bsc-dock-kicker{margin:0 4px 4px}.bsc-dock-grid{gap:2px}.bsc-dock-link{padding:6px 10px}.bsc-dock-link strong{font-size:.86rem}.bsc-dock-link span{font-size:.75rem;line-height:1.25}.bsc-dock-kicker{font-size:.75rem}button.bsc-dock-link{margin-top:2px}}'
     ].join('\n'));
     var d = document.createElement('details'); d.className = 'bsc-dock';
     d.innerHTML = '<summary aria-label="Open resume modes menu">Resume modes</summary>' +
       '<div class="bsc-dock-panel"><div class="bsc-dock-kicker">Same story, five views</div><div class="bsc-dock-grid">' +
       PAGES.map(function(p){
         return '<a class="bsc-dock-link" href="' + siteLink(p.file) + '" data-page="' + p.file + '"' + (p.file === page ? ' aria-current="page"' : '') + '><strong>' + p.label + '</strong><span>' + p.desc + '</span></a>';
-      }).join('') + '</div></div>';
+      }).join('') + '<button type="button" class="bsc-dock-link" id="bsc-dock-search"><strong>Search pages</strong><span>Jump to any page or action</span></button></div></div>';
     document.body.appendChild(d);
     d.querySelectorAll('.bsc-dock-link').forEach(function(link){
       link.addEventListener('click', function(){ store.set('bsc_last_resume_mode', link.getAttribute('data-page')); });
     });
-    document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && d.open) d.open = false; });
+    // bind lazily: the palette may not exist yet when the dock is injected
+    d.querySelector('#bsc-dock-search').addEventListener('click', function(){
+      d.open = false;
+      if(window.bscOpenPalette) window.bscOpenPalette();
+    });
+    // Escape closes the dock, unless the palette is open on top of it (then the
+    // palette's own handler takes that keypress, so one Escape closes one layer).
+    document.addEventListener('keydown', function(e){
+      var pal = document.getElementById('cmd-pal');
+      if(e.key === 'Escape' && d.open && !(pal && !pal.hidden)) d.open = false;
+    });
+    document.addEventListener('pointerdown', function(e){ if(d.open && !d.contains(e.target)) d.open = false; });
     document.addEventListener('click', function(e){ if(d.open && !d.contains(e.target)) d.open = false; });
   })();
 
@@ -395,7 +421,7 @@
       btn.setAttribute('aria-label','Copy shareable link to this case study');
       btn.title = 'Copy shareable link';
       btn.textContent = '🔗';
-      btn.style.cssText = 'margin-left:8px;font-size:.85em;padding:2px 8px;min-width:32px;min-height:28px;border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;opacity:.6;cursor:pointer;vertical-align:middle;line-height:1.4';
+      btn.style.cssText = 'margin-left:8px;font-size:.85em;padding:2px 8px;border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;opacity:.6;cursor:pointer;vertical-align:middle;line-height:1.4';
       btn.addEventListener('mouseenter', function(){ btn.style.opacity = '1'; });
       btn.addEventListener('mouseleave', function(){ btn.style.opacity = '.6'; });
       btn.addEventListener('focus', function(){ btn.style.opacity = '1'; });

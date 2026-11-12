@@ -343,7 +343,15 @@
       gap:14px;
       margin-top:18px;
     }
-    @media (max-width:940px){ .row{grid-template-columns:1fr} }
+    @media (max-width:940px){ .row{grid-template-columns:minmax(0,1fr)} }
+    /* Phones: the single-column .row uses minmax(0,1fr) so its track can shrink below
+       the content width (stops 320px sideways scroll), and give the contact links a 32px+ touch target. */
+    /* Narrow screens and touch-only devices (a phone held sideways is wider than 640px). */
+    @media (max-width:640px), (hover:none) and (pointer:coarse){
+      .badge{white-space:normal;min-width:0;max-width:100%}
+      main li a{overflow-wrap:anywhere} /* long URLs in the contact list */
+      .badge a{display:inline-flex;align-items:center;min-height:32px;overflow-wrap:anywhere}
+    }
 
     .card{
       border:1px solid var(--border);

@@ -78,7 +78,9 @@
       padding:22px 18px 70px;
     }
     /* ── Header ──
-     Sticky with a translucent, blurred background so it stays visible while scrolling. */
+     Sticky with a translucent, blurred background so it stays visible while scrolling.
+     Below 860px the header wraps to about 336px tall, so it is made static there
+     (see the mobile block after .actions) to leave the screen for reading. */
     header{
       position:sticky;
       top:0;
@@ -128,6 +130,20 @@
       gap:.5rem;
       flex-wrap:wrap;
       justify-content:flex-end;
+    }
+    /* Phones: a frozen header would take half the screen, so it scrolls away;
+       at <=560px the head wraps and the buttons get their own full-width row. */
+    @media (max-width:860px){ header{position:static} }
+    @media (max-width:560px){
+      .head{flex-wrap:wrap}
+      .actions{width:100%;justify-content:flex-start}
+    }
+    /* Phones: comfortable tap heights for the buttons, contact links, disclosure
+       summaries and the footer link (desktop keeps its tighter sizes). */
+    @media (max-width:640px), (hover:none) and (pointer:coarse){
+      .btn{min-height:40px}
+      .contact a, footer a{display:inline-flex; align-items:center; min-height:32px}
+      summary{display:flex; align-items:center; min-height:32px} /* the ▸ marker already has its own width */
     }
     .btn{
       border:1px solid var(--border);

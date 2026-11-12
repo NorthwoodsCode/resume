@@ -1575,8 +1575,18 @@
     }
     .bsc-dock summary::-webkit-details-marker{display:none}
     .bsc-dock-panel{
+      /* Opens upward from the pill, so the "Mode dock" pill stays at the bottom (under the thumb)
+         instead of jumping to the top as the panel pushes it. */
+      position:absolute;
+      right:0;
+      bottom:calc(100% + .55rem);
       width:min(340px, calc(100vw - 32px));
-      margin-top:.55rem;
+      /* Never taller than the screen above the pill (100vh fallback first); long menus scroll inside. */
+      max-height:calc(100vh - 96px);
+      max-height:calc(100dvh - 96px);
+      box-sizing:border-box;
+      overflow:auto;
+      overscroll-behavior:contain;
       border:1px solid var(--border);
       border-radius:20px;
       background:linear-gradient(180deg, color-mix(in srgb, var(--panel-strong) 92%, transparent), color-mix(in srgb, var(--panel) 96%, transparent));
@@ -1700,6 +1710,64 @@
       .presets{grid-auto-columns:minmax(78vw, 1fr); padding-right:12vw}
       .tools-summary{align-items:flex-start; flex-direction:column}
       .summaryMeta{width:100%; justify-content:center}
+      /* Dock links get tighter padding and smaller type so the open panel stays under ~440px tall. */
+      .bsc-dock-panel{padding:10px}
+      .bsc-dock-kicker{margin-bottom:8px}
+      .bsc-dock-grid{gap:6px}
+      .bsc-dock-link{padding:.5rem .7rem; border-radius:14px}
+      .bsc-dock-link strong{font-size:.88rem}
+      .bsc-dock-link span{font-size:.76rem; margin-top:1px}
+      /* Presets rail: size the columns against the rail itself (100cqw of the card that holds it, which
+         is as wide as the rail; a plain percentage resolves against an indefinite size here and collapses the cards) so one card
+         fits fully and the next peeks in. No right padding, which would shrink the base. */
+      section[aria-label="One-click presets"]{container-type:inline-size}
+      .presets{grid-auto-columns:calc(100cqw - 28px); padding-right:0}
+    }
+
+    /* ── Phone fixes ──
+       Menus: below 560px the FX and Look & Feel panels stop anchoring to their own (mid-row) buttons and
+       span the whole utility row instead, so they cannot hang off the left edge.
+       Text: on tablets and phones nothing visible in the panels computes below 12px.
+       Inputs: 16px stops iOS Safari zooming the page on focus.
+       Targets: interactive controls are at least 40px tall on narrow or touch screens. Desktop unchanged.
+    */
+    @media (max-width: 560px){
+      .top-actions{position:relative}
+      .fx-panel,
+      .appearance-panel{position:static}
+      .fx-menu,
+      .appearance-menu{left:0; right:0; width:auto; max-width:none}
+      .fx-menu{transform-origin:top center}
+      /* Neither menu may run past the bottom of a short screen; long ones scroll inside. */
+      .fx-menu,
+      .appearance-menu{max-height:calc(100vh - 110px); max-height:calc(100dvh - 110px); overflow:auto; overscroll-behavior:contain}
+      /* The four classic effect swatches cannot fit one row in a 280px menu; let them wrap. */
+      .effect-row{flex-wrap:wrap}
+    }
+    @media (max-width: 900px){
+      .fx-led,
+      .appearance-sub{font-size:.75rem}
+      .fx-preset-desc,
+      .fx-desc{font-size:.78rem}
+      .appearance-kicker,
+      .fx-title,
+      .swatch,
+      .effect-swatch{font-size:.8rem}
+      .atlasBadge{font-size:.75rem}
+      .shotTab{font-size:.75rem}
+    }
+    /* Touch-only devices have no keyboard, so the palette's key legend is noise there. */
+    @media (hover: none) and (pointer: coarse){ #cmd-foot{display:none} }
+    @media (max-width: 640px), (hover: none) and (pointer: coarse){
+      input:not([type="checkbox"]):not([type="radio"]),
+      textarea,
+      select{font-size:16px}
+    }
+    @media (max-width: 520px), (hover: none) and (pointer: coarse){
+      .btn.small,
+      .swatch,
+      .effect-swatch{min-height:40px}
+      .hero-utility-link{min-height:40px}
     }
 
     /* ── Reduced motion ──
@@ -2488,6 +2556,11 @@
         return 'fog';
       }
 
+      // True once the visitor has picked an effect (applyEffect stores it).
+      function hasStoredEffect(){
+        try{ return VALID_EFFECTS.indexOf(localStorage.getItem('bsc_vanta_effect')) > -1; }catch(e){ return false; }
+      }
+
       function syncEffectButtons(){
         document.querySelectorAll('[data-effect-btn]').forEach(function(btn){
           btn.setAttribute('aria-pressed', btn.getAttribute('data-effect-btn') === currentEffect() ? 'true' : 'false');
@@ -2655,6 +2728,26 @@
         if(appearancePanel && appearancePanel.open && !appearancePanel.contains(event.target)){
           appearancePanel.open = false;
         }
+      });
+
+      // Phones and touch screens: when a menu opens, cap its height to the space left below its own
+      // top edge (the CSS cap only knows the viewport height, not where the menu starts), so it never
+      // runs past the bottom of the screen; a long menu scrolls inside. Desktop is left alone.
+      var smallScreen = window.matchMedia ? window.matchMedia('(max-width: 560px), (hover: none) and (pointer: coarse)') : null;
+      [appearancePanel, fxPanel].forEach(function(panel){
+        if(!panel) return;
+        panel.addEventListener('toggle', function(){
+          var menu = panel.querySelector('.appearance-menu, .fx-menu');
+          if(!menu) return;
+          if(panel.open && smallScreen && smallScreen.matches){
+            var top = menu.getBoundingClientRect().top;
+            menu.style.maxHeight = Math.max(180, window.innerHeight - top - 12) + 'px';
+            menu.style.overflowY = 'auto';
+          }else{
+            menu.style.maxHeight = '';
+            menu.style.overflowY = '';
+          }
+        });
       });
 
       function rememberMode(value){
@@ -3045,6 +3138,17 @@
           return;
         }
 
+        // Touch-only devices (phones and tablets, any size or orientation): the default fog (no effect
+        // chosen yet) uses the CSS fallback gradient, so three.js and Vanta (about 160 KB compressed) are
+        // never requested and the GPU stays idle. data-effect stays 'fog' so the gradient colours match.
+        // Picking any swatch, Fog included, stores a choice and is honoured.
+        if(eff === 'fog' && !hasStoredEffect() && window.matchMedia &&
+           window.matchMedia('(hover: none) and (pointer: coarse)').matches){
+          setAtmosphereState('fallback');
+          setWarn('');
+          return;
+        }
+
         if(!webglAvailable()){
           setAtmosphereState('fallback');
           setWarn('Animated background is unavailable here. The static atmosphere fallback is active.');
@@ -3108,6 +3212,19 @@
       }
       syncDockVisibility();
       window.addEventListener('scroll', syncDockVisibility, { passive:true });
+
+      // Close the open dock menu on a tap outside it or on Escape.
+      // (Looked up on each event: this script runs before the dock markup exists.)
+      document.addEventListener('pointerdown', function(e){
+        var dockEl = document.querySelector('.bsc-dock');
+        if(dockEl && dockEl.open && !dockEl.contains(e.target)) dockEl.open = false;
+      });
+      document.addEventListener('keydown', function(e){
+        var dockEl = document.querySelector('.bsc-dock');
+        // Leave Escape to the palette while it is open, so one keypress closes one layer.
+        var pal = document.getElementById('cmd-pal');
+        if(e.key === 'Escape' && dockEl && dockEl.open && !(pal && !pal.hidden)) dockEl.open = false;
+      });
 
       // Mark the dock link for the current page and remember which mode was last used.
       document.addEventListener('DOMContentLoaded', function(){
@@ -3648,8 +3765,10 @@
     if(cmdBtn){
       // Show the shortcut that matches the visitor's platform.
       var isMac = /Mac|iPhone|iPad|iPod/.test(navigator.platform || navigator.userAgent || '');
-      cmdBtn.textContent = isMac ? '⌘K' : 'Ctrl+K';
-      cmdBtn.setAttribute('aria-label', 'Open command palette ('+(isMac?'⌘K':'Ctrl+K')+')');
+      // On touch-only devices there is no keyboard, so the button says what it does instead.
+      var touchOnly = window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+      cmdBtn.textContent = touchOnly ? 'Search' : (isMac ? '⌘K' : 'Ctrl+K');
+      cmdBtn.setAttribute('aria-label', touchOnly ? 'Search pages' : 'Open command palette ('+(isMac?'⌘K':'Ctrl+K')+')');
       cmdBtn.addEventListener('click', function(){ openPal(); });
     }
   })();
