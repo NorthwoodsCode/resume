@@ -188,7 +188,7 @@
       width: 100%;
       border: 0;
       outline: none;
-      font-size: 14px;
+      font-size: 16px; /* 16px stops iOS Safari zooming the page on focus */
       background: transparent;
       color: inherit;
     }
@@ -783,6 +783,23 @@
        ------------------------------------------------------------ */
     /* On phones the gutter would squeeze the text, so actions drop below it (order: 1 for text,
        order: 2 for actions) and become normal flex items (position: static). */
+    /* The "/" shortcut hint is meaningless without a keyboard. */
+    @media (hover: none) and (pointer: coarse) {
+      .meta .kbd-hint { display: none; }
+    }
+    /* Touch targets, on narrow screens and on any touch-only device (a phone held sideways is
+       wider than 640px): buttons and chips reach 40px tall (wrapping and widths unchanged);
+       inputs are 16px so iOS Safari does not zoom on focus. */
+    @media (max-width: 640px), (hover: none) and (pointer: coarse) {
+      .btn, .btn.tiny, .chip, .chip-btn, .lane-btn, .search-chip, .bullet .copy-btn, .bullet .pick-btn {
+        min-height: 40px;
+      }
+      .chip { display: inline-flex; align-items: center; }
+      .search input { min-height: 40px; }
+      .jd, .selected-out { font-size: 16px; }
+      /* Contact links in the header and footer were 17-19px tall; padding brings them to ~28px+. */
+      .meta a, .footer a { display: inline-block; padding: 5px 0; }
+    }
     @media (max-width: 640px) {
       .wrap { padding: 14px 12px 64px; }
       header { padding: 14px 14px 12px; }
@@ -878,15 +895,18 @@
         <span>Last updated: <time id="lastUpdated" datetime="2026-11-11">2026-11-11</time></span>
         <span>·</span>
         <span>LinkedIn: <a href="https://www.linkedin.com/in/brandon-c-it-industry" target="_blank" rel="noopener">linkedin.com/in/brandon-c-it-industry</a></span>
-        <span>·</span>
-        <span class="mono">Press <b>/</b> to search</span>
+        <span class="kbd-hint" aria-hidden="true">·</span>
+        <span class="mono kbd-hint">Press <b>/</b> to search</span>
       </div>
 
       <div class="controls">
-        <div class="search" role="search">
-          <span aria-hidden="true">🔎</span>
-          <input id="search" type="search" aria-label="Filter bullets by keyword" placeholder="Filter bullets by keyword (AWS, Terraform, IoT, Step Functions…)" autocomplete="off">
-          <span class="hint">Tip: try “aws iot”</span>
+        <div role="search">
+          <!-- A label so a tap anywhere on the box (icon, padding) focuses the input -->
+          <label class="search">
+            <span aria-hidden="true">🔎</span>
+            <input id="search" type="search" aria-label="Filter bullets by keyword" placeholder="Filter bullets by keyword (AWS, Terraform, IoT, Step Functions…)" autocomplete="off">
+            <span class="hint">Tip: try “aws iot”</span>
+          </label>
         </div>
         <div class="control-row">
           <button id="expandBtn" class="btn" type="button">Expand all</button>

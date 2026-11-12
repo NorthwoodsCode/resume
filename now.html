@@ -69,11 +69,15 @@
     .head{max-width:var(--max);margin:0 auto;padding:18px 18px 16px;display:flex;align-items:center;gap:18px;justify-content:space-between}
     .head h1{margin:0;font-size:clamp(1.2rem,2.6vw,1.7rem);letter-spacing:-.02em}
     .head .nav{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px 14px;font-size:.92rem;color:var(--muted)}
+    /* Phones: block-level nav links with padding give 36px+ touch targets (still wrapping) */
+    @media (max-width:640px), (hover:none) and (pointer:coarse){
+      .head .nav a{display:block;padding:8px 4px;line-height:20px}
+    }
     .wrap{max-width:var(--max);margin:0 auto;padding:30px 18px 80px}
     .lede{color:var(--muted);font-size:1.02rem;margin:0 0 28px;max-width:62ch}
     .lede a{font-weight:600}
     /* ── "Last refreshed" stamp ── */
-    .stamp{display:inline-flex;align-items:center;gap:8px;padding:4px 10px;border:1px solid var(--border);border-radius:999px;font-family:var(--mono);font-size:.74rem;color:var(--muted);margin:0 0 28px}
+    .stamp{display:inline-flex;align-items:center;gap:8px;padding:4px 10px;border:1px solid var(--border);border-radius:999px;font-family:var(--mono);font-size:.75rem;color:var(--muted);margin:0 0 28px}
     .stamp .dot{width:7px;height:7px;border-radius:50%;background:var(--accent2);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent2) 18%,transparent)}
     /* ── Content cards ── */
     section.card{

@@ -498,6 +498,12 @@
       *{transition:none !important;scroll-behavior:auto !important}
     }
     /* ── Mobile ── Tighter gutters, then full-width search and wrapping pills. */
+    /* Narrow screens and touch-only devices (a phone held sideways is wider than 640px):
+       16px stops Safari's focus zoom; contact links get a 32px+ touch target. */
+    @media (max-width:640px), (hover:none) and (pointer:coarse){
+      .summaryCard textarea{font-size:16px}
+      .metaPill a{display:inline-flex;align-items:center;min-height:32px}
+    }
     @media (max-width:640px){
       .shell{padding:0 14px 74px}
       .hero{padding:18px 14px 20px}

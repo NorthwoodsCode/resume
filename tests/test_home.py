@@ -550,6 +550,260 @@ async def test_mobile_no_horizontal_overflow(c):
     return ("No page scrolls sideways at 375px", not failures, "; ".join(failures) or "6/6 pages OK")
 
 
+# ─── Phone emulation ────────────────────────────────────────────────────
+# These tests emulate a phone: a narrow viewport, touch events, a coarse
+# pointer and no hover, which is what the site's (pointer:coarse) and
+# (hover:none) rules key on. phone_off() returns the tab to desktop defaults so
+# later tests see the normal layout again.
+
+PHONE_FEATURES = [{"name": "pointer", "value": "coarse"}, {"name": "hover", "value": "none"}]
+
+
+async def phone_on(c, width=375, height=667):
+    await c.set_viewport(width, height, mobile=True)
+    await c.call("Emulation.setTouchEmulationEnabled", {"enabled": True, "maxTouchPoints": 5})
+    await c.emulate_media("", PHONE_FEATURES)
+
+
+async def phone_off(c):
+    await c.emulate_media("", [])
+    await c.call("Emulation.setTouchEmulationEnabled", {"enabled": False})
+    await c.clear_viewport()
+
+
+# Visible interactive controls that are too short to tap comfortably. Inline
+# links inside running text are exempt (WCAG 2.5.8 exempts them too); the
+# thresholds are per kind: buttons/inputs 36px, disclosure summaries 32px,
+# standalone links 28px.
+SHORT_TARGETS = (
+    "(function(){var vis=function(el){var r=el.getBoundingClientRect();var cs=getComputedStyle(el);"
+    "return r.width>0&&r.height>0&&cs.visibility!=='hidden'&&cs.display!=='none';};"
+    "var out=[];var sel='button,summary,input:not([type=checkbox]):not([type=radio]),select,textarea,a[href],[role=button]';"
+    "document.querySelectorAll(sel).forEach(function(el){if(!vis(el)||el.closest('#cmd-pal'))return;"
+    "var r=el.getBoundingClientRect();var cs=getComputedStyle(el);var min=36;"
+    "if(el.tagName==='SUMMARY')min=32;else if(el.tagName==='A'){if(cs.display==='inline'&&el.closest('p,li,dd,figcaption,td,.stamp,.note,small'))return;min=28;}"
+    "if(r.height<min-0.5)out.push(el.tagName.toLowerCase()+(el.id?'#'+el.id:'')+'.'+String(el.className||'').trim().split(/\\s+/)[0]+' \"'+(el.innerText||el.value||el.getAttribute('aria-label')||'').trim().slice(0,22)+'\" '+Math.round(r.width)+'x'+Math.round(r.height));});"
+    "return JSON.stringify(out.slice(0,8).concat(out.length>8?['+'+(out.length-8)+' more']:[]));})()"
+)
+
+# Smallest computed font-size of any visible text node outside the palette.
+MIN_FONT = (
+    "(function(){var min=99;var w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);var n;var ex='';"
+    "while((n=w.nextNode())){if(!n.textContent.trim())continue;var el=n.parentElement;if(!el||el.closest('#cmd-pal,script,style,noscript'))continue;"
+    "var r=el.getBoundingClientRect();var cs=getComputedStyle(el);if(!r.width||!r.height||cs.visibility==='hidden'||cs.display==='none')continue;"
+    "var fs=parseFloat(cs.fontSize);if(fs<min){min=fs;ex=el.tagName.toLowerCase()+'.'+String(el.className||'').trim().split(/\\s+/)[0]+' \"'+n.textContent.trim().slice(0,20)+'\"';}}"
+    "return JSON.stringify({min:Math.round(min*10)/10,ex:ex});})()"
+)
+
+# Visible text inputs below 16px: iOS Safari zooms the page when one is focused.
+SMALL_INPUTS = (
+    "(function(){var out=[];document.querySelectorAll('input:not([type=checkbox]):not([type=radio]),textarea,select').forEach(function(el){"
+    "var r=el.getBoundingClientRect();var cs=getComputedStyle(el);if(!r.width||!r.height||cs.visibility==='hidden'||el.closest('#cmd-pal'))return;"
+    "var fs=parseFloat(cs.fontSize);if(fs<16)out.push(el.tagName.toLowerCase()+(el.id?'#'+el.id:'')+' '+fs.toFixed(1)+'px');});return JSON.stringify(out);})()"
+)
+
+
+async def test_phone_no_horizontal_overflow_320(c):
+    # 320px is the narrowest common phone (older iPhone SE, small Androids).
+    await phone_on(c, 320, 568)
+    failures = []
+    for page in PAGES:
+        await c.goto(BASE + page, clear_storage=True)
+        over = await c.eval("document.documentElement.scrollWidth - document.documentElement.clientWidth")
+        if over and over > 1:
+            failures.append(f"{page}: overflow {over}px")
+    await phone_off(c)
+    return ("No page scrolls sideways at 320px", not failures, "; ".join(failures) or "6/6 pages OK")
+
+
+async def test_phone_atlas_header_not_sticky(c):
+    # On desktop the Atlas header is a one-row sticky bar; on a phone it wraps
+    # to ~330px, so it must become static there or it hides half the screen.
+    await phone_on(c)
+    await c.goto(BASE + "/resume-atlas.html", clear_storage=True)
+    phone = await c.eval("getComputedStyle(document.querySelector('header')).position")
+    over = await c.eval("document.documentElement.scrollWidth - document.documentElement.clientWidth")
+    await phone_off(c)
+    await c.goto(BASE + "/resume-atlas.html")
+    desktop = await c.eval("getComputedStyle(document.querySelector('header')).position")
+    return (
+        "Atlas header is static on phones and sticky on desktop",
+        phone == "static" and desktop == "sticky" and (over or 0) <= 1,
+        f"phone={phone} desktop={desktop} overflow={over}",
+    )
+
+
+async def test_phone_menus_within_viewport(c):
+    # The FX and Look & Feel menus drop down from mid-row buttons; at phone
+    # widths they must not hang off either edge of the screen.
+    failures = []
+    for width, height in ((375, 667), (320, 568), (667, 375)):
+        await phone_on(c, width, height)
+        await c.goto(BASE + "/", clear_storage=True)
+        for summary_sel, menu_sel in ((".fx-panel summary", ".fx-menu"), (".appearance-menu", None)):
+            if menu_sel is None:
+                js_open = "(function(){var m=document.querySelector('.appearance-menu');var d=m&&m.closest('details');if(d){d.open=true;}return !!d;})()"
+                await c.eval(js_open)
+                menu_sel = ".appearance-menu"
+            else:
+                await c.eval(f"document.querySelector('{summary_sel}').click()")
+            await asyncio.sleep(0.3)
+            rect = json.loads(await c.eval(
+                f"JSON.stringify((function(){{var m=document.querySelector('{menu_sel}');if(!m)return null;var r=m.getBoundingClientRect();"
+                f"return {{l:Math.round(r.left),r:Math.round(r.right),b:Math.round(r.bottom),w:Math.round(r.width),vw:innerWidth,vh:innerHeight}};}})())"
+            ) or "null")
+            if not rect or rect["w"] < 200 or rect["l"] < -1 or rect["r"] > rect["vw"] + 1 or rect["b"] > rect["vh"] + 1:
+                failures.append(f"{width}px {menu_sel}: {rect}")
+            await c.eval("document.querySelectorAll('details[open]').forEach(function(d){d.open=false})")
+    await phone_off(c)
+    return ("FX and Look & Feel menus stay inside the viewport on phones (375, 320, landscape)", not failures, "; ".join(failures) or "both menus fit at all three sizes")
+
+
+DOCK_RECT = (
+    "JSON.stringify((function(){var d=document.querySelector('.bsc-dock');var p=d&&d.querySelector('.bsc-dock-panel');"
+    "if(!p)return null;var r=p.getBoundingClientRect();var links=d.querySelectorAll('.bsc-dock-link').length;"
+    "return {open:d.open,top:Math.round(r.top),bottom:Math.round(r.bottom),vh:innerHeight,links:links};})())"
+)
+
+
+async def test_phone_dock_fits_landscape_and_closes(c):
+    # Landscape phones are only 375px tall: the open dock panel must fit (or
+    # scroll) instead of running off the top, and a tap outside must close it.
+    failures = []
+    for page in ("/", "/resume-atlas.html"):
+        await phone_on(c, 667, 375)
+        await c.goto(BASE + page, clear_storage=True)
+        # Home only shows its dock after 160px of scroll.
+        await c.eval("window.scrollTo(0, 700)")
+        await asyncio.sleep(0.4)
+        await c.eval("document.querySelector('.bsc-dock summary').click()")
+        await asyncio.sleep(0.5)
+        opened = json.loads(await c.eval(DOCK_RECT) or "null")
+        if not opened or not opened["open"] or opened["top"] < -1 or opened["bottom"] > opened["vh"] + 1 or opened["links"] < 6:
+            failures.append(f"{page} open: {opened}")
+        # A pointerdown anywhere outside the dock should close it.
+        await c.eval("document.querySelector('main, body').dispatchEvent(new PointerEvent('pointerdown', {bubbles:true, clientX:20, clientY:20}))")
+        await asyncio.sleep(0.3)
+        closed = json.loads(await c.eval(DOCK_RECT) or "null")
+        if not closed or closed["open"]:
+            failures.append(f"{page} did not close on outside tap: {closed}")
+    await phone_off(c)
+    return ("Dock panel fits a landscape phone and closes on an outside tap", not failures, "; ".join(failures) or "Home and Atlas OK")
+
+
+# Portrait and landscape: a phone held sideways is wider than the narrow-screen
+# breakpoints, so the touch rules must key on the pointer, not only the width.
+PHONE_SIZES = ((375, 667), (667, 375))
+
+
+async def test_phone_inputs_at_least_16px(c):
+    failures = []
+    for width, height in PHONE_SIZES:
+        await phone_on(c, width, height)
+        for page in PAGES:
+            await c.goto(BASE + page, clear_storage=True)
+            small = json.loads(await c.eval(SMALL_INPUTS) or "[]")
+            if small:
+                failures.append(f"{width}x{height} {page}: {small}")
+    await phone_off(c)
+    return ("No text field is under 16px on phones, portrait or landscape (avoids iOS focus zoom)", not failures, "; ".join(failures) or "6/6 pages OK at both sizes")
+
+
+async def test_phone_tap_targets(c):
+    failures = []
+    for width, height in PHONE_SIZES:
+        await phone_on(c, width, height)
+        for page in PAGES:
+            await c.goto(BASE + page, clear_storage=True)
+            short = json.loads(await c.eval(SHORT_TARGETS) or "[]")
+            if short:
+                failures.append(f"{width}x{height} {page}: {short}")
+    await phone_off(c)
+    return ("Buttons, fields and standalone links are tall enough to tap on phones, portrait or landscape", not failures, "; ".join(failures) or "6/6 pages OK at both sizes")
+
+
+async def test_phone_text_at_least_12px(c):
+    await phone_on(c)
+    failures = []
+    for page in PAGES:
+        await c.goto(BASE + page, clear_storage=True)
+        # Open the dock so its labels are measured too (closed <details> content
+        # may or may not be measurable depending on the Chrome version).
+        await c.eval("var d=document.querySelector('.bsc-dock'); if(d) d.open=true")
+        if page == "/":
+            # Open the FX menu so its labels are measured too.
+            await c.eval("document.querySelector('.fx-panel summary').click()")
+            await asyncio.sleep(0.3)
+        info = json.loads(await c.eval(MIN_FONT) or "{}")
+        if info.get("min", 0) < 12:
+            failures.append(f"{page}: {info}")
+    await phone_off(c)
+    return ("No visible text is smaller than 12px on phones", not failures, "; ".join(failures) or "6/6 pages OK")
+
+
+async def test_phone_home_skips_3d_stack(c):
+    # On a phone the default atmosphere uses the CSS fallback instead of
+    # downloading three.js, but an explicit swatch choice still loads it.
+    await phone_on(c)
+    await c.goto(BASE + "/", clear_storage=True)
+    await asyncio.sleep(0.8)
+    default_cdn = [u.split("/")[-1] for u in c.requests if "cdn.jsdelivr.net" in u]
+    effect = await c.eval("document.documentElement.getAttribute('data-effect')")
+    await c.eval("var b=document.querySelector('[data-effect-btn=\"fog\"]'); b && b.click()")
+    await asyncio.sleep(2.5)
+    chosen_cdn = [u.split("/")[-1] for u in c.requests if "cdn.jsdelivr.net" in u]
+    await phone_off(c)
+    return (
+        "Phones skip three.js by default but honour an explicit effect choice",
+        not default_cdn and bool(effect) and "three.min.js" in chosen_cdn,
+        f"default={default_cdn} effect={effect} after-choice={chosen_cdn}",
+    )
+
+
+async def test_phone_presets_fit_rail(c):
+    await phone_on(c)
+    await c.goto(BASE + "/", clear_storage=True)
+    info = json.loads(await c.eval(
+        "JSON.stringify((function(){var g=document.querySelector('.presets');if(!g)return null;var gr=g.getBoundingClientRect();"
+        "var a=g.children[0].getBoundingClientRect();var b=g.children[1].getBoundingClientRect();"
+        "return {railR:Math.round(gr.right),firstR:Math.round(a.right),secondL:Math.round(b.left),n:g.children.length};})())"
+    ) or "null")
+    await phone_off(c)
+    ok = bool(info) and info["firstR"] <= info["railR"] + 1 and info["secondL"] < info["railR"] + 1
+    return ("Preset cards fit the rail with the next card peeking at 375px", ok, f"{info}")
+
+
+async def test_phone_touch_labels_and_dock_search(c):
+    # Touch users have no keyboard: the palette button says "Search", the
+    # subpage dock offers a Search pages button, and keyboard hints are hidden.
+    await phone_on(c)
+    await c.goto(BASE + "/", clear_storage=True)
+    label = (await c.eval("document.getElementById('cmdPalBtn').textContent") or "").strip()
+    await c.goto(BASE + "/resume-atlas.html", clear_storage=True)
+    await c.eval("document.querySelector('.bsc-dock summary').click()")
+    await asyncio.sleep(0.3)
+    clicked = await c.eval(
+        "(function(){var b=Array.from(document.querySelectorAll('.bsc-dock button')).find(function(x){return /search/i.test(x.textContent)});"
+        "if(!b)return false;b.click();return true;})()"
+    )
+    await asyncio.sleep(0.4)
+    pal_open = await c.eval("(function(){var p=document.getElementById('cmd-pal');return !!p && !p.hidden;})()")
+    await c.eval("document.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}))")
+    await c.goto(BASE + "/proof-hub.html", clear_storage=True)
+    text = await c.eval(VISIBLE_TEXT)
+    hint_hidden = "Press / to search" not in (text or "")
+    await c.eval("document.querySelector('.search').dispatchEvent(new MouseEvent('click',{bubbles:true}))")
+    await asyncio.sleep(0.2)
+    focused = await c.eval("document.activeElement && document.activeElement.id")
+    await phone_off(c)
+    ok = label == "Search" and clicked and pal_open and hint_hidden and focused == "search"
+    return (
+        "Touch users get a Search label, a dock Search button and no keyboard hints",
+        ok,
+        f"label={label!r} dockSearch={clicked} paletteOpened={pal_open} hintHidden={hint_hidden} tapFocus={focused!r}",
+    )
+
+
 # ─── Runner ──────────────────────────────────────────────────────────────
 
 TESTS = [
@@ -585,6 +839,16 @@ TESTS = [
     test_plain_and_reduced_motion_skip_3d_stack,
     test_home_default_requests_3d_stack_lazily,
     test_mobile_no_horizontal_overflow,
+    test_phone_no_horizontal_overflow_320,
+    test_phone_atlas_header_not_sticky,
+    test_phone_menus_within_viewport,
+    test_phone_dock_fits_landscape_and_closes,
+    test_phone_inputs_at_least_16px,
+    test_phone_tap_targets,
+    test_phone_text_at_least_12px,
+    test_phone_home_skips_3d_stack,
+    test_phone_presets_fit_rail,
+    test_phone_touch_labels_and_dock_search,
 ]
 
 
