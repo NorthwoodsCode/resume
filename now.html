@@ -7,6 +7,8 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="icon" href="favicon.ico" sizes="any" />
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="manifest" href="site.webmanifest" />
+  <meta name="theme-color" content="#04070f" />
   <title>Brandon S. Clark — Now</title>
   <meta name="description" content="What I'm currently building, learning, and reading. A /now page in the Derek Sivers tradition — proof the site is alive." />
   <link rel="canonical" href="https://northwoodscode.github.io/resume/now.html" />
@@ -98,6 +100,11 @@
     .fine a{color:var(--muted);text-decoration:underline;text-underline-offset:3px}
     code{font-family:var(--mono);font-size:.92em;padding:1px 6px;border-radius:4px;background:color-mix(in srgb,var(--accent) 10%,transparent)}
     /* ── Print ── Force the light tokens so dark mode never prints a dark page. */
+    /* Save contact: a 40px tap target on phones, hidden in print. */
+    @media (max-width:640px), (hover:none) and (pointer:coarse){
+      a.bsc-act{display:inline-flex;align-items:center;min-height:40px}
+    }
+    @media print{ .bsc-act{display:none !important} }
     @media print{
       html, html[data-theme="dark"], html[data-theme="auto"]{ --bg:#fff; --fg:#000; --muted:#333; --card:#fff; --border:#ccc; --shadow:none }
       header{ position:static }
@@ -155,7 +162,7 @@
 
     <section class="card" aria-labelledby="open">
       <h2 id="open">Open to</h2>
-      <p>Senior IC roles on AWS-flavored platform / API / data teams. Remote-first. Bias toward small teams shipping fast. Drop a note: <a href="mailto:bsc_pro@protonmail.com">bsc_pro@protonmail.com</a>.</p>
+      <p>Senior IC roles on AWS-flavored platform / API / data teams. Remote-first. Bias toward small teams shipping fast. Drop a note: <a href="mailto:bsc_pro@protonmail.com">bsc_pro@protonmail.com</a>. <a class="bsc-act" href="brandon-clark.vcf" download="brandon-clark.vcf" type="text/vcard">Save contact</a></p>
     </section>
 
     <p class="fine">
