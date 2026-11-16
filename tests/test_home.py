@@ -1037,6 +1037,183 @@ async def test_proof_hub_one_pager(c):
     )
 
 
+# ─── Embers backdrop ────────────────────────────────────────────────────
+# "embers" is a 2D-canvas effect (no Three.js). window.bscEmbers exists only
+# while it runs; these tests cover selection, the skip paths, click sparks,
+# restart/destroy and the phone particle cap.
+
+def click_js(sel):
+    """JS that clicks the first element matching sel (if present)."""
+    return f"(function(){{var b=document.querySelector({json.dumps(sel)});if(b)b.click();}})()"
+
+
+EMBERS_BTN = click_js('[data-effect-btn="embers"]')
+EMBERS_STATE = "JSON.stringify(window.bscEmbers && window.bscEmbers.state())"
+EMBERS_TYPE = "typeof window.bscEmbers"
+VANTA_CANVASES = "document.querySelectorAll('#vanta canvas').length"
+SPARK_DIVS = "document.querySelectorAll('div[style*=\"z-index:9999\"],div[style*=\"z-index: 9999\"]').length"
+BODY_CLICK = "document.body.dispatchEvent(new MouseEvent('click',{bubbles:true,clientX:200,clientY:300}))"
+HAS_FALLBACK = "document.documentElement.classList.contains('use-fallback')"
+HAS_ACTIVE = "document.documentElement.classList.contains('vanta-active')"
+SEED_EMBERS = "try{localStorage.setItem('bsc_vanta_effect','embers')}catch(e){}"
+UNSEED = "try{localStorage.removeItem('bsc_vanta_effect')}catch(e){}"
+SEEDED = "(function(){try{return localStorage.getItem('bsc_vanta_effect')+'/'+document.documentElement.getAttribute('data-vanta-effect')}catch(e){return 'blocked'}})()"
+
+
+def cdn_requests(c):
+    return [u for u in c.requests if "cdn.jsdelivr.net" in u]
+
+
+async def test_embers_swatch_runs_and_persists(c):
+    await c.emulate_media("", [])
+    await c.goto(BASE + "/", clear_storage=True)
+    await c.eval(EMBERS_BTN)
+    await asyncio.sleep(0.8)
+    effect = await c.eval("document.documentElement.getAttribute('data-effect')")
+    pressed = await c.eval("document.querySelector('[data-effect-btn=\"embers\"]').getAttribute('aria-pressed')")
+    other = await c.eval("document.querySelector('[data-effect-btn=\"leaves\"]').getAttribute('aria-pressed')")
+    stored = await c.eval("localStorage.getItem('bsc_vanta_effect')")
+    active = await c.eval(HAS_ACTIVE)
+    canvases = await c.eval(VANTA_CANVASES)
+    st = json.loads(await c.eval(EMBERS_STATE) or "null") or {}
+    errors = list(c.errors)
+    # A reload without clearing storage must restore the choice. The request log
+    # resets on goto, so this load (embers from the start, never fog) must show
+    # no CDN request at all: embers is a plain canvas, not a Three.js effect.
+    await c.goto(BASE + "/", wait=2.5, clear_storage=False)
+    await asyncio.sleep(0.8)
+    effect2 = await c.eval("document.documentElement.getAttribute('data-effect')")
+    canvases2 = await c.eval(VANTA_CANVASES)
+    cdn = cdn_requests(c)
+    errors += list(c.errors)
+    await c.eval(UNSEED)
+    ok = (effect == "embers" and pressed == "true" and other == "false" and stored == "embers"
+          and active and canvases == 1 and st.get("alive") is True and (st.get("count") or 0) > 0
+          and not cdn and not errors and effect2 == "embers" and (canvases2 or 0) >= 1)
+    return (
+        "Embers swatch starts a single canvas, persists across reload, needs no CDN",
+        bool(ok),
+        f"effect={effect} pressed={pressed}/{other} stored={stored} active={active} canvases={canvases} state={st} cdn={cdn} errors={errors} reload={effect2}/{canvases2}",
+    )
+
+
+async def test_embers_skipped_under_plain_and_reduced(c):
+    # Seed the saved effect on every document so only ?plain / reduced-motion
+    # can explain the absence of the effect.
+    await c.emulate_media("", [])
+    ident = await c.add_init_script(SEED_EMBERS)
+    seen = {}
+    try:
+        await c.goto(BASE + "/?plain=1")
+        await asyncio.sleep(0.5)
+        seen["plain"] = (await c.eval(VANTA_CANVASES), await c.eval(HAS_FALLBACK), await c.eval(EMBERS_TYPE), cdn_requests(c), await c.eval(SEEDED))
+        await c.emulate_media("", [{"name": "prefers-reduced-motion", "value": "reduce"}])
+        await c.goto(BASE + "/")
+        await asyncio.sleep(0.5)
+        seen["reduced"] = (await c.eval(VANTA_CANVASES), await c.eval(HAS_FALLBACK), await c.eval(EMBERS_TYPE), cdn_requests(c), await c.eval(SEEDED))
+    finally:
+        await c.emulate_media("", [])
+        await c.remove_init_script(ident)
+        await c.eval(UNSEED)
+    # The seed must have applied (v[4]); otherwise a default-fog page would pass too.
+    ok = len(seen) == 2 and all(v[0] == 0 and v[1] is True and v[2] == "undefined" and not v[3] and v[4] == "embers/embers" for v in seen.values())
+    return (
+        "Embers does not start under ?plain=1 or prefers-reduced-motion",
+        ok,
+        f"(canvases, fallback, typeof, cdn, stored/attr) {seen}",
+    )
+
+
+async def test_embers_click_sparks_use_canvas(c):
+    await c.emulate_media("", [])
+    await c.goto(BASE + "/", clear_storage=True)
+    try:
+        await c.eval(EMBERS_BTN)
+        await asyncio.sleep(0.8)
+        await c.eval("window.BSC_FX.set('sparks', true)")
+        count0 = (json.loads(await c.eval(EMBERS_STATE) or "null") or {}).get("count")
+        # One eval: dispatch, then read the count and any DOM spark divs.
+        after = json.loads(await c.eval(f"(function(){{{BODY_CLICK};return JSON.stringify({{count:window.bscEmbers.state().count,divs:{SPARK_DIVS}}})}})()") or "null") or {}
+        # With Still there is no bscEmbers, so the old DOM sparks must appear.
+        await c.eval(click_js('[data-effect-btn="still"]'))
+        await asyncio.sleep(0.3)
+        gone = await c.eval(EMBERS_TYPE)
+        still_divs = await c.eval(f"(function(){{{BODY_CLICK};return {SPARK_DIVS}}})()")
+    finally:
+        await c.eval("window.BSC_FX && window.BSC_FX.set('sparks', false)")
+    ok = (count0 is not None and (after.get("count") or 0) > count0 and after.get("divs") == 0
+          and gone == "undefined" and (still_divs or 0) >= 1)
+    return (
+        "With embers a click spark is canvas particles, not DOM divs (divs return under Still)",
+        bool(ok),
+        f"count {count0}->{after.get('count')} domSparks(embers)={after.get('divs')} typeofAfterStill={gone} domSparks(still)={still_divs}",
+    )
+
+
+async def test_embers_restart_and_destroy(c):
+    await c.emulate_media("", [])
+    await c.goto(BASE + "/", clear_storage=True)
+    notes, bad = [], False
+    try:
+        await c.eval(EMBERS_BTN)
+        await asyncio.sleep(0.8)
+        await c.eval("window.__bscEmbersPrev = window.bscEmbers; true")
+        # Theme and atmosphere changes destroy and restart the effect: one canvas, a new instance.
+        for label, js in (("theme", click_js("#themeBtn")), ("bronze", click_js('[data-atmosphere-btn="bronze"]'))):
+            await c.eval(js)
+            await asyncio.sleep(0.6)
+            st = json.loads(await c.eval(EMBERS_STATE) or "null") or {}
+            n = await c.eval(VANTA_CANVASES)
+            fresh = await c.eval("(function(){var f = !!window.bscEmbers && window.bscEmbers !== window.__bscEmbersPrev; window.__bscEmbersPrev = window.bscEmbers; return f;})()")
+            notes.append(f"{label}: canvases={n} alive={st.get('alive')} newInstance={fresh}")
+            bad = bad or n != 1 or st.get("alive") is not True or fresh is not True
+        # poke() must respect the cap.
+        await c.eval("(function(){for(var i=0;i<60;i++)window.bscEmbers.poke(100,100);})()")
+        st = json.loads(await c.eval(EMBERS_STATE) or "null") or {}
+        capped = st.get("count") is not None and st["count"] <= st.get("cap", 0)
+        notes.append(f"count={st.get('count')} cap={st.get('cap')}")
+        await c.eval(click_js('[data-effect-btn="leaves"]'))
+        await asyncio.sleep(0.5)
+        leaves_canvases = await c.eval(VANTA_CANVASES)
+        gone = await c.eval(EMBERS_TYPE)
+        errors = list(c.errors)
+    finally:
+        if await c.eval(GET_THEME) == "light":
+            await c.eval(click_js("#themeBtn"))
+        await c.goto(BASE + "/", clear_storage=True)
+    ok = not bad and capped and leaves_canvases == 1 and gone == "undefined" and not errors
+    return (
+        "Embers restarts on theme/atmosphere change, caps pokes, and is destroyed by Leaves",
+        bool(ok),
+        f"{'; '.join(notes)}; leaves canvases={leaves_canvases} typeof={gone} errors={errors}",
+    )
+
+
+async def test_embers_phone_allowed(c):
+    # Unlike the 3D effects, embers is cheap enough to run on phones, with a
+    # smaller particle cap (80 vs 140) under (pointer: coarse).
+    ident = None
+    try:
+        await phone_on(c)
+        ident = await c.add_init_script(SEED_EMBERS)
+        await c.goto(BASE + "/")
+        await asyncio.sleep(0.8)
+        n = await c.eval(VANTA_CANVASES)
+        st = json.loads(await c.eval(EMBERS_STATE) or "null") or {}
+        cdn = cdn_requests(c)
+        errors = list(c.errors)
+    finally:
+        if ident is not None:
+            await c.remove_init_script(ident)
+        await c.eval(UNSEED)
+        await phone_off(c)
+    return (
+        "Phones run embers with the reduced cap of 80 and no CDN requests",
+        n == 1 and st.get("cap") == 80 and not cdn and not errors,
+        f"canvases={n} state={st} cdn={cdn} errors={errors}",
+    )
+
+
 # ─── Runner ──────────────────────────────────────────────────────────────
 
 TESTS = [
@@ -1089,6 +1266,11 @@ TESTS = [
     test_manifest_and_icons,
     test_service_worker_offline,
     test_proof_hub_one_pager,
+    test_embers_swatch_runs_and_persists,
+    test_embers_skipped_under_plain_and_reduced,
+    test_embers_click_sparks_use_canvas,
+    test_embers_restart_and_destroy,
+    test_embers_phone_allowed,
 ]
 
 
