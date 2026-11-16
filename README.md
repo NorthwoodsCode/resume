@@ -14,7 +14,7 @@ Most resume sites force every reader through the same generic page. This one rou
 
 | Page | Audience | What it does |
 | ---- | -------- | ------------ |
-| [Home](https://northwoodscode.github.io/resume/) | First impression | Landing page with audience routing, an animated backdrop that loads on demand, optional effects (off by default), command palette, theme toggle, and a tailored-link builder |
+| [Home](https://northwoodscode.github.io/resume/) | First impression | Landing page with audience routing, an animated backdrop that loads on demand (plus two hand-drawn canvas backdrops, Leaves and Embers), optional effects (off by default), command palette, theme toggle, and a tailored-link builder |
 | [Atlas](https://northwoodscode.github.io/resume/resume-atlas.html) | Recruiters / ATS | Classic document layout — clean, fast, print-to-PDF safe |
 | [Signal](https://northwoodscode.github.io/resume/resume-signal.html) | Hiring managers | Focus-filtered view with shareable URLs and copy-ready ATS text |
 | [Proof Hub](https://northwoodscode.github.io/resume/proof-hub.html) | Technical interviewers | Case studies, accomplishment inventory, JD matching, and bullet export |
@@ -58,8 +58,8 @@ Focus keys: `cloud`, `api`, `iot`, `data`, `opex`, `lead`, `enable`, `ai`. Commo
 ## Tech
 
 - Static HTML / CSS / Vanilla JavaScript — no framework, no build step
-- **11 atmospheres** (blue, crimson, emerald, violet, ghost, void, amethyst, graphite, ink, bronze, autumn), each with light and dark tokens, across **6 visual effects** (still, leaves, fog, clouds, ocean, depth). Three.js and the one Vanta bundle an effect needs load on demand, only for fog, clouds, ocean and depth, and never under `?plain=1` or `prefers-reduced-motion`
-- **FX panel** on Home — a confetti burst pops on every load (skipped under `?plain=1` and `prefers-reduced-motion`), plus toggles for cursor spotlight, 3D card tilt and click sparks, which are off by default; choices persist to `localStorage`, and other pages run no effects
+- **11 atmospheres** (blue, crimson, emerald, violet, ghost, void, amethyst, graphite, ink, bronze, autumn), each with light and dark tokens, across **7 visual effects** (still, leaves, embers, fog, clouds, ocean, depth). Leaves and Embers are hand-drawn 2D canvases that need no library or WebGL; Three.js and the one Vanta bundle an effect needs load on demand, only for fog, clouds, ocean and depth, and never under `?plain=1` or `prefers-reduced-motion`
+- **FX panel** on Home — a confetti burst pops on every load (skipped under `?plain=1` and `prefers-reduced-motion`), plus toggles for cursor spotlight, 3D card tilt and click sparks, which are off by default (with the Embers backdrop active, click sparks rise from the backdrop canvas instead of the page); choices persist to `localStorage`, and other pages run no effects
 - **Command palette** (`⌘K` / `Ctrl+K`) and **mode dock** on every page, provided by `shared-enhancements.js`
 - **Reach features**: cross-document View Transitions between modes (off under `prefers-reduced-motion` and `?plain=1`); **Save contact** (vCard) and **Share** (native share sheet, or copy the link) next to the contact details; mail links carry a subject naming the page; a **QR code** to the live site on the printed Atlas, Signal and Proof Hub; a web app manifest plus a service worker (`sw.js`, registered on HTTPS only) so the resume installs to a home screen and opens offline; and a **tailored one-pager** printed from Proof Hub's picked bullets or job-description matches
 - Hero typing animation (runs once), availability badge, scroll-reveal that fails open (print and no-observer browsers see everything)
@@ -132,7 +132,7 @@ Content is intentionally repeated across pages so each mode stays optimized for 
 
 After editing, verify:
 
-- [ ] `python3 tests/test_home.py` from the repo root — all 49 functional tests pass (ten emulate a phone; seven cover the reach features, including a real offline run)
+- [ ] `python3 tests/test_home.py` from the repo root — all 54 functional tests pass (eleven emulate a phone; seven cover the reach features, including a real offline run; five cover the Embers backdrop)
 - [ ] Home loads and routes correctly; `?plain=1` fallback works
 - [ ] FX panel toggles each persist + visibly turn the corresponding effect on/off
 - [ ] Signal presets open with the right focus areas active
