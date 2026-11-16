@@ -1,0 +1,12 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Clark;Brandon;S.;;
+FN:Brandon S. Clark
+TITLE:Senior Software Engineer
+EMAIL;TYPE=INTERNET,PREF:bsc_pro@protonmail.com
+URL:https://northwoodscode.github.io/resume/
+X-SOCIALPROFILE;TYPE=linkedin:https://www.linkedin.com/in/brandon-c-it-industry
+X-SOCIALPROFILE;TYPE=github:https://github.com/NorthwoodsCode
+ADR;TYPE=WORK:;;;;Wisconsin;;USA
+NOTE:AWS backend / cloud platform engineering. Resume: https://northwoodscode.github.io/resume/
+END:VCARD

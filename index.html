@@ -8,6 +8,7 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="icon" href="favicon.ico" sizes="any" />
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="manifest" href="site.webmanifest" />
   <!-- Browser UI colour on mobile; matches the dark theme background (--bg, #04070f). -->
   <meta name="theme-color" content="#04070f" />
 
@@ -829,6 +830,8 @@
     }
     .micro-pill a,
     .micro-pill[href]{color:inherit}
+    /* The Share control is a <button>: inherit the pill look from the page font. */
+    button.micro-pill{font-family:inherit;cursor:pointer;color:inherit}
 
     /* ── Content sections and cards ── */
     #formats{scroll-margin-top:20px;}
@@ -1798,6 +1801,7 @@
         backdrop-filter:none !important;
       }
       .hero-wrap,.section-shell,.meta-row{width:100%; max-width:none}
+      .bsc-act{display:none !important} /* Save contact / Share are screen-only */
       .btn,.chip,.micro-pill{
         box-shadow:none !important;
         background:#fff !important;
@@ -2013,6 +2017,8 @@
           <a class="micro-pill" href="mailto:bsc_pro@protonmail.com">bsc_pro@protonmail.com</a>
           <a class="micro-pill" href="https://github.com/NorthwoodsCode" target="_blank" rel="noopener">GitHub</a>
           <a class="micro-pill" href="https://www.linkedin.com/in/brandon-c-it-industry" target="_blank" rel="noopener">LinkedIn</a>
+          <a class="micro-pill bsc-act" href="brandon-clark.vcf" download="brandon-clark.vcf" type="text/vcard">Save contact</a>
+          <button class="micro-pill bsc-act" type="button" data-bsc-share>Share</button>
         </section>
       </div>
 

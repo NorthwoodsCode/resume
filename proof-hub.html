@@ -6,6 +6,8 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="icon" href="favicon.ico" sizes="any" />
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" content="#04070f">
   <title>Brandon S. Clark — Proof Hub (Resume + Case Studies)</title>
   <meta name="description" content="Case studies and searchable accomplishments behind Brandon S. Clark's resume: AWS backend, serverless, IoT and cloud platform work.">
 
@@ -773,6 +775,8 @@
     .btn[hidden] { display: none; }
     /* Screen: hidden. Shown only inside @media print below. */
     .print-identity { display: none; }
+    /* The one-pager is built on demand by the "Print one-pager" button and only ever shown in print. */
+    #onepager { display: none; }
     details.tools > summary { cursor: pointer; font-weight: 700; padding: 4px 2px; }
     details.tools[open] > summary { margin-bottom: 4px; }
     /* Leaves a little space above an element when a #hash link scrolls to it. */
@@ -859,6 +863,11 @@
       header { border: 0; box-shadow: none; padding: 0 0 8px; background: #fff; color: #000; }
       .print-identity { display: block; margin-top: 4px; font-size: 12px; color: #000; }
       .print-identity .pi-title { font-weight: 700; }
+      /* QR for the interactive version, top-right of the identity block; name and contact stay on the left. */
+      .print-identity { position: relative; padding-right: 90px; min-height: 84px; }
+      .print-identity .print-qr { position: absolute; top: 0; right: 0; width: 72px; height: 72px; }
+      .print-identity .print-qr-cap { position: absolute; top: 74px; right: 0; width: 80px; font-size: 8pt; line-height: 1.1; text-align: right; color: #000; }
+      .save-contact, [data-bsc-share] { display: none !important; }
       .card, .subcard, .bullet, details, details.year, details.case, .metric, .impact-mini, .lane-highlights {
         background: #fff !important;
         color: #000 !important;
@@ -868,6 +877,32 @@
       details.year summary { border-bottom: 1px solid #ddd; }
       details.year { break-inside: auto; }
       .bullet-text, .card h2, .case-body { color: #000; }
+    }
+
+    /* One-pager: the typography lives outside @media print so the same rules drive the
+       off-screen measuring pass (class op-measure, Letter width) that trims the list until it
+       fits one page. On screen #onepager stays display:none (rule above) unless measuring. */
+    #onepager { background: #fff; color: #000; font: 10.5pt/1.25 Arial, Helvetica, sans-serif; }
+    #onepager.op-measure { display: block; position: absolute; left: -9999px; top: 0; width: 724px; }
+    #onepager .op-head { position: relative; padding-right: 90px; min-height: 82px; border-bottom: 1px solid #000; margin-bottom: 6px; }
+    #onepager .op-name { font-size: 15pt; font-weight: 700; margin: 0; line-height: 1.1; }
+    #onepager .op-title { font-weight: 700; }
+    #onepager .op-qr { position: absolute; top: 0; right: 0; width: 72px; text-align: right; font-size: 8pt; line-height: 1.1; }
+    #onepager .op-qr img { display: block; width: 72px; height: 72px; margin-bottom: 2px; }
+    #onepager .op-sub { margin: 4px 0 6px; font-size: 9.5pt; }
+    #onepager h2 { font-size: 10.5pt; margin: 8px 0 2px; border-bottom: 1px solid #999; color: #000; }
+    #onepager ul { margin: 0; padding-left: 16px; }
+    #onepager li { margin: 0 0 3px; line-height: 1.2; break-inside: avoid; }
+    #onepager .op-foot { margin-top: 8px; font-size: 9pt; border-top: 1px solid #999; padding-top: 3px; }
+    #onepager .op-more { font-size: 9pt; margin-top: 4px; }
+    /* One-pager print mode: only while html[data-onepager] is set (during the button's print call) every
+       top-level element except #onepager is hidden, so the page's other print rules never touch it. */
+    /* A named page so only the one-pager gets these margins; normal prints keep the browser default. */
+    @page onepager { margin: 12mm; }
+    @media print {
+      html[data-onepager] body > *:not(#onepager) { display: none !important; }
+      html[data-onepager] #onepager { display: block; page: onepager; }
+      html[data-onepager] body { background: #fff; color: #000; }
     }
 
   </style>
@@ -889,6 +924,8 @@
       <div class="print-identity">
         <div class="pi-title">Senior Software Engineer • AWS Backend / Cloud Platform</div>
         <div>Wisconsin (Remote) · bsc_pro@protonmail.com · linkedin.com/in/brandon-c-it-industry · github.com/NorthwoodsCode</div>
+        <img class="print-qr" src="qr-resume.svg" alt="QR code: northwoodscode.github.io/resume" width="72" height="72">
+        <div class="print-qr-cap">Scan for the interactive version</div>
       </div>
 
       <div class="meta">
@@ -897,6 +934,8 @@
         <span>LinkedIn: <a href="https://www.linkedin.com/in/brandon-c-it-industry" target="_blank" rel="noopener">linkedin.com/in/brandon-c-it-industry</a></span>
         <span class="kbd-hint" aria-hidden="true">·</span>
         <span class="mono kbd-hint">Press <b>/</b> to search</span>
+        <a class="chip save-contact" href="brandon-clark.vcf" download="brandon-clark.vcf" type="text/vcard">Save contact</a>
+        <button class="chip" type="button" data-bsc-share>Share</button>
       </div>
 
       <div class="controls">
@@ -1165,6 +1204,7 @@
             <button id="copyMdBtn" class="btn tiny" type="button">Copy Markdown</button>
             <button id="clearSelectedBtn" class="btn tiny" type="button">Clear</button>
             <button id="printBtn" class="btn tiny" type="button">Print / Save PDF</button>
+            <button id="onepagerBtn" class="btn tiny" type="button">Print one-pager</button>
           </div>
 
           <textarea id="selectedOut" aria-label="Selected bullets text" class="selected-out" rows="10" readonly placeholder="Your selected bullets will appear here…"></textarea>
@@ -2879,6 +2919,125 @@
         if (printRestore) printRestore.forEach(([d, o]) => { d.open = o; });
         printRestore = null;
       });
+
+      // Tailored one-pager: picked bullets (page order), else JD-matched bullets by score. The section is
+      // created once and refilled per click; print CSS shows only it while html[data-onepager] is set.
+      const ONEPAGER_MAX = 14;
+      function bscBuildOnePager() {
+        let chosen = bullets.filter(b => b.classList.contains('picked'));
+        if (!chosen.length && jdTerms.length) {
+          chosen = bullets.filter(b => b.classList.contains('matched'))
+            .sort((a, b) => (Number(b.dataset.match) || 0) - (Number(a.dataset.match) || 0));
+        }
+        if (!chosen.length) return 0;
+        const extra = Math.max(0, chosen.length - ONEPAGER_MAX);
+        chosen = chosen.slice(0, ONEPAGER_MAX);
+        let sec = document.getElementById('onepager');
+        if (!sec) {
+          sec = document.createElement('section');
+          sec.id = 'onepager';
+          sec.hidden = true;
+          sec.setAttribute('aria-hidden', 'true');
+          document.body.appendChild(sec);
+        }
+        const mk = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+        sec.textContent = '';
+        const head = mk('div', 'op-head');
+        head.appendChild(mk('h1', 'op-name', 'Brandon S. Clark'));
+        head.appendChild(mk('div', 'op-title', 'Senior Software Engineer'));
+        head.appendChild(mk('div', 'op-contact', 'Wisconsin (Remote) · bsc_pro@protonmail.com · linkedin.com/in/brandon-c-it-industry · github.com/NorthwoodsCode'));
+        const qr = mk('div', 'op-qr');
+        const img = document.createElement('img');
+        img.src = 'qr-resume.svg'; img.alt = 'QR code: northwoodscode.github.io/resume'; img.width = 72; img.height = 72;
+        qr.appendChild(img);
+        qr.appendChild(document.createTextNode('Scan for the interactive version'));
+        head.appendChild(qr);
+        sec.appendChild(head);
+        const now = new Date();
+        const date = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+        const terms = jdTerms.length ? ' · matched to: ' + jdTerms.slice(0, 12).join(', ') : '';
+        sec.appendChild(mk('div', 'op-sub', 'Tailored highlights' + terms + ' · ' + date));
+        // Group by the enclosing year section (bullets are filed under details.year, not per role).
+        const groups = new Map();
+        chosen.forEach(b => {
+          const y = b.closest('details.year');
+          const t = y ? ((y.querySelector('.year-title') || {}).textContent || '').trim() : '';
+          if (!groups.has(t)) groups.set(t, []);
+          groups.get(t).push(b);
+        });
+        groups.forEach((list, title) => {
+          if (title) sec.appendChild(mk('h2', '', title));
+          const ul = mk('ul');
+          list.forEach(b => {
+            const t = b.querySelector('.bullet-text');
+            ul.appendChild(mk('li', '', (t ? t.textContent : b.textContent).trim()));
+          });
+          sec.appendChild(ul);
+        });
+        const foot = mk('div', 'op-foot', 'Full evidence, cases and the live timeline: northwoodscode.github.io/resume/proof-hub.html');
+        const setMore = (n) => {
+          const old = sec.querySelector('.op-more');
+          if (old) old.remove();
+          if (n) sec.insertBefore(mk('div', 'op-more', '+' + n + ' more at northwoodscode.github.io/resume/proof-hub.html'), foot);
+        };
+        sec.appendChild(foot);
+        let kept = chosen.length;
+        let more = extra;
+        setMore(more);
+        // Height cap: a count cap alone lets long bullets spill onto a second page. Lay the
+        // section out off-screen at Letter width with the print typography and drop trailing
+        // bullets until it fits the printable height (11in minus 12mm margins at 96dpi).
+        const PAGE_H = 965;
+        sec.classList.add('op-measure');
+        try {
+          while (kept > 1 && sec.offsetHeight > PAGE_H) {
+            const items = sec.querySelectorAll('li');
+            const last = items[items.length - 1];
+            const ul = last.parentElement;
+            last.remove();
+            if (!ul.children.length) {
+              const h = ul.previousElementSibling;
+              ul.remove();
+              if (h && h.tagName === 'H2') h.remove();
+            }
+            kept--; more++;
+            setMore(more);
+          }
+        } finally {
+          sec.classList.remove('op-measure');
+        }
+        return kept;
+      }
+      window.bscBuildOnePager = bscBuildOnePager;
+      const onepagerBtn = document.getElementById('onepagerBtn');
+      if (onepagerBtn) {
+        onepagerBtn.addEventListener('click', () => {
+          if (!bscBuildOnePager()) { toast('Pick bullets or paste a job description first'); return; }
+          // The attribute switches the print CSS to the one-pager. It is cleared by afterprint, by
+          // the print media query turning off, by the next tap or key (browsers whose print()
+          // returns before the dialog closes, such as iOS Safari), or after a minute at most.
+          const root = document.documentElement;
+          const mq = window.matchMedia ? window.matchMedia('print') : null;
+          let timer = 0;
+          const clear = () => {
+            root.removeAttribute('data-onepager');
+            window.removeEventListener('afterprint', clear);
+            if (mq && mq.removeEventListener) mq.removeEventListener('change', onMq);
+            document.removeEventListener('pointerdown', clear);
+            document.removeEventListener('keydown', clear);
+            clearTimeout(timer);
+          };
+          const onMq = (e) => { if (!e.matches) clear(); };
+          root.setAttribute('data-onepager', '1');
+          window.addEventListener('afterprint', clear);
+          if (mq && mq.addEventListener) mq.addEventListener('change', onMq);
+          timer = setTimeout(clear, 60000);
+          window.print();
+          // Listen for the next interaction only after print() has returned, so the click that
+          // started the print never clears it.
+          setTimeout(() => { document.addEventListener('pointerdown', clear); document.addEventListener('keydown', clear); }, 0);
+        });
+      }
 
       // Order matters: applyPublicMode runs last (silently) so everything is rendered in the right mode, then deep links are applied.
       // Initial state

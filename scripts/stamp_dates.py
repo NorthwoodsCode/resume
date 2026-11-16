@@ -3,6 +3,9 @@
 
 - Every <time id="lastUpdated" datetime="YYYY-MM-DD">...</time> in *.html gets
   the date of the last commit that touched that file.
+- sw.js: the VERSION line becomes bsc-<commit date>-<short SHA> of HEAD, so
+  every deploy gets a new cache name and old caches are deleted on activate.
+  (Skipped quietly when sw.js is absent.)
 - Every <lastmod> in sitemap.xml gets the last-commit date of the page it
   points at (case/<slug>/ URLs follow cases.json).
 
@@ -35,6 +38,32 @@ def last_commit_date(path):
         return out or None
     except Exception:
         return None
+
+
+def stamp_service_worker():
+    """Rewrite the VERSION line in sw.js to the HEAD commit's date and short SHA.
+
+    Returns 1 when the file changed, else 0. Missing sw.js or git: do nothing.
+    """
+    sw = REPO / "sw.js"
+    if not sw.exists():
+        return 0
+    try:
+        out = subprocess.run(
+            ["git", "log", "-1", "--format=%cs %h"],
+            cwd=REPO, capture_output=True, text=True, check=True,
+        ).stdout.split()
+        date, sha = out[0], out[1]
+    except Exception:
+        return 0
+    src = sw.read_text()
+    version = f"bsc-{date}-{sha}"
+    new = re.sub(r"^(const VERSION = ')[^']*(';)", lambda m: m.group(1) + version + m.group(2), src, flags=re.M)
+    if new != src:
+        sw.write_text(new)
+        print(f"  sw.js: VERSION -> {version}")
+        return 1
+    return 0
 
 
 def main():
@@ -77,6 +106,7 @@ def main():
             sitemap.write_text(new)
             changed += 1
             print("  sitemap.xml: lastmod refreshed")
+    changed += stamp_service_worker()
     print(f"Stamped {changed} file(s).")
     return 0
 

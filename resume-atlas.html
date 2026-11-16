@@ -7,6 +7,8 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="icon" href="favicon.ico" sizes="any" />
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="manifest" href="site.webmanifest" />
+  <meta name="theme-color" content="#04070f" />
   <title>Brandon S. Clark — Senior Software Engineer (AWS Backend / Cloud Platform)</title>
   <meta name="description" content="Print-ready resume for Brandon S. Clark: Senior Software Engineer specializing in AWS cloud, serverless APIs, backend platform engineering, and operational excellence." />
   <link rel="canonical" href="https://northwoodscode.github.io/resume/resume-atlas.html" />
@@ -155,6 +157,8 @@
       cursor:pointer;
       transition:transform .08s ease, box-shadow .2s ease;
     }
+    /* Save contact is a link styled as a button (the .actions row is hidden in print). */
+    a.btn{display:inline-flex;align-items:center;text-decoration:none}
     .btn:hover{box-shadow:var(--shadow)}
     .btn:active{transform:translateY(1px)}
     main{padding-top:26px}
@@ -283,6 +287,15 @@
     /* ── Print rules ──
      Force the light tokens even in the dark theme and drop the buttons. The header is kept (name and contact
      details belong on the printed page) but made static with no blur, so it prints as an ordinary block. */
+    /* Print-only QR: lets a paper or PDF copy lead back to the interactive site.
+       Hidden on screen; the print block below floats it to the top-right of the header. */
+    .print-qr-wrap,.print-qr{display:none}
+    @media print{
+      .bsc-act{display:none !important}
+      .print-qr-wrap{display:block;float:right;width:1.25in;margin:0 0 6px 12px;text-align:center;break-inside:avoid}
+      .print-qr{display:block;width:84px;height:84px;margin:0 auto 3px}
+      .print-qr-cap{display:block;font-size:8pt;line-height:1.2;color:#000}
+    }
     @media print{
       html, html[data-theme="dark"]{
         --bg:#fff; --fg:#000; --muted:#333; --card:#fff; --border:#bbb;
@@ -360,6 +373,7 @@
   <header>
     <div class="head">
       <div class="who">
+        <div class="print-qr-wrap"><img class="print-qr" src="qr-resume.svg" alt="QR code: northwoodscode.github.io/resume" width="84" height="84"><span class="print-qr-cap">Scan for the interactive version · northwoodscode.github.io/resume</span></div>
         <h1>Brandon S. Clark</h1>
         <p class="role">Senior Software Engineer <span aria-hidden="true">•</span> AWS Backend / Cloud Platform</p>
         <ul class="contact">
@@ -372,6 +386,8 @@
       </div>
 
       <div class="actions" aria-label="Resume actions">
+        <a class="btn bsc-act" href="brandon-clark.vcf" download="brandon-clark.vcf" type="text/vcard">Save contact</a>
+        <button class="btn bsc-act" type="button" data-bsc-share>Share</button>
         <button class="btn" id="themeBtn" type="button" aria-pressed="false">Dark theme</button>
         <button class="btn" id="printBtn" type="button">Print / Save PDF</button>
       </div>

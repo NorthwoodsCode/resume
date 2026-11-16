@@ -804,6 +804,239 @@ async def test_phone_touch_labels_and_dock_search(c):
     )
 
 
+# ─── Reach features: transitions, contact, print QR, offline, one-pager ──
+# These cover the features that help a reader act on the resume: page
+# transitions, saving the contact card and sharing, the QR on paper, the
+# installable offline copy, and the tailored one-pager from Proof Hub.
+
+# Records clipboard writes and hides the native share sheet, so the Share
+# button takes its copy-link fallback and the test can read what it copied.
+STUB_CLIPBOARD_NO_SHARE = (
+    "(function(){window.__copied=[];try{Object.defineProperty(navigator,'share',{value:undefined,configurable:true});}catch(e){}"
+    "try{Object.defineProperty(navigator,'clipboard',{value:{writeText:function(t){window.__copied.push(t);return Promise.resolve();}},configurable:true});}catch(e){}})();"
+)
+# Pretends the browser has a native share sheet and records what was shared.
+STUB_SHARE = (
+    "(function(){window.__shared=[];try{Object.defineProperty(navigator,'share',{value:function(d){window.__shared.push(d);return Promise.resolve();},configurable:true});}catch(e){}})();"
+)
+STUB_PRINT = "(function(){window.__prints=0;window.print=function(){window.__prints++;};})();"
+
+CONTACT_PAGES = tuple(p for p in PAGES)  # every page carries contact details
+
+
+async def test_view_transitions_declared(c):
+    # Cross-document View Transitions are declared in the shared stylesheet,
+    # the dock keeps its place across pages, and reduced motion turns them off.
+    await c.goto(BASE + "/resume-atlas.html", clear_storage=True)
+    supported = await c.eval("CSS.supports('view-transition-name: a')")
+    info = json.loads(await c.eval(
+        "JSON.stringify((function(){var css='';document.querySelectorAll('style').forEach(function(s){css+=s.textContent;});"
+        "var dock=document.querySelector('.bsc-dock');return {declared:/@view-transition\\s*\\{[^}]*navigation\\s*:\\s*auto/.test(css),"
+        "reduced:/prefers-reduced-motion[^{]*\\{[^@]*@view-transition\\s*\\{[^}]*navigation\\s*:\\s*none/.test(css),"
+        "dockName:dock?getComputedStyle(dock).viewTransitionName:null};})())"
+    ) or "{}")
+    ok = info.get("declared") and info.get("reduced") and (not supported or info.get("dockName") == "bsc-dock")
+    return ("View Transitions are declared, the dock is named, reduced motion disables them", bool(ok), f"supported={supported} {info}")
+
+
+async def test_mailto_links_carry_mode_subject(c):
+    # Every email link tells the recipient which page it came from.
+    labels = {"/": "Home", "/resume-atlas.html": "Atlas", "/resume-signal.html": "Signal", "/proof-hub.html": "Proof Hub", "/resume-switchboard.html": "Switchboard", "/now.html": "Now"}
+    failures = []
+    for page in CONTACT_PAGES:
+        await c.goto(BASE + page, clear_storage=True)
+        hrefs = json.loads(await c.eval("JSON.stringify(Array.from(document.querySelectorAll('a[href^=\"mailto:\"]')).map(function(a){return a.getAttribute('href');}))") or "[]")
+        bad = [h for h in hrefs if "subject=" not in h or labels[page].replace(" ", "%20") not in h.replace("+", "%20")]
+        if not hrefs or bad:
+            failures.append(f"{page}: {bad or 'no mailto links'}")
+    return ("Every mailto link carries a subject naming its page", not failures, "; ".join(failures) or "6/6 pages OK")
+
+
+async def test_save_contact_and_share(c):
+    # The vCard downloads (also in plain mode), and Share falls back to copying
+    # the link when there is no native share sheet, or uses it when there is.
+    failures = []
+    for page in CONTACT_PAGES:
+        await c.goto(BASE + page + "?plain=1", clear_storage=True)
+        info = json.loads(await c.eval(
+            "JSON.stringify((function(){var a=document.querySelector('a[href$=\".vcf\"]');var s=document.querySelector('[data-bsc-share]');"
+            "return {vcf:a?a.getAttribute('href'):null,download:a?a.hasAttribute('download'):false,share:!!s};})())"
+        ) or "{}")
+        if not info.get("vcf") or "?" in info["vcf"] or not info.get("download") or (not info.get("share") and page != "/now.html"):
+            failures.append(f"{page}: {info}")
+    text = await c.eval("fetch('brandon-clark.vcf').then(function(r){return r.ok?r.text():'HTTP '+r.status;})", await_promise=True)
+    if not (text or "").startswith("BEGIN:VCARD") or "FN:Brandon S. Clark" not in text or "\r\n" not in text or "END:VCARD" not in text:
+        failures.append(f"vcf content: {str(text)[:60]!r}")
+    ident = await c.add_init_script(STUB_CLIPBOARD_NO_SHARE)
+    await c.goto(BASE + "/resume-atlas.html", clear_storage=True)
+    await c.eval("document.querySelector('[data-bsc-share]').click()")
+    await asyncio.sleep(0.5)
+    copied = json.loads(await c.eval("JSON.stringify(window.__copied||[])") or "[]")
+    toast = await c.eval(VISIBLE_TEXT)
+    await c.remove_init_script(ident)
+    if not copied or not copied[0].startswith(BASE + "/resume-atlas.html") or "copied" not in (toast or "").lower():
+        failures.append(f"copy fallback: copied={copied} toast={'copied' in (toast or '').lower()}")
+    ident = await c.add_init_script(STUB_SHARE)
+    await c.goto(BASE + "/resume-atlas.html", clear_storage=True)
+    await c.eval("document.querySelector('[data-bsc-share]').click()")
+    await asyncio.sleep(0.3)
+    shared = json.loads(await c.eval("JSON.stringify(window.__shared||[])") or "[]")
+    await c.remove_init_script(ident)
+    if not shared or not str(shared[0].get("url", "")).startswith(BASE + "/resume-atlas.html"):
+        failures.append(f"native share: {shared}")
+    return ("Save contact downloads a valid vCard and Share copies or shares the link", not failures, "; ".join(failures) or "vCard valid on 6 pages; share and copy fallback OK")
+
+
+async def test_print_shows_qr(c):
+    # The printed resume carries a scannable link back to the live site; on
+    # screen the QR stays hidden.
+    failures = []
+    for page in ("/resume-atlas.html", "/resume-signal.html", "/proof-hub.html"):
+        await c.goto(BASE + page, clear_storage=True)
+        # Hidden on screen means no rendered box (the image or an ancestor is display:none).
+        on_screen = await c.eval("(function(){var q=document.querySelector('.print-qr');return q?(q.getClientRects().length?'visible':'none'):'missing';})()")
+        await c.emulate_media("print")
+        await asyncio.sleep(0.3)
+        info = json.loads(await c.eval(
+            "JSON.stringify((function(){var q=document.querySelector('.print-qr');if(!q)return null;var r=q.getBoundingClientRect();"
+            "return {w:Math.round(r.width),h:Math.round(r.height),loaded:q.naturalWidth>0||q.complete,display:getComputedStyle(q).display};})())"
+        ) or "null")
+        await c.emulate_media("")
+        if on_screen != "none" or not info or info["w"] < 60 or info["h"] < 60 or not info["loaded"]:
+            failures.append(f"{page}: screen={on_screen} print={info}")
+    return ("Atlas, Signal and Proof Hub print a QR code to the live site", not failures, "; ".join(failures) or "3/3 pages OK")
+
+
+async def test_manifest_and_icons(c):
+    failures = []
+    # 404.html is served at any URL depth, so it carries no relative manifest link.
+    for page in CONTACT_PAGES:
+        await c.goto(BASE + page, clear_storage=True)
+        info = json.loads(await c.eval(
+            "JSON.stringify({manifest:(document.querySelector('link[rel=manifest]')||{}).getAttribute?document.querySelector('link[rel=manifest]').getAttribute('href'):null,"
+            "theme:document.querySelectorAll('meta[name=theme-color]').length})"
+        ) or "{}")
+        if info.get("manifest") != "site.webmanifest" or info.get("theme") != 1:
+            failures.append(f"{page}: {info}")
+    manifest = await c.eval("fetch('site.webmanifest').then(function(r){return r.json();})", await_promise=True)
+    icons = {i.get("sizes"): i.get("src") for i in (manifest or {}).get("icons", [])}
+    if not manifest or manifest.get("display") != "standalone" or "192x192" not in icons or "512x512" not in icons:
+        failures.append(f"manifest: {manifest}")
+    else:
+        for src in icons.values():
+            ok = await c.eval(f"fetch('{src}').then(function(r){{return r.ok;}})", await_promise=True)
+            if not ok:
+                failures.append(f"icon missing: {src}")
+    return ("Every page links a valid web app manifest with 192 and 512px icons", not failures, "; ".join(failures) or f"6/6 pages; icons {sorted(icons)}")
+
+
+async def test_service_worker_offline(c):
+    # The worker is opt-in on localhost (?sw=1) and absent otherwise. It is
+    # exercised on a throwaway second server (its own origin, so the rest of
+    # the suite never sees a worker) which is then stopped: cached pages must
+    # still render and unknown pages must get the offline page. DevTools
+    # offline emulation does not reach service-worker fetches, hence the stop.
+    await c.goto(BASE + "/resume-atlas.html", clear_storage=True)
+    regs_default = await c.eval("navigator.serviceWorker.getRegistrations().then(function(r){return r.length;})", await_promise=True)
+    port2 = PORT + 1
+    base2 = f"http://localhost:{port2}"
+    server2 = serve_directory(ROOT, port=port2)
+    try:
+        await asyncio.sleep(0.6)
+        # Another project on the same origin (github.io is shared) has a cache
+        # of its own; activation must leave it alone.
+        await c.goto(base2 + "/resume-atlas.html")
+        await c.eval("caches.open('other-project-cache').then(function(){return true;})", await_promise=True)
+        await c.goto(base2 + "/resume-atlas.html?sw=1")
+        ready = await c.eval(
+            "navigator.serviceWorker.ready.then(function(r){return new Promise(function(res){var n=0;(function poll(){"
+            "caches.keys().then(function(keys){var k=keys.filter(function(x){return x.indexOf('bsc')===0;});"
+            "if(k.length){caches.open(k[0]).then(function(cache){return cache.keys();}).then(function(reqs){"
+            "if(reqs.length>=6||n++>=40){res({cache:k[0],urls:reqs.map(function(q){return q.url.split('/').pop();})});}else{setTimeout(poll,250);}});}"
+            "else if(n++<40){setTimeout(poll,250);}else{res({cache:null,urls:[]});}});})();});})",
+            await_promise=True,
+        )
+        urls = set((ready or {}).get("urls", []))
+        cached_ok = bool((ready or {}).get("cache")) and {"resume-signal.html", "offline.html", "shared-enhancements.js"} <= urls
+        other_kept = await c.eval("caches.has('other-project-cache')", await_promise=True)
+    finally:
+        server2.terminate()
+        server2.wait(timeout=5)
+    await asyncio.sleep(0.3)
+    await c.goto(base2 + "/resume-signal.html")
+    offline_name = await c.eval("(document.querySelector('h1')||{}).textContent||''")
+    await c.goto(base2 + "/not-cached-page.html")
+    offline_fallback = await c.eval(VISIBLE_TEXT)
+    await c.eval(
+        "Promise.all([navigator.serviceWorker.getRegistrations().then(function(rs){return Promise.all(rs.map(function(r){return r.unregister();}));}),"
+        "caches.keys().then(function(ks){return Promise.all(ks.map(function(k){return caches.delete(k);}));})])",
+        await_promise=True,
+    )
+    regs_after = await c.eval("navigator.serviceWorker.getRegistrations().then(function(r){return r.length;})", await_promise=True)
+    await c.goto(BASE + "/resume-atlas.html")
+    ok = regs_default == 0 and cached_ok and other_kept and "Brandon" in (offline_name or "") and "offline" in (offline_fallback or "").lower() and regs_after == 0
+    return (
+        "Service worker is opt-in, caches the pages, keeps other caches, and serves pages with the server gone",
+        ok,
+        f"default_regs={regs_default} cache={(ready or {}).get('cache')} cached={len(urls)} otherCacheKept={other_kept} offlineSignal={'Brandon' in (offline_name or '')} fallback={'offline' in (offline_fallback or '').lower()} after={regs_after}",
+    )
+
+
+async def test_proof_hub_one_pager(c):
+    # Picked bullets print as a one-page brief; without picks a pasted JD
+    # drives the selection; with neither nothing prints.
+    ident = await c.add_init_script(STUB_PRINT)
+    await c.goto(BASE + "/proof-hub.html", clear_storage=True)
+    picked = json.loads(await c.eval(
+        "JSON.stringify((function(){var btns=Array.from(document.querySelectorAll('.bullet .pick-btn')).slice(0,2);"
+        "return btns.map(function(b){b.click();return b.closest('.bullet').querySelector('.bullet-text').textContent.trim().slice(0,40);});})())"
+    ) or "[]")
+    await c.eval("document.getElementById('onepagerBtn').click()")
+    await asyncio.sleep(0.5)
+    prints = await c.eval("window.__prints")
+    flagged = await c.eval("document.documentElement.getAttribute('data-onepager')")
+    await c.emulate_media("print")
+    await asyncio.sleep(0.3)
+    info = json.loads(await c.eval(
+        "JSON.stringify((function(){var o=document.getElementById('onepager');if(!o)return null;var r=o.getBoundingClientRect();var txt=o.innerText;"
+        "var q=o.querySelector('img[src*=\"qr\"]');var jd=document.getElementById('jd');var b=document.querySelector('.bullet');"
+        "var vis=function(el){if(!el)return false;var cs=getComputedStyle(el);var rr=el.getBoundingClientRect();return cs.display!=='none'&&rr.width>0&&rr.height>0;};"
+        "return {visible:vis(o),h:Math.round(r.height),name:/Brandon S\\. Clark/.test(txt),contact:/bsc_pro@protonmail\\.com/.test(txt),qr:!!q&&q.naturalWidth>0,jdHidden:!vis(jd),bulletsHidden:!vis(b),text:txt.slice(0,2000)};})())"
+    ) or "null")
+    await c.emulate_media("")
+    await c.eval("window.dispatchEvent(new Event('afterprint'))")
+    await asyncio.sleep(0.2)
+    cleared = await c.eval("document.documentElement.getAttribute('data-onepager')")
+    hidden_on_screen = await c.eval("(function(){var o=document.getElementById('onepager');return !o||getComputedStyle(o).display==='none';})()")
+    pick_ok = bool(info) and info["visible"] and all(p in info["text"] for p in picked) and info["name"] and info["contact"] and info["qr"] and info["jdHidden"] and info["bulletsHidden"]
+    # JD-driven selection without picks.
+    await c.goto(BASE + "/proof-hub.html", clear_storage=True)
+    await c.eval("var t=document.getElementById('jd');t.value='Terraform AWS IoT provisioning Python';t.dispatchEvent(new Event('input',{bubbles:true}));")
+    await asyncio.sleep(0.8)
+    jd_count = await c.eval("typeof window.bscBuildOnePager==='function'?window.bscBuildOnePager():-1")
+    jd_text = await c.eval("(document.getElementById('onepager')||{}).innerText||''")
+    # Every bullet picked: the height cap must trim the list to one Letter page.
+    await c.goto(BASE + "/proof-hub.html", clear_storage=True)
+    fit = json.loads(await c.eval(
+        "JSON.stringify((function(){document.querySelectorAll('.bullet .pick-btn').forEach(function(b){b.click();});"
+        "var n=window.bscBuildOnePager();var s=document.getElementById('onepager');s.classList.add('op-measure');var h=s.offsetHeight;s.classList.remove('op-measure');"
+        "var more=(s.querySelector('.op-more')||{}).textContent||'';return {kept:n,h:h,more:more.slice(0,12)};})())"
+    ) or "{}")
+    fits = bool(fit) and 0 < fit.get("kept", 0) <= 14 and fit.get("h", 9999) <= 965 and fit.get("more", "").startswith("+")
+    # Neither picks nor JD: toast, no print.
+    await c.goto(BASE + "/proof-hub.html", clear_storage=True)
+    await c.eval("document.getElementById('onepagerBtn').click()")
+    await asyncio.sleep(0.4)
+    no_prints = await c.eval("window.__prints")
+    await c.remove_init_script(ident)
+    ok = len(picked) == 2 and prints == 1 and flagged == "1" and pick_ok and cleared is None and hidden_on_screen and jd_count and jd_count > 0 and "matched to" in jd_text.lower() and fits and no_prints == 0
+    return (
+        "Proof Hub prints a tailored one-pager from picks or JD matches, and nothing without either",
+        bool(ok),
+        f"picked={len(picked)} prints={prints} flagged={flagged} pickOK={pick_ok} cleared={cleared} hiddenOnScreen={hidden_on_screen} jdCount={jd_count} jdTerms={'matched to' in jd_text.lower()} fit={fit} noPrints={no_prints}" + ("" if pick_ok else f" info={ {k: v for k, v in (info or {}).items() if k != 'text'} }"),
+    )
+
+
 # ─── Runner ──────────────────────────────────────────────────────────────
 
 TESTS = [
@@ -849,6 +1082,13 @@ TESTS = [
     test_phone_home_skips_3d_stack,
     test_phone_presets_fit_rail,
     test_phone_touch_labels_and_dock_search,
+    test_view_transitions_declared,
+    test_mailto_links_carry_mode_subject,
+    test_save_contact_and_share,
+    test_print_shows_qr,
+    test_manifest_and_icons,
+    test_service_worker_offline,
+    test_proof_hub_one_pager,
 ]
 
 

@@ -509,4 +509,99 @@
       '<a href="https://github.com/NorthwoodsCode/resume" rel="noopener" target="_blank" style="color:inherit;text-decoration:underline;text-underline-offset:3px">Source</a>.';
     footer.appendChild(p);
   })();
+
+  /* ── cross-page view transitions ─────────────────────────────── */
+  // Same-origin navigations crossfade instead of flashing white, and the floating
+  // dock keeps its own transition name so it stays put while the page fades.
+  // Browsers without cross-document view transitions ignore all of this. Reduced
+  // motion switches the opt-in off, and plain mode (the calm mode) skips it in JS.
+  addStyle('bsc-vt-style',
+    '@view-transition{navigation:auto}' +
+    '::view-transition-old(root),::view-transition-new(root){animation-duration:220ms}' +
+    '.bsc-dock{view-transition-name:bsc-dock}' +
+    '@media(prefers-reduced-motion:reduce){@view-transition{navigation:none}}');
+  ['pageswap','pagereveal'].forEach(function(name){
+    window.addEventListener(name, function(e){
+      if(plain && e && e.viewTransition && e.viewTransition.skipTransition){
+        try { e.viewTransition.skipTransition(); } catch(err){}
+      }
+    });
+  });
+
+  /* ── mail subjects ───────────────────────────────────────────── */
+  // A recruiter's message arrives already naming the role and the page (mode)
+  // they came from. Links that carry their own query are left alone.
+  (function mailSubjects(){
+    var label = 'Resume';
+    PAGES.forEach(function(p){ if(p.file === page) label = p.label; });
+    var subject = encodeURIComponent('Senior Software Engineer — from your ' + label + ' page');
+    var links = document.querySelectorAll('a[href^="mailto:"]');
+    for(var i = 0; i < links.length; i++){
+      var href = links[i].getAttribute('href');
+      if(href.indexOf('?') === -1) links[i].setAttribute('href', href + '?subject=' + subject);
+    }
+  })();
+
+  /* ── share ───────────────────────────────────────────────────── */
+  // The native share sheet where the browser has one (phones), otherwise copy the
+  // link and say so. Buttons are marked [data-bsc-share] (optionally with
+  // data-bsc-share-url); the pages own the markup, this owns the behaviour.
+  addStyle('bsc-share-style', '@media print{[data-bsc-share]{display:none !important}}');
+  // The address worth passing on: the page itself, without the reader's own
+  // ?plain=1 / ?sw=1 switches (a ?for= link is the personalised one, so it
+  // stays), and without the hash except on Proof Hub, where #case-... links
+  // are deep links to a case.
+  function shareUrl(){
+    try{
+      var u = new URL(location.href);
+      u.searchParams.delete('plain');
+      u.searchParams.delete('sw');
+      if(page !== 'proof-hub.html') u.hash = '';
+      return u.href;
+    }catch(e){
+      return location.href.replace(/#.*$/, '');
+    }
+  }
+  function bscShare(opts){
+    opts = opts || {};
+    var title = opts.title || document.title;
+    var url = opts.url || shareUrl();
+    var fallback = function(){
+      return copyText(url).then(function(ok){
+        toast(ok ? 'Link copied' : 'Copy failed, the address is: ' + url);
+        return ok;
+      });
+    };
+    if(navigator.share){
+      var sharing;
+      try{ sharing = navigator.share({title: title, url: url}); }catch(e){ return fallback(); }
+      return Promise.resolve(sharing).then(function(){ return true; }, function(err){
+        // AbortError means the reader closed the sheet: nothing to do. Any other
+        // failure (not allowed, bad data) falls back to copying the link.
+        if(err && err.name === 'AbortError') return false;
+        return fallback();
+      });
+    }
+    return fallback();
+  }
+  window.bscShare = bscShare;
+  // Delegated, so buttons added later (or by other scripts) work too.
+  document.addEventListener('click', function(e){
+    var el = e.target && e.target.closest ? e.target.closest('[data-bsc-share]') : null;
+    if(!el) return;
+    e.preventDefault();
+    bscShare({url: el.getAttribute('data-bsc-share-url') || undefined});
+  });
+
+  /* ── offline + installable ───────────────────────────────────── */
+  // sw.js caches the pages so the resume opens with no signal. Registered only
+  // over https (GitHub Pages) or when the URL opts in with ?sw=1, so the local
+  // test suite on http://localhost never gets a worker by default.
+  (function registerWorker(){
+    if(!('serviceWorker' in navigator)) return;
+    if(location.protocol !== 'https:' && params.get('sw') !== '1') return;
+    try {
+      navigator.serviceWorker.register('sw.js').catch(function(){ /* optional feature */ });
+    } catch(e){}
+  })();
 })();
