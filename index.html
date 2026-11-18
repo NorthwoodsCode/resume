@@ -1921,7 +1921,7 @@
                   <span class="fx-icon" aria-hidden="true">✶</span>
                   <span class="fx-text">
                     <span class="fx-name">Click sparks</span>
-                    <span class="fx-desc">Particles burst from each tap.</span>
+                    <span class="fx-desc">Particles burst from each tap. With Embers on, they rise from the backdrop.</span>
                   </span>
                   <input class="fx-toggle" type="checkbox" role="switch" data-fx="sparks">
                   <span class="fx-switch" aria-hidden="true"></span>
@@ -1950,6 +1950,7 @@
             <div class="swatch-row effect-row" role="group" aria-label="Refined visual effects">
               <button class="swatch effect-swatch" type="button" data-effect-btn="still"  aria-pressed="false">Still</button>
               <button class="swatch effect-swatch" type="button" data-effect-btn="leaves" aria-pressed="false">Leaves</button>
+              <button class="swatch effect-swatch" type="button" data-effect-btn="embers" aria-pressed="false">Embers</button>
             </div>
             <p class="appearance-sub">Classic</p>
             <div class="swatch-row effect-row" role="group" aria-label="Classic visual effects">
@@ -2547,7 +2548,7 @@
 
       // Allow-list for the background effect. Anything else (including a stale stored value)
       // falls back to 'fog'.
-      var VALID_EFFECTS = ['fog','clouds','ocean','depth','still','leaves'];
+      var VALID_EFFECTS = ['fog','clouds','ocean','depth','still','leaves','embers'];
 
       function currentEffect(){
         var e = html.getAttribute('data-vanta-effect');
@@ -2715,7 +2716,8 @@
         ocean:'Ocean — 3D wave surface',
         depth:'Depth — underwater ripple rings',
         still:'Still — no animation, just a refined gradient',
-        leaves:'Leaves — sparse falling foliage'
+        leaves:'Leaves — sparse falling foliage',
+        embers:'Embers — rising sparks and glowing motes'
       };
       document.querySelectorAll('[data-effect-btn]').forEach(function(btn){
         btn.addEventListener('click', function(){
@@ -2881,10 +2883,14 @@
       });
 
       // ── Animated background ──
-      // Effects: 'leaves' is a lightweight 2D canvas; fog, clouds, ocean and depth use Vanta on
+      // Effects: 'leaves' and 'embers' are lightweight 2D canvases; fog, clouds, ocean and depth use Vanta on
       // three.js, fetched on demand. 'still' and every guard path use the CSS fallback gradient.
       const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       let vanta = null;
+
+      /* The two "Refined" animated effects below (Leaves, Embers) are hand-drawn 2D canvases:
+         no library, no WebGL, nothing downloaded. Each returns a handle with destroy(), the
+         same contract the Vanta instances honour, so startVanta() treats them alike. */
 
       /* Refined "Leaves" effect — sparse, slow-drifting fall foliage silhouettes.
          Always uses an autumn palette regardless of current atmosphere (semantic),
@@ -3001,6 +3007,241 @@
         };
       }
 
+      /* Refined "Embers" effect — rising sparks and glowing motes, hand-drawn on a 2D canvas.
+         A port of the "Rising embers" recipe from the spark demo, tuned to sit behind text:
+         low emission, a 140-particle cap (80 on touch devices), the device-pixel ratio capped
+         at 1.5, pre-rendered glow sprites instead of shadowBlur, and a loop that stops while
+         the tab is hidden. Colours are derived from the atmosphere table, so every atmosphere
+         gets its own embers; in light theme the base is light and the embers are drawn darker
+         with normal blending (additive blending would vanish into white). Plain mode and
+         reduced motion never reach this function: startVanta() returns before it is called.
+         While it runs it exposes window.bscEmbers = { poke(x, y), state() }. The shared
+         "Click sparks" handler uses poke() for a canvas spray, and the tests read state(). */
+      function mixHex(a, b, t){
+        var ar = (a >> 16) & 255, ag = (a >> 8) & 255, ab = a & 255;
+        var br = (b >> 16) & 255, bg = (b >> 8) & 255, bb = b & 255;
+        return [Math.round(ar + (br - ar) * t), Math.round(ag + (bg - ag) * t), Math.round(ab + (bb - ab) * t)];
+      }
+      function startEmbersCanvas(atmosphere, theme) {
+        var el = document.getElementById('vanta');
+        if (!el) return null;
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
+        if (!ctx) return null;
+
+        var A = ATMOSPHERES[atmosphere] || ATMOSPHERES.autumn;
+        var light = theme === 'light';
+        var TAU = Math.PI * 2, UP = -Math.PI / 2;
+        var coarse = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
+        var CAP = coarse ? 80 : 140;
+        var GA = light ? 0.55 : 0.7;   // global alpha: embers stay quieter on a light page
+
+        function rgb(c){ return 'rgb(' + c[0] + ',' + c[1] + ',' + c[2] + ')'; }
+        function rgba(c, a){ return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')'; }
+        var hi = light ? A.highlightLight : A.highlightDark;
+        var lo = light ? A.lowlightLight : A.lowlightDark;
+        // Five tints per atmosphere: its highlight, its lowlight, two warm ember mixes and one
+        // hot (dark theme) or deep (light theme) variant, so blue gives blue-gold sparks and
+        // crimson gives red embers without a hand-written table.
+        var tints = light
+          ? [mixHex(hi, hi, 0), mixHex(lo, lo, 0), mixHex(hi, 0xb04820, .4), mixHex(lo, 0x7a3a10, .4), mixHex(hi, 0x000000, .2)]
+          : [mixHex(hi, hi, 0), mixHex(lo, lo, 0), mixHex(hi, 0xffb347, .5), mixHex(lo, 0xff6a2a, .5), mixHex(hi, 0xffffff, .35)];
+        var tintCss = tints.map(rgb);
+        var core = rgb(light ? mixHex(hi, 0x000000, .3) : mixHex(hi, 0xffffff, .75));
+        var wash = mixHex(lo, lo, 0);
+        var base = (light ? A.baseLightCss : A.baseDarkCss) || (light ? '#fdf4ec' : '#0d0907');
+
+        var bgDiv = document.createElement('div');
+        bgDiv.style.cssText =
+          'position:absolute;inset:0;background:' +
+          'radial-gradient(60rem 32rem at 18% 100%, ' + rgba(wash, .10) + ', transparent 62%),' +
+          'radial-gradient(48rem 26rem at 82% 92%, ' + rgba(wash, .07) + ', transparent 60%),' +
+          base + ';';
+        canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;';
+
+        // Soft discs are painted once and stamped with drawImage, far cheaper than shadowBlur.
+        function disc(c){
+          var s = document.createElement('canvas'); s.width = s.height = 64;
+          var g = s.getContext('2d'), gr = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+          gr.addColorStop(0, rgba(c, 1)); gr.addColorStop(.35, rgba(c, .35)); gr.addColorStop(1, rgba(c, 0));
+          g.fillStyle = gr; g.fillRect(0, 0, 64, 64);
+          return s;
+        }
+        var sprites = tints.map(disc);
+
+        var W, H, dpr, sc, resizeTimer = null;
+        function size(){
+          var nd = Math.min(window.devicePixelRatio || 1, 1.5);
+          var nw = el.offsetWidth  || window.innerWidth;
+          var nh = el.offsetHeight || window.innerHeight;
+          if (nd === dpr && nw === W && nh === H) return;   // nothing changed: keep the bitmap
+          dpr = nd; W = nw; H = nh;
+          sc = Math.max(.6, Math.min(3.2, W / 360));   // emission scales with width, within limits
+          canvas.width  = Math.max(1, Math.floor(W * dpr));   // this clears the bitmap ...
+          canvas.height = Math.max(1, Math.floor(H * dpr));
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);     // ... and resets the context, so set state after
+          ctx.lineCap = 'round';
+          if (ps) draw();                             // repaint now rather than show a blank frame
+        }
+        function onResize(){
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(size, 120);         // particles survive; only the canvas is reallocated
+        }
+        size();
+
+        var ps = [], acc = {}, sprayIn = 6 + Math.random() * 6;
+        function rnd(a, b){ return a + Math.random() * (b - a); }
+        // Turns "N per second" into whole particles this frame, carrying the fraction forward.
+        function rate(key, perSec, dt){
+          var a = (acc[key] || 0) + perSec * dt, n = Math.floor(a);
+          acc[key] = a - n;
+          return n;
+        }
+        function add(x, y, ang, spd, o){
+          if (ps.length >= CAP) return false;
+          ps.push({
+            x:x, y:y, vx:Math.cos(ang) * spd, vy:Math.sin(ang) * spd, age:0, life:o.life, r:o.r,
+            streak:!!o.streak, peak:o.peak == null ? 1 : o.peak, drag:o.drag || 0, grav:o.grav || 0,
+            sway:o.sway || 0, swaySpd:rnd(.4, 1.3), phase:rnd(0, TAU), flick:rnd(3, 12),
+            c:(Math.random() * tints.length) | 0
+          });
+          return true;
+        }
+        function mote(x, y){
+          add(x, y, UP + rnd(-.35, .35), rnd(14, 40), { life:rnd(4, 8), r:rnd(.6, 1.6), peak:rnd(.35, .7), sway:rnd(6, 18) });
+        }
+        function streak(x, y, spread, vLo, vHi){
+          add(x, y, UP + rnd(-spread, spread), rnd(vLo, vHi), { streak:1, life:rnd(1, 2), r:rnd(.8, 1.4), peak:.6, drag:.9, grav:120 });
+        }
+        function emit(dt){
+          var n = rate('m', 3.0 * sc, dt);
+          while (n--) mote(rnd(0, W), H + 10);
+          n = rate('s', 1.6 * Math.min(sc, 2), dt);   // streaks stop scaling at 720px wide
+          while (n--) streak(rnd(0, W), H + 8, .75, 140, 320);
+          if ((sprayIn -= dt) <= 0){                      // a rare, small spray from the bottom edge
+            sprayIn = rnd(6, 12);
+            var x = rnd(.15, .85) * W;
+            for (var i = 0; i < 5; i++) streak(x, H + 6, .9, 200, 440);
+          }
+        }
+        function update(dt){
+          emit(dt);
+          for (var i = ps.length - 1; i >= 0; i--){
+            var p = ps[i];
+            p.age += dt;
+            if (p.age >= p.life || p.x < -60 || p.x > W + 60 || p.y < -60 || p.y > H + 60){
+              ps[i] = ps[ps.length - 1]; ps.pop(); continue;
+            }
+            p.phase += p.flick * dt;
+            var k = Math.exp(-p.drag * dt);
+            p.vx *= k;
+            p.vy = p.vy * k + p.grav * dt;
+            p.x += (p.vx + (p.sway ? Math.sin(p.age * p.swaySpd + p.phase) * p.sway : 0)) * dt;
+            p.y += p.vy * dt;
+          }
+        }
+        function alpha(p){
+          var t = p.age / p.life;
+          var env = t < .1 ? t / .1 : (t > .5 ? (1 - t) / .5 : 1);   // quick in, long out
+          return Math.max(0, Math.min(1, p.peak * env * (.8 + .2 * Math.sin(p.phase)) * GA));
+        }
+        function draw(){
+          ctx.clearRect(0, 0, W, H);
+          if (!ps.length) return;
+          ctx.globalCompositeOperation = light ? 'source-over' : 'lighter';
+          var i, p, a, g;
+          for (i = 0; i < ps.length; i++){                 // halos first ...
+            p = ps[i]; a = alpha(p); if (a <= .01) continue;
+            g = p.r * (p.streak ? 7 : 8);
+            ctx.globalAlpha = a * .5;
+            ctx.drawImage(sprites[p.c], p.x - g / 2, p.y - g / 2, g, g);
+          }
+          for (i = 0; i < ps.length; i++){                 // ... then the hot cores
+            p = ps[i]; a = alpha(p); if (a <= .01) continue;
+            ctx.globalAlpha = a;
+            if (p.streak){
+              var sp = Math.sqrt(p.vx * p.vx + p.vy * p.vy) || 1;
+              var len = Math.max(4, Math.min(30, sp * .06));   // faster = longer
+              var tx = p.x - p.vx / sp * len, ty = p.y - p.vy / sp * len;
+              ctx.strokeStyle = tintCss[p.c]; ctx.lineWidth = p.r * 1.6;
+              ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(tx, ty); ctx.stroke();
+              ctx.strokeStyle = core; ctx.lineWidth = p.r * .7;   // hot leading half
+              ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo((p.x + tx) / 2, (p.y + ty) / 2); ctx.stroke();
+            } else {
+              ctx.fillStyle = core;
+              ctx.beginPath(); ctx.arc(p.x, p.y, p.r * .75, 0, TAU); ctx.fill();
+            }
+          }
+          ctx.globalAlpha = 1;
+          ctx.globalCompositeOperation = 'source-over';
+        }
+
+        // Pre-roll four seconds of simulation so the first frame is already populated.
+        for (var pre = 0; pre < 120; pre++) update(1 / 30);
+
+        var raf = 0, alive = true, last = 0, stepAcc = 0;
+        var STEP = coarse ? 1 / 30 : 0;      // phones update at 30 fps to halve the battery cost
+        function tick(now){
+          raf = 0;
+          if (!alive || document.hidden) return;
+          var dt = last ? Math.min(.05, (now - last) / 1000) : 1 / 60;   // clamp: no fast-forward
+          last = now;
+          if (STEP){
+            stepAcc += dt;
+            if (stepAcc >= STEP - 0.004){ update(stepAcc); stepAcc = 0; draw(); }   // tolerance: two 60 Hz frames
+          } else {
+            update(dt); draw();
+          }
+          raf = requestAnimationFrame(tick);
+        }
+        function onVisibility(){
+          if (!alive) return;
+          if (document.hidden){ if (raf){ cancelAnimationFrame(raf); raf = 0; } }
+          else if (!raf){ last = 0; raf = requestAnimationFrame(tick); }
+        }
+        // The DOM and the listeners go in last, so a failure above leaves nothing behind.
+        el.appendChild(bgDiv);
+        el.appendChild(canvas);
+        window.addEventListener('resize', onResize);
+        document.addEventListener('visibilitychange', onVisibility);
+        draw();
+        raf = requestAnimationFrame(tick);
+
+        var hook = {
+          // A spray from a viewport point. The canvas is fixed and full-viewport, so viewport
+          // coordinates are canvas coordinates and no offset maths is needed.
+          poke: function(x, y){
+            try{
+              if (!alive) return false;
+              var n = 0, i;
+              for (i = 0; i < 7; i++) if (add(x, y, UP + rnd(-1, 1), rnd(200, 440), { streak:1, life:rnd(.8, 1.6), r:rnd(.8, 1.4), drag:.9, grav:160 })) n++;
+              for (i = 0; i < 3; i++) if (add(x, y, UP + rnd(-.6, .6), rnd(20, 60), { life:rnd(1.5, 3), r:rnd(.6, 1.4), peak:.7, sway:rnd(4, 12), grav:-10 })) n++;
+              return true;   // consumed even at the cap: a full canvas never gets DOM sparks on top
+            }catch(e){ return false; }
+          },
+          state: function(){ return { alive:alive, running:alive && !document.hidden, count:ps.length, cap:CAP, dpr:dpr }; }
+        };
+        window.bscEmbers = hook;
+
+        return {
+          destroy: function(){
+            alive = false;
+            if (raf){ cancelAnimationFrame(raf); raf = 0; }
+            clearTimeout(resizeTimer);
+            window.removeEventListener('resize', onResize);
+            document.removeEventListener('visibilitychange', onVisibility);
+            canvas.remove();
+            bgDiv.remove();
+            ps.length = 0;
+            // Only the instance that set the hook removes it, so a restart that already
+            // installed a new instance is never clobbered.
+            if (window.bscEmbers === hook){ try{ delete window.bscEmbers; }catch(e){ window.bscEmbers = undefined; } }
+          },
+          poke: hook.poke,
+          state: hook.state
+        };
+      }
+
       // 'vanta' hides the CSS fallback gradient (html.vanta-active); 'fallback' shows it
       // (html.use-fallback). Exactly one of the two is active after each start attempt.
       function setAtmosphereState(mode){
@@ -3084,7 +3325,7 @@
       }
 
       // Lazy loader: three.js and the Vanta effect files are only requested when an animated
-      // effect is actually needed, so plain mode, reduced motion, 'still' and 'leaves' never
+      // effect is actually needed, so plain mode, reduced motion, 'still', 'leaves' and 'embers' never
       // download them. three.js must load before the Vanta effect script.
       var VANTA_SRC = {
         FOG:'vanta.fog.min.js', CLOUDS:'vanta.clouds.min.js', WAVES:'vanta.waves.min.js', RIPPLE:'vanta.ripple.min.js'
@@ -3140,6 +3381,16 @@
         if(eff === 'leaves'){
           setWarn('');
           vanta = startLeavesCanvas(currentAtmosphere());
+          setAtmosphereState(vanta ? 'vanta' : 'fallback');
+          return;
+        }
+
+        // Embers is a 2D canvas like leaves (no WebGL, no download), so it sits before the
+        // phone gate below: a phone that chose it gets it. A start failure falls back to the
+        // CSS gradient instead of leaving a half-built backdrop.
+        if(eff === 'embers'){
+          setWarn('');
+          try{ vanta = startEmbersCanvas(currentAtmosphere(), currentTheme()); }catch(err){ vanta = null; }
           setAtmosphereState(vanta ? 'vanta' : 'fallback');
           return;
         }

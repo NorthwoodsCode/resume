@@ -396,6 +396,11 @@
       document.addEventListener('click', function(e){
         if(!fxOn('sparks')) return;
         if(e.target.closest('a,button,input,select,textarea,summary,label')) return;
+        // While Home's Embers backdrop runs it exposes window.bscEmbers; a spray on its
+        // canvas replaces the DOM sparks. Looked up per click, so it follows effect switches.
+        if(window.bscEmbers && typeof window.bscEmbers.poke === 'function'){
+          try{ if(window.bscEmbers.poke(e.clientX, e.clientY)) return; }catch(_e){}
+        }
         spawnSparks(e.clientX, e.clientY);
       });
     })();
