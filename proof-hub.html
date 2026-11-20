@@ -799,6 +799,7 @@
         min-height: 40px;
       }
       .chip { display: inline-flex; align-items: center; }
+      .chip[hidden] { display: none !important; }   /* evidence chips stay hidden while their list is empty */
       .search input { min-height: 40px; }
       .jd, .selected-out { font-size: 16px; }
       /* Contact links in the header and footer were 17-19px tall; padding brings them to ~28px+. */
@@ -965,6 +966,9 @@
     <nav class="year-nav" aria-label="Jump to year">
       <a class="chip" href="#start" title="Recruiter quick start">Start</a>
       <a class="chip" href="#cases" title="Architecture case studies">Cases</a>
+      <a class="chip" href="#decisions" title="Decisions and the road not taken">Decisions</a>
+      <a class="chip" href="#incidents" title="Things that broke on my watch">Incidents</a>
+      <a class="chip" href="#answers" title="Before the screen call">Answers</a>
       <a class="chip" href="#timeline" title="Role timeline">Timeline</a>
       <a class="chip" href="#cred" title="Credentials">Cred</a>
       <a class="chip" href="#turbo" title="Tailoring tools">Tools</a>
@@ -1103,6 +1107,26 @@
           </div>
         </details>
       </div>
+    </section>
+
+    <!-- Evidence lists, rendered from evidence.json by shared-enhancements.js. Draft entries
+         show a DRAFT badge locally and are removed at deploy; an empty list hides its section. -->
+    <section class="card" id="decisions" aria-labelledby="decisionsTitle">
+      <h2 id="decisionsTitle">Decisions and the road not taken</h2>
+      <div class="small muted">For each case: the options on the table, what I chose, what it cost, and how it held up.</div>
+      <div data-evidence-list="decisions"></div>
+    </section>
+
+    <section class="card" id="incidents" aria-labelledby="incidentsTitle">
+      <h2 id="incidentsTitle">Things that broke on my watch</h2>
+      <div class="small muted">What happened, how it was found, what it cost, what changed, and the guard that stops it recurring.</div>
+      <div data-evidence-list="incidents"></div>
+    </section>
+
+    <section class="card" id="answers" aria-labelledby="answersTitle">
+      <h2 id="answersTitle">Before the screen call</h2>
+      <div class="small muted">The questions a screener has to settle before forwarding me, answered in advance. Each answer links to its evidence and copies as plain text.</div>
+      <div data-evidence-list="answers"></div>
     </section>
 
     <!-- Role timeline -->
@@ -2124,6 +2148,10 @@
       const impactGrid = document.getElementById('impactGrid');
 
       let impactMetrics = [];
+      // Which receipt in evidence.json backs each generated tile; shared-enhancements.js
+      // turns data-receipt into a button that opens it.
+      const RECEIPT_FOR = { 'Customer payments': 'portal-volume', 'Automation savings': 'etl-hours', 'Provisioning speed': 'provisioning-time', 'Payload reduction': 'payload-bytes', 'Onboarding reduction': 'onboarding-ramp' };
+      function receiptAttr(k) { return RECEIPT_FOR[k] ? ' data-receipt="' + RECEIPT_FOR[k] + '"' : ''; }
 
       // Finds the first bullet matching the regex. The impact tiles are parsed out of the bullet text,
       // so each metric falls back to generic wording if a bullet is reworded and the pattern stops matching.
@@ -2184,7 +2212,7 @@
         metrics.slice(0, 8).forEach(m => {
           const el = document.createElement('div');
           el.className = 'metric';
-          el.innerHTML = '<div class="k">' + m.k + '</div><div class="v">' + m.v + '</div><div class="s">' + m.s + '</div>';
+          el.innerHTML = '<div class="k">' + m.k + '</div><div class="v"' + receiptAttr(m.k) + '>' + m.v + '</div><div class="s">' + m.s + '</div>';
           impactGrid.appendChild(el);
         });
       }
@@ -2204,7 +2232,7 @@
         items.forEach(m => {
           const el = document.createElement('div');
           el.className = 'impact-mini';
-          el.innerHTML = '<div class="k">' + m.k + '</div><div class="v">' + m.v + '</div><div class="s">' + m.s + '</div>';
+          el.innerHTML = '<div class="k">' + m.k + '</div><div class="v"' + receiptAttr(m.k) + '>' + m.v + '</div><div class="s">' + m.s + '</div>';
           impactStrip.appendChild(el);
         });
       }

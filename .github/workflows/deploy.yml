@@ -34,8 +34,23 @@ jobs:
       - name: Verify Chrome is available
         run: google-chrome --version
 
+      # evidence.json backs every headline number; a page that claims a receipt
+      # that does not exist, or a malformed entry, fails here before anything ships.
+      - name: Lint evidence.json against the pages
+        run: python3 scripts/check_evidence.py
+
+      # --report writes the run as JSON. The build job publishes it as
+      # tests-latest.json, which Home's "Verified" chip reads.
       - name: Run UI test suite (headless Chrome via CDP)
-        run: python3 tests/test_home.py
+        run: python3 tests/test_home.py --report tests-latest.json
+
+      - name: Upload test report for the build job
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: tests-latest.json
+          retention-days: 7
 
   # Produces the deployable site as an artifact. Skipped on pull requests: PRs
   # only need test results, and the build edits files (dates, generated pages)
@@ -58,6 +73,21 @@ jobs:
       # Pillow draws the Open Graph preview images in the next steps.
       - name: Install Pillow for OG generation
         run: pip install --quiet Pillow
+
+      # The test job's report replaces the committed placeholder, so the live
+      # site shows the run that verified this exact commit.
+      - name: Download the test report
+        uses: actions/download-artifact@v4
+        with:
+          name: test-report
+          path: .
+
+      # Draft decisions / incidents / answers and author notes ("_todo") never
+      # publish; the strict lint then confirms nothing unfinished is left.
+      - name: Remove draft evidence and author notes
+        run: |
+          python3 scripts/strip_drafts.py
+          python3 scripts/check_evidence.py --strict
 
       # Rewrites "last updated" dates in the HTML pages and sitemap.xml from git
       # history (hence fetch-depth: 0 above). Only the build copy changes.
