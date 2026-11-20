@@ -662,7 +662,7 @@
     .hero-shell{
       width:100%;
       text-align:center;
-      padding:clamp(3rem, 6vw, 4.9rem) clamp(1.55rem, 4vw, 3.3rem);
+      padding:clamp(2.2rem, 4.5vw, 3.2rem) clamp(1.4rem, 4vw, 3rem);
       border-radius:clamp(32px, 4vw, 44px);
       border:1px solid color-mix(in srgb, var(--accent) 24%, var(--border));
       background:
@@ -706,7 +706,7 @@
     h1{
       margin:.92rem auto 0;
       max-width:none;
-      font-size:clamp(3rem, 10vw, 6.8rem);
+      font-size:clamp(2.6rem, 8.5vw, 5.4rem);
       line-height:.92;
       letter-spacing:-.06em;
       white-space:nowrap;
@@ -731,19 +731,6 @@
       color:color-mix(in srgb, var(--fg) 84%, var(--muted));
       font-weight:620;
       text-wrap:pretty;
-    }
-    .hero-role-text{
-      color:var(--accent2);
-      font-style:italic;
-    }
-    .hero-role-text.typing::after{
-      content:'|';
-      color:var(--accent);
-      margin-left:1px;
-      animation:blink-caret .75s step-end infinite;
-    }
-    @keyframes blink-caret{
-      0%,100%{opacity:1}50%{opacity:0}
     }
     /* Availability badge. Script hides it after an expiry date. */
     .avail-badge{
@@ -780,7 +767,7 @@
       50%{opacity:.5;transform:scale(.75)}
     }
     .cta-row{
-      margin-top:1.95rem;
+      margin-top:1.1rem;
       display:flex;
       justify-content:center;
       align-items:center;
@@ -789,7 +776,7 @@
     }
 
     .hero-utilities{
-      margin-top:1rem;
+      margin-top:.75rem;
       display:flex;
       justify-content:center;
       flex-wrap:wrap;
@@ -814,6 +801,90 @@
       color:var(--fg);
       transform:translateY(-1px);
     }
+
+    /* ── First screen: claim, facts strip, fit check, verified chip ──
+       The claim is one dated result whose numbers open receipts; the facts strip answers the
+       recruiter's first questions; the fit check and the verified chip prove rather than decorate. */
+    .claim{max-width:46rem; font-size:clamp(1.02rem, 2vw, 1.18rem); line-height:1.45; font-weight:640; margin-top:1.1rem}
+    /* The two receipt numbers in the claim pulse once, a second after load, so the eye lands on them.
+       shared-enhancements.js adds .bsc-receipt when it decorates [data-receipt]; the delay counts from then.
+       Box-shadow and background only, so nothing shifts. Off for reduced motion and plain mode. */
+    .claim .bsc-receipt{border-radius:4px; animation:bsc-receipt-pulse 1.1s ease-out 1.2s 1 both}
+    @keyframes bsc-receipt-pulse{
+      0%{background-color:transparent; box-shadow:0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent)}
+      45%{background-color:color-mix(in srgb, var(--accent) 16%, transparent); box-shadow:0 0 0 7px color-mix(in srgb, var(--accent) 0%, transparent)}
+      100%{background-color:transparent; box-shadow:0 0 0 0 transparent}
+    }
+    html.plain .claim .bsc-receipt{animation:none}
+    @media (prefers-reduced-motion: reduce){ .claim .bsc-receipt{animation:none} }
+    .facts-strip{
+      list-style:none; margin:1rem auto 0; padding:0;
+      display:flex; flex-wrap:wrap; justify-content:center; gap:.45rem .5rem; max-width:60rem;
+    }
+    .facts-strip li{
+      display:inline-flex; flex-direction:column; align-items:flex-start; gap:.08rem;
+      padding:.4rem .75rem; border-radius:14px; text-align:left;
+      border:1px solid color-mix(in srgb, var(--accent) 18%, var(--border));
+      background:color-mix(in srgb, var(--panel-strong) 70%, transparent);
+    }
+    .facts-strip b{font-size:.98rem; font-weight:820; letter-spacing:-.01em}
+    .facts-strip span{font-size:.8rem; color:var(--muted); font-weight:640}
+    .fit{margin:1.1rem auto 0; max-width:54rem; text-align:left}
+    .fit-label{display:block; font-size:.92rem; font-weight:760; color:color-mix(in srgb, var(--fg) 88%, var(--muted)); margin:0 0 .4rem}
+    .fit-row{display:flex; gap:.6rem; align-items:stretch}
+    .fit-row textarea{
+      flex:1 1 auto; min-height:52px; resize:vertical; padding:.6rem .9rem; border-radius:16px;
+      border:1px solid color-mix(in srgb, var(--accent) 28%, var(--border));
+      background:color-mix(in srgb, var(--panel-strong) 88%, transparent); color:var(--fg);
+      font:600 1rem/1.4 var(--sans);   /* 16px: iOS Safari zooms on focus below that */
+    }
+    .fit-row textarea:focus-visible{outline:3px solid color-mix(in srgb, var(--accent) 55%, transparent); outline-offset:2px}
+    .fit-btns{display:flex; flex-direction:column; gap:.4rem; justify-content:center}
+    .fit-status{margin:.45rem 0 0; font-size:.8rem; color:var(--muted); font-weight:640}
+    .fit-out{margin-top:.9rem}
+    .fit-sum{margin:0 0 .7rem; font-size:.95rem}
+    .fit-grid{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:.7rem}
+    .fit-col{padding:.75rem .85rem; border-radius:16px; border:1px solid var(--border); background:color-mix(in srgb, var(--panel-strong) 60%, transparent)}
+    .fit-col h3{margin:0 0 .4rem; font-size:.78rem; letter-spacing:.14em; text-transform:uppercase; color:var(--muted)}
+    .fit-col ul{list-style:none; margin:0; padding:0; display:grid; gap:.55rem}
+    .fit-col li{font-size:.86rem; line-height:1.4}
+    .fit-role{display:inline-block; font-size:.72rem; font-weight:800; letter-spacing:.04em; color:var(--accent); margin-right:.2rem}
+    .fit-hits{display:block; font-size:.74rem; color:var(--muted); margin-top:.1rem}
+    .fit-col a{font-weight:800}
+    .fit-chip{display:inline-block; padding:.22rem .6rem; border-radius:999px; font-size:.8rem; font-weight:760; border:1px dashed color-mix(in srgb, var(--fg) 40%, transparent); margin:0 .25rem .3rem 0}
+    .fit-note,.fit-empty{font-size:.82rem; color:var(--muted); margin:.3rem 0 0}
+    .fit-actions{margin:.9rem 0 0; display:flex; flex-wrap:wrap; gap:.5rem}
+    .verified{margin:.9rem auto 0; max-width:54rem; text-align:center}
+    .verified summary{
+      list-style:none; display:inline-flex; align-items:center; gap:.5rem; cursor:pointer;
+      padding:.38rem .85rem; border-radius:999px; font-size:.8rem; font-weight:760; letter-spacing:.02em;
+      border:1px solid rgba(16,185,129,.35); background:rgba(16,185,129,.10); color:#047857;
+    }
+    .v-chev{display:inline-block; transition:transform .18s ease; font-size:12px}
+    .verified[open] .v-chev{transform:rotate(90deg)}
+    .sr-only{position:absolute !important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0}
+    .verified summary::-webkit-details-marker{display:none}
+    .verified summary:focus-visible{outline:3px solid color-mix(in srgb, var(--accent) 55%, transparent); outline-offset:2px}
+    html[data-theme="dark"] .verified summary{color:#6ee7b7}
+    .v-dot{width:.5rem; height:.5rem; border-radius:999px; background:currentColor; box-shadow:0 0 0 4px rgba(16,185,129,.16)}
+    .verified-body{margin-top:.7rem; padding:.85rem 1rem; border-radius:16px; border:1px solid var(--border); background:color-mix(in srgb, var(--panel-strong) 60%, transparent); text-align:left}
+    .verified-body .small{font-size:.86rem; color:var(--muted); margin:0 0 .5rem}
+    .verified-body .mono{font-family:var(--mono); font-size:.76rem}
+    .verified-list{list-style:none; margin:.4rem 0 .6rem; padding:0; display:grid; gap:.25rem; font-size:.84rem}
+    .verified-list li{display:flex; gap:.5rem; align-items:baseline}
+    .verified-list li span{font-weight:900}
+    .verified-list li.ok span{color:#10b981}
+    .verified-list li.bad span{color:#ef4444}
+    .verified-list li.sum{font-weight:800; margin-top:.3rem}
+    .verified-list small{color:var(--muted); font-size:.74rem}
+    @media (max-width: 720px){
+      .fit-grid{grid-template-columns:1fr}
+      .fit-row{flex-direction:column}
+      .fit-btns{flex-direction:row}
+      .facts-strip{justify-content:flex-start}
+      .facts-strip li{flex:1 1 calc(50% - .6rem)}
+    }
+    @media print{ .fit-row,.fit-status,.fit-actions,.verified{display:none !important} }
 
     .meta-row{
       width:min(940px, calc(100vw - 40px));
@@ -1704,7 +1775,9 @@
     }
     @media (max-width: 520px){
       .top-actions{width:100%; justify-content:center}
-      .top-actions .btn{flex:1 1 calc(50% - .45rem)}
+      .top-actions{gap:.4rem}
+      .top-actions .btn{flex:0 1 auto; padding:.45rem .62rem; font-size:.76rem}
+      #plainModeLink{display:none}
       #cmdPalBtn{padding:.28rem .55rem; font-size:.78rem; flex:0 0 auto}
       .route-actions,
       .rowBtns,
@@ -1771,6 +1844,7 @@
       .swatch,
       .effect-swatch{min-height:40px}
       .hero-utility-link{min-height:40px}
+      .verified summary{min-height:40px}
     }
 
     /* ── Reduced motion ──
@@ -1932,7 +2006,7 @@
                   <span class="fx-icon" aria-hidden="true">🎉</span>
                   <span class="fx-text">
                     <span class="fx-name">Confetti bursts</span>
-                    <span class="fx-desc">Pops every time this page loads.</span>
+                    <span class="fx-desc">Pops on load while this is on.</span>
                   </span>
                   <input class="fx-toggle" type="checkbox" role="switch" data-fx="confetti">
                   <span class="fx-switch" aria-hidden="true"></span>
@@ -1989,27 +2063,65 @@
     <main class="main" id="content">
       <div class="hero-wrap">
         <!-- Hero: name, positioning line and the primary calls to action. -->
-        <section class="hero-shell card" aria-label="Cinematic resume hero">
+        <section class="hero-shell card" aria-label="Resume hero">
           <div class="avail-badge" id="availBadge" aria-label="Availability status">
             <span class="dot" aria-hidden="true"></span>
             Available for new roles · Remote
           </div>
-          <p class="eyebrow">Senior software engineer</p>
+          <p class="eyebrow">Senior software engineer · AWS backend &amp; cloud platform</p>
           <h1><span class="name-lockup">Brandon&nbsp;S.&nbsp;Clark</span></h1>
-          <p class="strap"><span class="specular-headline" data-text="AWS Backend &amp; Cloud Platform" id="heroHeadline">AWS Backend &amp; Cloud Platform</span></p>
-          <p class="lede">
-            I build <span class="hero-role-text" id="hero-role">serverless backend systems</span> that hold up under real pressure — then give you the format that fits how you read engineers.
+          <!-- The claim: one specific, dated result. The numbers carry data-receipt, which
+               shared-enhancements.js turns into a button that opens the receipt from evidence.json. -->
+          <p class="lede claim" id="heroClaim">
+            In 2025 at Milwaukee Tool I cut IoT device provisioning from <span data-receipt="provisioning-time">about 10 minutes to under 1 per device</span> and one device payload from <span data-receipt="payload-bytes">476 bytes to 15</span>. Click any underlined number to see how it was measured.
           </p>
+          <!-- Facts strip: what a recruiter needs in the first screen. "N years" is kept current by home-evidence.js. -->
+          <ul class="facts-strip" aria-label="Key facts">
+            <li><b>Milwaukee Tool</b><span>since 2021 · Senior since 2025</span></li>
+            <li><b data-fact="years">10 years</b><span>in software, since 2016</span></li>
+            <li><b>Wisconsin</b><span>remote</span></li>
+            <li><b>3 certifications</b><span>AWS SAA · Terraform · CCP</span></li>
+          </ul>
 
           <div class="cta-row" role="group" aria-label="Primary resume actions">
-            <a class="btn lift cta" href="resume-atlas.html" data-mode="resume-atlas.html">Start with Atlas</a>
-            <a class="btn lift" href="resume-signal.html" data-mode="resume-signal.html">Open Signal</a>
+            <a class="btn lift cta" href="resume-atlas.html" data-mode="resume-atlas.html">Read the resume</a>
+            <a class="btn lift" href="proof-hub.html" data-mode="proof-hub.html">Case studies</a>
           </div>
 
           <div class="hero-utilities" aria-label="Secondary resume actions">
-            <a class="hero-utility-link" href="proof-hub.html" data-mode="proof-hub.html"><strong>Need proof?</strong> Open Proof Hub</a>
-            <a class="hero-utility-link" href="#formats"><strong>See all modes</strong> Explore every mode ↓</a>
+            <a class="hero-utility-link" href="resume-signal.html" data-mode="resume-signal.html"><strong>Tailored view</strong> Signal</a>
+            <a class="hero-utility-link" href="resume-atlas.html?print=1"><strong>Print / Save PDF</strong></a>
+            <a class="hero-utility-link" href="resume-ats.txt"><strong>Plain text</strong> ATS copy</a>
+            <a class="hero-utility-link" href="#formats"><strong>All views</strong> ↓</a>
           </div>
+
+          <!-- Fit check: paste a job description, see the match and the gaps. Runs entirely in the
+               browser (home-evidence.js scores resume-ats.txt); the text is never sent anywhere. -->
+          <form class="fit" id="fitCheck" aria-labelledby="fitLabel">
+            <label class="fit-label" id="fitLabel" for="fitJd">Hiring for a role? Paste the job description. I'll show the fit, including what is not on this resume.</label>
+            <div class="fit-row">
+              <textarea id="fitJd" rows="2" placeholder="Paste a job description…" autocomplete="off" spellcheck="false"></textarea>
+              <div class="fit-btns">
+                <button class="btn lift cta small" id="fitRun" type="button">Check the fit</button>
+                <button class="btn lift small" id="fitClear" type="button">Clear</button>
+              </div>
+            </div>
+            <p class="fit-status" id="fitStatus" role="status" aria-live="polite">Runs in your browser. Nothing is sent anywhere.</p>
+            <div class="fit-out" id="fitOut" hidden></div>
+          </form>
+
+          <!-- Verified chip: the last CI test run (tests-latest.json, written at deploy) and a button
+               that runs a few checks live in the reader's own browser. -->
+          <details class="verified" id="verified">
+            <summary id="verifiedChip"><span class="v-dot" aria-hidden="true"></span><span id="verifiedText">This site tests itself in real Chrome before every deploy</span><span class="v-chev" aria-hidden="true">▸</span></summary>
+            <div class="verified-body">
+              <p class="small" id="verifiedSummary">These checks cover this site, not my work: every deploy runs the UI test suite in headless Chrome, and the report from the last run is published here with the site.</p>
+              <p class="small mono" id="verifiedMeta"></p>
+              <ul class="verified-list" id="verifiedList"></ul>
+              <button class="btn lift small" id="liveRun" type="button">Run 7 checks in this browser now</button>
+              <ul class="verified-list" id="liveChecks" aria-live="polite"></ul>
+            </div>
+          </details>
         </section>
 
         <!-- Contact row: location and direct links. -->
@@ -2028,7 +2140,7 @@
         <!-- Route panel: audience-based shortcuts to the right mode. -->
         <section class="card route-panel" aria-label="Recommended routes">
           <div class="kicker">Reader routing</div>
-          <h2 class="section-title">Choose the mode that matches how they review</h2>
+          <h2 class="section-title">Choose the view that matches how you review</h2>
           <p class="route-copy">
             Pick the view that fits how you review. Prefer no motion? Use <a class="plainLink mono" href="?plain=1" id="plainModeLinkInline">plain mode</a>.
           </p>
@@ -2364,7 +2476,7 @@
       // any feature script runs so they can gate behavior via window.BSC_FX.get().
       // Only the booleans listed here are accepted from storage, so a stale or hand-edited value
       // cannot inject unknown keys or non-boolean types.
-      const BSC_FX_DEFAULTS = { spotlight:false, tilt:false, sparks:false, confetti:true };
+      const BSC_FX_DEFAULTS = { spotlight:false, tilt:false, sparks:false, confetti:false };
       let fxState = (function(){
         try{
           const raw = localStorage.getItem('bsc_fx');
@@ -3871,27 +3983,6 @@
     })();
   </script>
 
-  <script>
-    // Types the role phrase one character at a time, then drops the .typing class (the caret).
-    // Skipped for reduced motion, which leaves the server-rendered text untouched.
-    /* hero typing animation */
-    (function(){
-      if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      var el = document.getElementById('hero-role');
-      if(!el) return;
-      var phrase = 'serverless backend systems';
-      var n = 0;
-      function tick(){
-        n++;
-        el.textContent = phrase.slice(0, n);
-        if(n < phrase.length){ setTimeout(tick, 68); }
-        else { el.classList.remove('typing'); }
-      }
-      el.textContent = '';
-      el.classList.add('typing');
-      setTimeout(tick, 600);
-    })();
-  </script>
 
   <!-- command palette -->
   <div id="cmd-pal" role="dialog" aria-modal="true" aria-label="Command palette" hidden>
@@ -3933,6 +4024,7 @@
     // Section jumps are keyed by page, so each page only offers anchors that exist on it.
     var JMP={
       'index.html':[
+        {cat:'Jump to',label:'Fit check',desc:'Paste a job description',anchor:'#fitCheck'},
         {cat:'Jump to',label:'Resume Modes',desc:'All format cards',anchor:'#formats'},
         {cat:'Jump to',label:'Tailor Tools',desc:'Build a Signal link',anchor:'#tailorTools'},
       ],
@@ -4066,5 +4158,7 @@
   </script>
 
   <script src="shared-enhancements.js"></script>
+  <!-- Home only: fit check, facts strip and verified chip; see the header comment in home-evidence.js -->
+  <script src="home-evidence.js"></script>
 </body>
 </html>

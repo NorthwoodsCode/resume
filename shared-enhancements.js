@@ -13,6 +13,9 @@
      7. "Copy share link" buttons on each case study (ids case-<slug>).
      8. ?for=<company> personalization driven by companies.json.
      9. The "Built with…" line in Home's footer.
+    10. Evidence: receipts behind every headline number ([data-receipt]) and
+        the decisions / incidents / answers lists ([data-evidence-list]), both
+        read from evidence.json.
 
    Everything is wrapped in one IIFE so nothing leaks except the few window.*
    helpers that pages and tests use (BSC_STORE, bscCopy, bscOpenPalette,
@@ -597,6 +600,271 @@
     e.preventDefault();
     bscShare({url: el.getAttribute('data-bsc-share-url') || undefined});
   });
+
+  /* ── evidence: receipts behind the numbers, and the evidence lists ── */
+  // evidence.json holds a receipt for every headline number (baseline, method,
+  // where, confidence) plus, once written, the decisions, incidents and
+  // screen-call answers shown on Proof Hub. Two hooks, both markup-driven:
+  //   data-receipt="<id>"                       the element opens that receipt
+  //   data-evidence-list="decisions|incidents|answers"   filled with cards
+  // Entries still marked "draft": true render with a DRAFT badge here and are
+  // removed before deploy by scripts/strip_drafts.py, so the live site never
+  // shows unfinished content. scripts/check_evidence.py fails the build when a
+  // page claims a receipt that does not exist.
+  var evidencePromise = null;
+  function loadEvidence(){
+    if(!evidencePromise){
+      evidencePromise = fetch('evidence.json')
+        .then(function(r){ return r.ok ? r.json() : null; })
+        .catch(function(){ return null; });
+    }
+    return evidencePromise;
+  }
+  window.bscEvidence = loadEvidence;
+  function escapeHtml(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+  function draftBadge(entry){
+    return entry && entry.draft === true ? ' <span class="bsc-draft" title="Author draft: removed from the published site until finished">DRAFT</span>' : '';
+  }
+  // Cards and the receipt panel share one small stylesheet. Colours are plain
+  // values with a dark override, because each page names its own tokens.
+  addStyle('bsc-evidence-style',
+    '.bsc-receipt{cursor:help;text-decoration:underline dotted;text-decoration-thickness:2px;text-underline-offset:.16em;text-decoration-color:#2f64ff}' +
+    'html[data-theme="dark"] .bsc-receipt{text-decoration-color:#86a6ff}' +
+    '.bsc-receipt:hover,.bsc-receipt:focus-visible{text-decoration-style:solid;text-decoration-color:currentColor}' +
+    '.bsc-receipt:focus-visible{outline:3px solid rgba(47,100,255,.6);outline-offset:3px;border-radius:4px}' +
+    '.bsc-draft{display:inline-block;font:800 .75rem/1 system-ui,sans-serif;letter-spacing:.1em;padding:.22rem .45rem;border-radius:6px;background:#fde68a;color:#78350f;vertical-align:middle}' +
+    '#bsc-receipt{position:fixed;inset:0;z-index:100001;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(5,9,20,.55);backdrop-filter:blur(6px)}' +
+    '#bsc-receipt[hidden]{display:none}' +
+    '.bsc-rc-card{position:relative;width:min(600px,100%);max-height:min(88vh,88dvh);overflow:auto;overscroll-behavior:contain;padding:22px 24px 20px;border-radius:20px;background:#fff;color:#0b1325;border:1px solid rgba(86,109,145,.25);box-shadow:0 30px 90px rgba(0,0,0,.4);font:1rem/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}' +
+    'html[data-theme="dark"] .bsc-rc-card{background:#0f172a;color:#e5e7eb;border-color:rgba(203,220,255,.16)}' +
+    '@media(prefers-color-scheme:dark){html[data-theme="auto"] .bsc-rc-card{background:#0f172a;color:#e5e7eb;border-color:rgba(203,220,255,.16)}}' +
+    '.bsc-rc-kicker{display:flex;align-items:center;justify-content:space-between;gap:10px;font:800 .72rem/1 system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;opacity:.7}' +
+    '.bsc-rc-close{appearance:none;border:1px solid currentColor;background:transparent;color:inherit;border-radius:999px;width:36px;height:36px;font-size:1.1rem;cursor:pointer;opacity:.8}' +
+    '.bsc-rc-close:hover,.bsc-rc-close:focus-visible{opacity:1}' +
+    '.bsc-rc-head{margin:.65rem 0 .25rem;font-size:1.55rem;line-height:1.15;letter-spacing:-.02em;font-weight:850}' +
+    '.bsc-rc-claim{margin:0 0 .9rem;font-size:1.02rem;opacity:.92}' +
+    '.bsc-rc-conf{display:inline-flex;align-items:center;gap:.45rem;padding:.3rem .7rem;border-radius:999px;font:800 .72rem/1 system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase}' +
+    '.bsc-rc-conf.measured{background:rgba(16,185,129,.16);color:#047857}.bsc-rc-conf.logged{background:rgba(37,99,235,.14);color:#1d4ed8}' +
+    '.bsc-rc-conf.reported{background:rgba(245,158,11,.18);color:#92400e}.bsc-rc-conf.stated{background:rgba(139,92,246,.16);color:#5b21b6}.bsc-rc-conf.estimated{background:rgba(107,114,128,.18);color:#374151}' +
+    'html[data-theme="dark"] .bsc-rc-conf.measured{color:#6ee7b7}html[data-theme="dark"] .bsc-rc-conf.logged{color:#93c5fd}html[data-theme="dark"] .bsc-rc-conf.reported{color:#fcd34d}html[data-theme="dark"] .bsc-rc-conf.stated{color:#d8b4fe}html[data-theme="dark"] .bsc-rc-conf.estimated{color:#d1d5db}' +
+    '@media(prefers-color-scheme:dark){html[data-theme="auto"] .bsc-rc-conf.measured{color:#6ee7b7}html[data-theme="auto"] .bsc-rc-conf.logged{color:#93c5fd}html[data-theme="auto"] .bsc-rc-conf.reported{color:#fcd34d}html[data-theme="auto"] .bsc-rc-conf.stated{color:#d8b4fe}html[data-theme="auto"] .bsc-rc-conf.estimated{color:#d1d5db}html[data-theme="auto"] .bsc-receipt{text-decoration-color:#86a6ff}}' +
+    '.bsc-rc-rows{margin:0;display:grid;grid-template-columns:minmax(96px,auto) 1fr;gap:.45rem 1rem;font-size:.94rem}' +
+    '.bsc-rc-rows dt{margin:0;font-weight:800;opacity:.7}.bsc-rc-rows dd{margin:0}' +
+    '.bsc-rc-rows dd.muted{opacity:.62;font-style:italic}' +
+    '.bsc-rc-foot{margin:1rem 0 0;padding-top:.8rem;border-top:1px solid rgba(128,128,128,.25);font-size:.8rem;line-height:1.5;opacity:.72}' +
+    '.bsc-rc-link{display:inline-block;margin-top:.9rem;font-weight:800;text-decoration:underline;text-underline-offset:.15em;color:inherit}' +
+    '@media(max-width:560px){.bsc-rc-card{padding:18px 16px 16px;border-radius:16px}.bsc-rc-rows{grid-template-columns:1fr;gap:.15rem .5rem}.bsc-rc-rows dt{margin-top:.5rem}}' +
+    '.bsc-ev-list{display:grid;gap:12px;margin:12px 0 0}' +
+    '.bsc-ev-card{padding:14px 16px;border:1px solid rgba(128,128,128,.28);border-radius:14px;background:rgba(127,127,127,.06)}' +
+    '.bsc-ev-card h3{margin:0 0 .5rem;font-size:1.02rem;line-height:1.3}' +
+    '.bsc-ev-card p{margin:.3rem 0}.bsc-ev-card ul{margin:.2rem 0 .4rem;padding-left:1.2rem}' +
+    '.bsc-ev-card .bsc-ev-k{font-weight:800;opacity:.75;margin-right:.35rem}' +
+    '.bsc-ev-actions{display:flex;flex-wrap:wrap;gap:.5rem .9rem;margin-top:.6rem;font-size:.9rem}' +
+    '.bsc-ev-actions button{appearance:none;border:1px solid currentColor;background:transparent;color:inherit;border-radius:999px;padding:.3rem .7rem;font:700 .82rem/1.2 system-ui,sans-serif;cursor:pointer;opacity:.85}' +
+    '.bsc-ev-actions button:hover,.bsc-ev-actions button:focus-visible{opacity:1}' +
+    '@media(max-width:640px),(hover:none) and (pointer:coarse){.bsc-ev-actions button,.bsc-rc-close{min-height:40px}.bsc-ev-actions button{min-width:40px}' +
+    '.bsc-ev-actions a{display:inline-flex;align-items:center;min-height:40px}' +
+    /* Receipt numbers sit inside sentences and tiles: pad the tap target without moving the line (negative margins cancel the padding). */
+    '.bsc-receipt{display:inline-block;box-sizing:border-box;min-height:40px;padding:.55rem 0;margin:-.55rem 0}}' +
+    '@media print{.bsc-receipt{text-decoration:none}#bsc-receipt,.bsc-ev-actions{display:none !important}}');
+
+  /* receipts: any [data-receipt] opens the matching receipt in a panel */
+  (function receipts(){
+    var panel = null, lastFocus = null;
+    var levelsFallback = {measured:'timed or counted directly', logged:'from logs or dashboards', reported:'a figure reported by others', estimated:'calculated from assumptions'};
+    function build(){
+      if(panel) return panel;
+      panel = document.createElement('div');
+      panel.id = 'bsc-receipt'; panel.hidden = true;
+      panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-modal', 'true');
+      panel.setAttribute('aria-labelledby', 'bsc-rc-title');
+      panel.innerHTML = '<div class="bsc-rc-card" tabindex="-1"></div>';
+      panel.addEventListener('click', function(e){ if(e.target === panel) close(); });
+      document.addEventListener('keydown', function(e){
+        if(panel.hidden) return;
+        if(e.key === 'Escape'){ e.preventDefault(); close(); return; }
+        if(e.key !== 'Tab') return;
+        // Keep focus inside the dialog while it is open.
+        var focusables = panel.querySelectorAll('button,[href],[tabindex]:not([tabindex="-1"])');
+        if(!focusables.length) return;
+        var first = focusables[0], last = focusables[focusables.length - 1];
+        var inside = panel.contains(document.activeElement) && document.activeElement !== panel.firstChild;
+        if(!inside){ e.preventDefault(); (e.shiftKey ? last : first).focus(); return; }
+        if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+        else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+      });
+      document.body.appendChild(panel);
+      return panel;
+    }
+    function row(label, value, muted){
+      if(value == null || value === '') return '';
+      return '<dt>' + escapeHtml(label) + '</dt><dd' + (muted ? ' class="muted"' : '') + '>' + escapeHtml(value) + '</dd>';
+    }
+    function render(id, r, levels){
+      var conf = String(r.confidence || 'estimated');
+      var levelText = (levels && levels[conf]) || levelsFallback[conf] || '';
+      var artifact = r.artifact && r.artifact.href
+        ? '<dt>Artifact</dt><dd><a href="' + escapeHtml(r.artifact.href) + '" rel="noopener" target="_blank">' + escapeHtml(r.artifact.label || 'Open') + '</a></dd>'
+        : '';
+      var legend = [];
+      var lv = levels || levelsFallback;
+      for(var k in lv){ if(Object.prototype.hasOwnProperty.call(lv, k)) legend.push('<b>' + escapeHtml(k) + '</b> ' + escapeHtml(lv[k])); }
+      return '<div class="bsc-rc-kicker"><span>Receipt · ' + escapeHtml(id) + '</span>' +
+        '<button class="bsc-rc-close" type="button" aria-label="Close receipt">×</button></div>' +
+        '<h2 class="bsc-rc-head" id="bsc-rc-title">' + escapeHtml(r.headline) + draftBadge(r) + '</h2>' +
+        '<p class="bsc-rc-claim">' + escapeHtml(r.claim) + '</p>' +
+        '<p><span class="bsc-rc-conf ' + escapeHtml(conf) + '">' + escapeHtml(conf) + '</span> <span style="font-size:.86rem;opacity:.8">' + escapeHtml(levelText) + '</span></p>' +
+        '<dl class="bsc-rc-rows">' +
+          row('Baseline', r.baseline) + row('Result', r.result) + row('Method', r.method || 'Not documented yet.', !r.method) +
+          row('Where', r.where) + row('My role', r.role) + row('Caveat', r.confidence_note) + artifact +
+        '</dl>' +
+        (r.case ? '<a class="bsc-rc-link" href="' + escapeHtml(siteLink('proof-hub.html')) + '#case-' + escapeHtml(r.case) + '">Read the case study →</a>' : '') +
+        '<p class="bsc-rc-foot">Confidence levels: ' + legend.join(' · ') + '.</p>';
+    }
+    function open(id, trigger){
+      return loadEvidence().then(function(d){
+        var r = d && d.receipts && d.receipts[id];
+        if(!r){ toast('No receipt published for this number yet'); return false; }
+        build();
+        lastFocus = trigger || document.activeElement;
+        var card = panel.firstChild;
+        card.innerHTML = render(id, r, d.confidence_levels);
+        card.querySelector('.bsc-rc-close').addEventListener('click', close);
+        panel.hidden = false;
+        document.documentElement.style.overflow = 'hidden';
+        card.scrollTop = 0;
+        card.querySelector('.bsc-rc-close').focus();
+        return true;
+      });
+    }
+    function close(){
+      if(!panel || panel.hidden) return;
+      panel.hidden = true;
+      document.documentElement.style.overflow = '';
+      if(lastFocus && lastFocus.focus){ try{ lastFocus.focus(); }catch(e){} }
+    }
+    function decorate(root){
+      var els = (root || document).querySelectorAll('[data-receipt]:not(.bsc-receipt)');
+      for(var i = 0; i < els.length; i++){
+        var el = els[i];
+        el.classList.add('bsc-receipt');
+        if(!/^(button|a)$/i.test(el.tagName)){ el.setAttribute('role', 'button'); el.setAttribute('tabindex', '0'); }
+        el.setAttribute('aria-haspopup', 'dialog');
+        if(!el.getAttribute('title')) el.setAttribute('title', 'How this number was measured');
+      }
+      return els.length;
+    }
+    document.addEventListener('click', function(e){
+      var el = e.target && e.target.closest ? e.target.closest('[data-receipt]') : null;
+      if(!el) return;
+      e.preventDefault();
+      open(el.getAttribute('data-receipt'), el);
+    });
+    document.addEventListener('keydown', function(e){
+      if(e.key !== 'Enter' && e.key !== ' ') return;
+      var el = e.target && e.target.closest ? e.target.closest('[data-receipt]') : null;
+      if(!el || /^(button|a)$/i.test(el.tagName)) return;
+      e.preventDefault();
+      open(el.getAttribute('data-receipt'), el);
+    });
+    decorate(document);
+    window.bscReceipts = {open: open, close: close, decorate: decorate, data: loadEvidence};
+  })();
+
+  /* evidence lists: decisions, incidents and screen-call answers on Proof Hub */
+  (function evidenceLists(){
+    var hosts = document.querySelectorAll('[data-evidence-list]');
+    if(!hosts.length) return;
+    function caseLink(slug){
+      return slug ? '<a href="' + escapeHtml(siteLink('proof-hub.html')) + '#case-' + escapeHtml(slug) + '">Case study →</a>' : '';
+    }
+    function field(label, value){
+      return value ? '<p><span class="bsc-ev-k">' + escapeHtml(label) + '</span>' + escapeHtml(value) + '</p>' : '';
+    }
+    var renderers = {
+      decisions: function(d){
+        var opts = (d.options || []).map(function(o){ return '<li>' + escapeHtml(o) + '</li>'; }).join('');
+        return '<article class="bsc-ev-card" id="decision-' + escapeHtml(d.id) + '">' +
+          '<h3>' + escapeHtml(d.title) + draftBadge(d) + '</h3>' +
+          field('Context', d.context) +
+          (opts ? '<p><span class="bsc-ev-k">Options considered</span></p><ul>' + opts + '</ul>' : '') +
+          field('Choice', d.choice) + field('What it cost', d.cost) + field('How it held up', d.verdict_later) +
+          '<div class="bsc-ev-actions">' + caseLink(d.case) + '</div></article>';
+      },
+      incidents: function(i){
+        return '<article class="bsc-ev-card" id="incident-' + escapeHtml(i.id) + '">' +
+          '<h3>' + escapeHtml(i.year) + ' · ' + escapeHtml(i.system) + draftBadge(i) + '</h3>' +
+          field('What happened', i.what) + field('Detected by', i.detected_by) + field('Impact', i.impact) +
+          field('Fix', i.fix) + field('Guard added', i.guard) + '</article>';
+      },
+      answers: function(a){
+        var refs = (a.evidence || []).map(function(ref){
+          if(ref.indexOf('case:') === 0) return caseLink(ref.slice(5));
+          return '<button type="button" data-receipt="' + escapeHtml(ref) + '">Receipt: ' + escapeHtml(ref) + '</button>';
+        }).join('');
+        return '<article class="bsc-ev-card" id="answer-' + escapeHtml(a.id) + '">' +
+          '<h3>' + escapeHtml(a.q) + draftBadge(a) + '</h3><p>' + escapeHtml(a.a) + '</p>' +
+          '<div class="bsc-ev-actions"><button type="button" data-bsc-copy-answer="' + escapeHtml(a.id) + '">Copy answer</button>' + refs + '</div></article>';
+      }
+    };
+    function renderLists(d){
+      for(var i = 0; i < hosts.length; i++){
+        var host = hosts[i];
+        var kind = host.getAttribute('data-evidence-list');
+        var items = (d && d[kind]) || [];
+        var section = host.closest('section') || host;
+        if(!items.length || !renderers[kind]){
+          // Nothing published yet: hide the section and any chip that points at it.
+          section.hidden = true;
+          if(section.id){
+            var chips = document.querySelectorAll('a[href="#' + section.id + '"]');
+            for(var c = 0; c < chips.length; c++){ chips[c].hidden = true; chips[c].style.display = 'none'; }
+          }
+          continue;
+        }
+        section.hidden = false;
+        if(section.id){
+          var shown = document.querySelectorAll('a[href="#' + section.id + '"]');
+          for(var s2 = 0; s2 < shown.length; s2++){ shown[s2].hidden = false; shown[s2].style.display = ''; }
+        }
+        host.classList.add('bsc-ev-list');
+        host.innerHTML = items.map(renderers[kind]).join('');
+        if(window.bscReceipts) window.bscReceipts.decorate(host);
+      }
+      document.dispatchEvent(new CustomEvent('bsc-evidence-rendered'));
+    }
+    loadEvidence().then(renderLists);
+    // Exposed for the test suite, which re-renders from an empty data set to
+    // check that unfilled sections disappear.
+    window.bscRenderEvidence = renderLists;
+    document.addEventListener('click', function(e){
+      var btn = e.target && e.target.closest ? e.target.closest('[data-bsc-copy-answer]') : null;
+      if(!btn) return;
+      var card = btn.closest('article');
+      var q = card ? card.querySelector('h3').textContent.replace(/\s*DRAFT\s*$/, '').trim() : '';
+      var a = card ? card.querySelector('p').textContent.trim() : '';
+      copyText(q + '\n' + a).then(function(ok){ toast(ok ? 'Answer copied' : COPY_FAIL); });
+    });
+  })();
+
+  /* Proof Hub: a job description pasted into Home's fit check carries over */
+  (function carryJdToProofHub(){
+    if(page !== 'proof-hub.html') return;
+    var jd = document.getElementById('jd');
+    if(!jd || jd.value) return;
+    var text = null;
+    try{ text = sessionStorage.getItem('bsc_fit_jd'); }catch(e){ text = null; }
+    if(!text) return;
+    try{ sessionStorage.removeItem('bsc_fit_jd'); }catch(e){}
+    var tools = jd.closest('details');
+    if(tools) tools.open = true;
+    jd.value = text;
+    jd.dispatchEvent(new Event('input', {bubbles:true}));
+  })();
 
   /* ── offline + installable ───────────────────────────────────── */
   // sw.js caches the pages so the resume opens with no signal. Registered only

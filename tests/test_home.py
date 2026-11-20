@@ -9,9 +9,14 @@ tests share one browser tab, so most start with goto(..., clear_storage=True)
 to begin from a clean localStorage. Tests are listed in TESTS near the bottom.
 """
 import asyncio
+import datetime
 import json
 import os
+import shutil
+import subprocess
 import sys
+import tempfile
+import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from harness import ChromeSession, serve_directory  # noqa: E402
@@ -112,8 +117,8 @@ async def test_subpages_load_without_BSC_FX(c):
 async def test_fx_defaults(c):
     await c.goto(BASE + "/", clear_storage=True)
     state = json.loads(await c.eval("JSON.stringify(window.BSC_FX.all())"))
-    expected = {"spotlight": False, "tilt": False, "sparks": False, "confetti": True}
-    return ("BSC_FX defaults: confetti on, every other effect off", state == expected, f"got {state}")
+    expected = {"spotlight": False, "tilt": False, "sparks": False, "confetti": False}
+    return ("BSC_FX defaults: every effect off, confetti included", state == expected, f"got {state}")
 
 
 async def test_fx_set_persists(c):
@@ -185,7 +190,11 @@ async def _confetti_fires(c, url, window_s=2.0):
 
 
 async def test_confetti_pops_on_home_load(c):
+    """Confetti is opt-in: silent on a first visit, pops on load once switched on,
+    and never in plain mode or under reduced motion."""
     await c.goto(BASE + "/", clear_storage=True)
+    silent = not await _confetti_fires(c, BASE + "/", window_s=1.5)
+    await c.eval("window.BSC_FX && window.BSC_FX.set('confetti', true)")
     fired = await _confetti_fires(c, BASE + "/")
     plain = await _confetti_fires(c, BASE + "/?plain=1", window_s=1.5)
     await c.eval("window.BSC_FX && window.BSC_FX.set('confetti', false)")
@@ -196,9 +205,9 @@ async def test_confetti_pops_on_home_load(c):
     reduced = await _confetti_fires(c, BASE + "/", window_s=1.5)
     await c.emulate_media("", [])
     return (
-        "Confetti pops on Home load, but not in plain mode, reduced motion, or with the toggle off",
-        fired and not plain and not off and not reduced,
-        f"default={fired} plain={plain} toggle_off={off} reduced_motion={reduced}",
+        "Confetti is silent by default, pops once switched on, never in plain mode or reduced motion",
+        silent and fired and not plain and not off and not reduced,
+        f"silent={silent} default={fired} plain={plain} toggle_off={off} reduced_motion={reduced}",
     )
 
 
@@ -1216,6 +1225,201 @@ async def test_embers_phone_allowed(c):
 
 # ─── Runner ──────────────────────────────────────────────────────────────
 
+
+# ─── Evidence: receipts, fit check, verified chip, evidence lists ────────
+# The first screen makes claims a reader can check: every headline number opens
+# its receipt from evidence.json, the fit check scores a pasted job description
+# in the browser, the verified chip runs checks live, and Proof Hub renders the
+# decisions / incidents / answers lists (drafts badged locally, stripped at deploy).
+
+async def _wait_for(c, expr, timeout=6.0, step=0.1):
+    """Poll a JS expression until it is truthy (or the timeout passes); returns the last value.
+    Used instead of fixed sleeps so a slow CI runner cannot turn a render delay into a failure."""
+    deadline = asyncio.get_event_loop().time() + timeout
+    value = None
+    while True:
+        value = await c.eval(expr)
+        if value or asyncio.get_event_loop().time() > deadline:
+            return value
+        await asyncio.sleep(step)
+
+
+FIT_JD = (
+    "Senior Backend Engineer. 5+ years of experience. You will build AWS serverless "
+    "services with Lambda, API Gateway, Step Functions and DynamoDB, manage infrastructure "
+    "with Terraform, and write Python and TypeScript. Kubernetes and Kafka are a plus."
+)
+
+
+async def test_home_first_screen_shows_claim_facts_and_fit(c):
+    """At a common laptop size the claim, the facts strip and the fit check are all
+    inside the first screen, and the name is not pushed down by the toolbar."""
+    await c.set_viewport(1366, 768)
+    try:
+        await c.goto(BASE + "/", clear_storage=True)
+        rects = json.loads(await c.eval(
+            "JSON.stringify((function(){function r(s){var e=document.querySelector(s);if(!e)return null;"
+            "var b=e.getBoundingClientRect();return [Math.round(b.top),Math.round(b.bottom)];}"
+            "return {h1:r('h1'),claim:r('#heroClaim'),facts:r('.facts-strip'),fit:r('#fitJd'),chip:r('#verifiedChip')};})())"
+        ))
+    finally:
+        await c.clear_viewport()
+    inside = all(rects.get(k) and rects[k][1] <= 768 for k in ("claim", "facts", "fit"))
+    # The claim's receipt numbers pulse once after load; not under reduced motion.
+    anim_expr = "getComputedStyle(document.querySelector('#heroClaim [data-receipt]')).animationName"
+    pulse = await c.eval(anim_expr)
+    await c.emulate_media("", [{"name": "prefers-reduced-motion", "value": "reduce"}])
+    reduced = await c.eval(anim_expr)
+    await c.emulate_media("", [])
+    return (
+        "Home first screen (1366x768) holds the claim, the facts strip and the fit check; receipt numbers pulse once",
+        inside and bool(rects["h1"]) and rects["h1"][0] < 300 and pulse == "bsc-receipt-pulse" and reduced == "none",
+        f"rects={rects} pulse={pulse!r} reduced={reduced!r}",
+    )
+
+
+async def test_receipt_opens_from_a_number(c):
+    """A number marked data-receipt is keyboard-reachable, opens its receipt with the
+    confidence label and a case link, closes on Escape and hands focus back."""
+    with open(os.path.join(ROOT, "evidence.json"), encoding="utf-8") as f:
+        evidence = json.load(f)
+    receipt = evidence["receipts"]["payload-bytes"]
+    await c.goto(BASE + "/", clear_storage=True)
+    buttons = await c.eval("document.querySelectorAll('[data-receipt].bsc-receipt[role=\"button\"][tabindex=\"0\"]').length")
+    await c.eval("document.querySelector('[data-receipt=\"payload-bytes\"]').click()")
+    await _wait_for(c, "(function(){var p=document.getElementById('bsc-receipt');return !!p&&!p.hidden;})()")
+    shown = json.loads(await c.eval(
+        "JSON.stringify((function(){var p=document.getElementById('bsc-receipt');if(!p||p.hidden)return null;"
+        "return {title:p.querySelector('#bsc-rc-title').textContent,conf:(p.querySelector('.bsc-rc-conf')||{textContent:''}).textContent.trim(),"
+        "focus:document.activeElement&&document.activeElement.className,link:!!p.querySelector('.bsc-rc-link'),"
+        "rows:p.querySelectorAll('.bsc-rc-rows dt').length};})())"
+    ))
+    await c.eval("document.activeElement.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}))")
+    await asyncio.sleep(0.2)
+    closed = await c.eval("document.getElementById('bsc-receipt').hidden")
+    focus_back = await c.eval("document.activeElement && document.activeElement.getAttribute('data-receipt')")
+    ok = (
+        buttons >= 2 and shown is not None and shown["title"].startswith(receipt["headline"])
+        and shown["conf"] == receipt["confidence"] and shown["conf"] in evidence["confidence_levels"]
+        and shown["link"] and shown["rows"] >= 4 and shown["focus"] == "bsc-rc-close"
+        and closed is True and focus_back == "payload-bytes"
+    )
+    return (
+        "Receipts open from a headline number, show the confidence level, close on Escape and restore focus",
+        ok,
+        f"buttons={buttons} shown={shown} closed={closed} focusBack={focus_back!r} errors={_real_errors(c)!r}",
+    )
+
+
+async def test_every_tile_claims_a_real_receipt(c):
+    """Atlas, Signal and Proof Hub tiles carry data-receipt ids that exist in evidence.json."""
+    failures = []
+    for page, min_n in (("/resume-atlas.html", 4), ("/resume-signal.html", 3), ("/proof-hub.html", 4)):
+        await c.goto(BASE + page, clear_storage=True)
+        res = json.loads(await c.eval(
+            "window.bscReceipts.data().then(function(d){var ids=Array.from(document.querySelectorAll('[data-receipt]'))"
+            ".map(function(e){return e.getAttribute('data-receipt')});return JSON.stringify({n:ids.length,"
+            "missing:ids.filter(function(i){return !(d&&d.receipts&&d.receipts[i])}),"
+            "decorated:document.querySelectorAll('[data-receipt].bsc-receipt').length});})",
+            await_promise=True,
+        ))
+        if res["n"] < min_n or res["missing"] or res["decorated"] != res["n"]:
+            failures.append(f"{page}: {res}")
+        if _real_errors(c):
+            failures.append(f"{page}: {_real_errors(c)!r}")
+    return ("Every metric tile on Atlas, Signal and Proof Hub opens a receipt that exists", not failures, "; ".join(failures) or "3/3 pages OK")
+
+
+async def test_fit_check_scores_a_posting_and_names_gaps(c):
+    """Pasting a posting lists strong matches with Signal links, counts the years asked for,
+    and names the skills the resume does not have. The posting carries over to Proof Hub."""
+    await c.goto(BASE + "/", clear_storage=True)
+    await c.eval("(function(){var t=document.getElementById('fitJd');t.value=" + json.dumps(FIT_JD) + ";document.getElementById('fitRun').click();})()")
+    await _wait_for(c, "!document.getElementById('fitOut').hidden")
+    res = json.loads(await c.eval(
+        "JSON.stringify((function(){var o=document.getElementById('fitOut');var cols=o.querySelectorAll('.fit-col');"
+        "return {shown:!o.hidden,strong:cols.length?cols[0].querySelectorAll('li').length:0,"
+        "gaps:Array.from(o.querySelectorAll('.fit-chip')).map(function(e){return e.textContent}),"
+        "sum:(o.querySelector('.fit-sum')||{textContent:''}).textContent,"
+        "signal:!!o.querySelector('a[href^=\"resume-signal.html?q=\"]')};})())"
+    ))
+    await c.eval("sessionStorage.setItem('bsc_fit_jd', " + json.dumps(FIT_JD) + ")")
+    await c.goto(BASE + "/proof-hub.html")
+    await _wait_for(c, "document.querySelectorAll('#matchList li').length > 0")
+    carried = json.loads(await c.eval(
+        "JSON.stringify({jd:document.getElementById('jd').value.length,matches:document.querySelectorAll('#matchList li').length,"
+        "open:document.querySelector('#turbo details').open})"
+    ))
+    ok = (
+        res["shown"] and res["strong"] >= 1 and "Kubernetes" in res["gaps"] and "Kafka" in res["gaps"]
+        and "Terraform" not in res["gaps"] and "asks for 5+ years" in res["sum"] and res["signal"]
+        and carried["jd"] > 100 and carried["matches"] >= 1 and carried["open"]
+    )
+    return (
+        "Fit check finds strong matches, names Kubernetes and Kafka as gaps, and carries the posting to Proof Hub",
+        ok,
+        f"home={res} proofhub={carried} errors={_real_errors(c)!r}",
+    )
+
+
+async def test_verified_chip_runs_live_checks(c):
+    """The chip describes the real-browser test run and its live checks all pass here."""
+    await c.goto(BASE + "/", clear_storage=True)
+    text = (await c.eval("document.getElementById('verifiedText').textContent") or "").lower()
+    results = json.loads(await c.eval("window.bscLiveChecks().then(function(r){return JSON.stringify(r)})", await_promise=True))
+    failed = [r for r in results if not r["ok"]]
+    rendered = await c.eval("document.querySelectorAll('#liveChecks li.ok').length")
+    ok = "real chrome" in text and len(results) >= 5 and not failed and rendered == len(results)
+    return ("Verified chip is present and every live check passes in this browser", ok, f"text={text!r} n={len(results)} failed={failed!r} rendered={rendered}")
+
+
+async def test_proof_hub_evidence_lists_and_draft_stripping(c):
+    """Proof Hub renders the decisions / incidents / answers lists; locally, drafts carry a
+    DRAFT badge. strip_drafts.py removes every draft and author note, an empty list hides
+    its section and nav chip, and check_evidence.py passes against the pages."""
+    with open(os.path.join(ROOT, "evidence.json"), encoding="utf-8") as f:
+        evidence = json.load(f)
+    expected_drafts = {k: sum(1 for e in evidence.get(k, []) if e.get("draft")) for k in ("decisions", "incidents", "answers")}
+    await c.goto(BASE + "/proof-hub.html", clear_storage=True)
+    await _wait_for(c, "document.querySelectorAll('.bsc-ev-card').length > 0 || document.getElementById('decisions').hidden")
+    probe = (
+        "JSON.stringify((function(){function n(id){var s=document.getElementById(id);var a=document.querySelector('a[href=\"#'+id+'\"]');"
+        "return {hidden:!!s.hidden,cards:s.querySelectorAll('.bsc-ev-card').length,drafts:s.querySelectorAll('.bsc-draft').length,chipHidden:!!(a&&a.hidden)};}"
+        "return {decisions:n('decisions'),incidents:n('incidents'),answers:n('answers')};})())"
+    )
+    before = json.loads(await c.eval(probe))
+    badges_ok = all(before[k]["cards"] == len(evidence.get(k, [])) and before[k]["drafts"] == expected_drafts[k] for k in expected_drafts)
+    # Re-render from an empty data set: sections and chips must hide.
+    await c.eval("window.bscRenderEvidence({decisions:[],incidents:[],answers:[]})")
+    after = json.loads(await c.eval(probe))
+    hides_ok = all(after[k]["hidden"] and after[k]["chipHidden"] for k in expected_drafts)
+    # The deploy-time strip removes drafts and notes; the lint passes against the pages.
+    with tempfile.TemporaryDirectory() as tmp:
+        copy = os.path.join(tmp, "evidence.json")
+        shutil.copy(os.path.join(ROOT, "evidence.json"), copy)
+        subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "strip_drafts.py"), copy], check=True, capture_output=True)
+        with open(copy, encoding="utf-8") as f:
+            stripped = json.load(f)
+
+    def has_author_material(node):
+        if isinstance(node, dict):
+            return node.get("draft") is True or any(k.startswith("_") or has_author_material(v) for k, v in node.items())
+        if isinstance(node, list):
+            return any(has_author_material(v) for v in node)
+        return False
+
+    strip_ok = not has_author_material(stripped) and set(stripped["receipts"]) == set(evidence["receipts"])
+    strict = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "check_evidence.py"), "--strict"], capture_output=True, text=True)
+    # --strict must reject the unstripped file whenever it still holds drafts or notes, and accept it otherwise.
+    strict_ok = (strict.returncode != 0) == has_author_material(evidence)
+    lint = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "check_evidence.py")], capture_output=True, text=True)
+    ok = badges_ok and hides_ok and strip_ok and strict_ok and lint.returncode == 0 and not _real_errors(c)
+    return (
+        "Proof Hub renders the evidence lists with DRAFT badges, hides empty ones, and the strip + lint scripts agree",
+        ok,
+        f"before={before} after={after} strip_ok={strip_ok} strict_ok={strict_ok} lint={lint.returncode} {lint.stdout.strip()[-160:]!r} errors={_real_errors(c)!r}",
+    )
+
 TESTS = [
     test_page_loads_clean,
     test_fx_panel_renders,
@@ -1271,23 +1475,78 @@ TESTS = [
     test_embers_click_sparks_use_canvas,
     test_embers_restart_and_destroy,
     test_embers_phone_allowed,
+    test_home_first_screen_shows_claim_facts_and_fit,
+    test_receipt_opens_from_a_number,
+    test_every_tile_claims_a_real_receipt,
+    test_fit_check_scores_a_posting_and_names_gaps,
+    test_verified_chip_runs_live_checks,
+    test_proof_hub_evidence_lists_and_draft_stripping,
 ]
 
 
+def _browser_version():
+    """Best-effort Chrome version string for the report; None when unavailable."""
+    for exe in ("google-chrome", "google-chrome-stable", "chromium", "chromium-browser"):
+        try:
+            out = subprocess.run([exe, "--version"], capture_output=True, text=True, timeout=5).stdout.strip()
+            if out:
+                return out
+        except Exception:
+            continue
+    return None
+
+
+def _commit_sha():
+    sha = os.environ.get("GITHUB_SHA")
+    if sha:
+        return sha
+    try:
+        return subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True, timeout=5).stdout.strip() or None
+    except Exception:
+        return None
+
+
+def write_report(path, results, started):
+    """Write the run as JSON (tests-latest.json in CI): Home's verified chip reads it."""
+    report = {
+        "date": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "commit": _commit_sha(),
+        "browser": _browser_version(),
+        "total": len(results),
+        "passed": sum(1 for r in results if r["ok"]),
+        "duration_ms": int((time.monotonic() - started) * 1000),
+        "tests": [{"name": r["name"], "ok": r["ok"], "ms": r["ms"]} for r in results],
+    }
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(report, f, indent=1)
+        f.write("\n")
+    print(f"Report written to {path}")
+
+
 async def main():
-    """Serve the repo, run every test in TESTS and exit non-zero on any failure."""
+    """Serve the repo, run every test in TESTS and exit non-zero on any failure.
+
+    `--report PATH` also writes the run as JSON; the deploy workflow publishes it
+    as tests-latest.json so the Home page can show the last verified run."""
+    report_path = None
+    if "--report" in sys.argv:
+        report_path = sys.argv[sys.argv.index("--report") + 1]
+    started = time.monotonic()
     server = serve_directory(ROOT, port=PORT)
     # Separate ports for the web server (8766) and DevTools (9438), so neither
     # collides with a developer's own server or browser.
     async with ChromeSession(port=9438) as chrome:
         print(f"Running {len(TESTS)} tests against {BASE}\n")
         results = []
+        timings = []
         for fn in TESTS:
+            t0 = time.monotonic()
             try:
                 name, ok, msg = await fn(chrome)
             except Exception as e:
                 name, ok, msg = fn.__name__, False, f"EXCEPTION: {e!r}"
             results.append((name, ok, msg))
+            timings.append({"name": name, "ok": ok, "ms": int((time.monotonic() - t0) * 1000)})
             mark = "PASS" if ok else "FAIL"
             print(f"  [{mark}] {name}")
             if not ok:
@@ -1300,6 +1559,8 @@ async def main():
         server.wait(timeout=3)
     except Exception:
         server.kill()
+    if report_path:
+        write_report(report_path, timings, started)
     sys.exit(0 if passed == total else 1)
 
 
