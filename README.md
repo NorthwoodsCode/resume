@@ -170,9 +170,7 @@ CI runs the test suite on every push and PR automatically; a regression blocks d
 
 Pushes to `main` deploy to GitHub Pages via the `.github/workflows/deploy.yml` workflow. The workflow first runs the headless-Chrome test suite — if any test fails, the deploy is skipped. Pull requests run the test suite only; the build and deploy jobs run on `main`. During the build, `scripts/stamp_dates.py` writes each page's last-updated date, the sitemap's `lastmod` values and the service worker's cache `VERSION` from git history, per-case OG art and `/case/<slug>/` stub pages are generated, the test job's report lands as `tests-latest.json`, and `scripts/strip_drafts.py` removes draft evidence and author notes (then `check_evidence.py --strict` confirms it), so none of those are committed.
 
-```text
-Production:  https://northwoodscode.github.io/resume/
-```
+**Production:** [northwoodscode.github.io/resume](https://northwoodscode.github.io/resume/)
 
 One-time setup: repo **Settings → Pages → Build and deployment → Source → GitHub Actions**. While the source is still "Deploy from a branch", GitHub's own "pages build and deployment" job runs on every push and races this workflow (it can fail at startup and hold the Actions deploy in the queue).
 
