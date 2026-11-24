@@ -14,7 +14,8 @@ const NAV_TIMEOUT_MS = 4000;
 const PRECACHE = [
   './', 'index.html', 'resume-atlas.html', 'resume-signal.html', 'proof-hub.html',
   'resume-switchboard.html', 'now.html', '404.html', 'offline.html',
-  'shared-enhancements.js', 'cases.json', 'companies.json', 'resume-ats.txt',
+  'shared-enhancements.js', 'home-evidence.js', 'cases.json', 'companies.json', 'evidence.json',
+  'tests-latest.json', 'resume-ats.txt',
   'brandon-clark.vcf', 'qr-resume.svg', 'favicon.svg', 'favicon.ico',
   'apple-touch-icon.png', 'icon-192.png', 'icon-512.png', 'icon-512-maskable.png',
   'site.webmanifest'

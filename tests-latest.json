@@ -1,0 +1,4 @@
+{
+  "about": "Written by tests/test_home.py --report in the GitHub Actions test job and published with each deploy. This committed copy is a placeholder so local servers never 404; Home shows a generic line when it has no tests.",
+  "tests": []
+}

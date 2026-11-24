@@ -1,0 +1,255 @@
+{
+  "about": "Evidence behind the resume: the facts strip on Home, a receipt for every headline number, and (once written) the decisions, incidents and screen-call answers rendered on Proof Hub. Every receipt field is written from the resume's own wording (resume-ats.txt, proof-hub.html); fields nobody has documented yet are null and the panel says so. Entries marked \"draft\": true and keys starting with \"_\" are author notes: scripts/strip_drafts.py removes them at deploy, so they never reach the live site (they are visible in this public repository). scripts/check_evidence.py lints this file in CI.",
+  "confidence_levels": {
+    "measured": "timed or counted directly",
+    "logged": "taken from system logs, metrics or dashboards",
+    "reported": "reported by the business or the team, not measured by me",
+    "stated": "stated on my resume; the measurement basis is not documented here yet",
+    "estimated": "calculated from stated assumptions"
+  },
+  "facts": {
+    "name": "Brandon S. Clark",
+    "title": "Senior Software Engineer",
+    "focus": "AWS Backend & Cloud Platform",
+    "employer": "Milwaukee Tool",
+    "team": "Digital IoT Service",
+    "at_employer_since": "2021",
+    "role_since": "2025",
+    "career_since": "2016",
+    "location": "Wisconsin",
+    "remote": true,
+    "availability": "Available for new roles",
+    "available_from": null,
+    "certifications": [
+      "AWS Solutions Architect – Associate (SAA-C03)",
+      "HashiCorp Terraform Associate (003)",
+      "AWS Cloud Practitioner (CLF-C01)"
+    ],
+    "stack": "AWS serverless · Terraform · Python · TypeScript",
+    "_todo": "Set available_from to a date (YYYY-MM-DD) or a phrase such as \"two weeks' notice\" and it appears in the facts strip."
+  },
+  "receipts": {
+    "provisioning-time": {
+      "headline": "≈10 min → <1 min per device",
+      "claim": "Cut device provisioning from roughly 10 minutes of manual work to under 1 minute per device.",
+      "baseline": "Roughly 10 minutes of manual, console-driven onboarding per device: registration, certificate generation and bootstrapping.",
+      "result": "Under 1 minute per device with a repeatable workflow aligned to AWS IoT Core and enterprise security practices.",
+      "method": null,
+      "where": "Milwaukee Tool · Digital IoT Service · 2025",
+      "role": "Delivered the greenfield CLI and supporting APIs; integrated AWS Secrets Manager and Auth0 credential handling.",
+      "confidence": "stated",
+      "confidence_note": "The figures are approximate (\"roughly 10 minutes\" to \"under 1 minute\") and how they were timed is not documented here yet.",
+      "artifact": null,
+      "case": "secure-provisioning",
+      "_todo": "Who timed it, when, and how (one device, wall clock?). Then set confidence to \"measured\" and method to that sentence. Attach a redacted terminal timing or CI log as the artifact ({\"label\": \"...\", \"href\": \"...\"})."
+    },
+    "payload-bytes": {
+      "headline": "476 B → 15 B",
+      "claim": "MQTT delta updates cut constrained-device payloads by about 40%, with one example dropping from 476 bytes to 15 bytes.",
+      "baseline": "The same device update before delta messaging: 476 bytes.",
+      "result": "15 bytes for that update after switching to MQTT delta updates; across messages the reduction was about 40%.",
+      "method": "Byte count of one message before and after the change.",
+      "where": "Milwaukee Tool · Digital IoT Service · 2025",
+      "role": "Implemented the MQTT delta updates.",
+      "confidence": "measured",
+      "confidence_note": "476 → 15 is one example, not the average. The average reduction was about 40%.",
+      "artifact": null,
+      "case": "secure-provisioning",
+      "_todo": "Fill the \"payload\" block below with a sanitized before/after pair (field names changed, structure and sizes real); check_evidence.py then verifies the byte counts and Home animates the real squeeze."
+    },
+    "portal-volume": {
+      "headline": "$85M · ~250,000 payments",
+      "claim": "A client-facing payment portal processed roughly 250,000 payments totalling about $85M.",
+      "baseline": "What the number is: payments processed through the portal while in production.",
+      "result": "Zero reported payment failures attributable to the platform; still in production after handoff.",
+      "method": null,
+      "where": "Foundation Finance Company · 2020–2021",
+      "role": null,
+      "confidence": "reported",
+      "confidence_note": "Figures reported by the business, and approximate (\"roughly\", \"about\").",
+      "artifact": null,
+      "case": "payment-portal",
+      "_todo": "Two pages word your role differently (\"Designed and delivered\" in the case study and ATS text; \"Assisted with the design\" in the 2020 ledger). State what you owned (design, build, CI/CD, operations) and who else was on it, then align the other wording. Name the source of the figures if you can (for example a finance dashboard and the year)."
+    },
+    "etl-hours": {
+      "headline": "1,200+ hours · ~$40K",
+      "claim": "An automated data-entry program (Java + MS SQL Server) saved more than 1,200 hours of manual work and about $40K.",
+      "baseline": "A manual data-entry process that consumed a large amount of repetitive effort and introduced error risk.",
+      "result": "The program handled parsing, validation, transformation and persistence without human intervention, with no ongoing support burden.",
+      "method": null,
+      "where": "Foundation Finance Company · 2019–2020",
+      "role": "Built the program.",
+      "confidence": "stated",
+      "confidence_note": "More than 1,200 hours and about $40K, as stated on the resume; how they were counted is not documented here yet.",
+      "artifact": null,
+      "case": "java-etl",
+      "_todo": "State how the 1,200 hours were counted (minutes per record × records, over what period) and the hourly rate behind $40K; then set confidence to \"measured\", \"logged\" or \"estimated\" and method to that sentence."
+    },
+    "onboarding-ramp": {
+      "headline": "~30% faster ramp",
+      "claim": "A README, CLI examples, diagrams and demo assets cut onboarding time for new engineers by an estimated 30%.",
+      "baseline": null,
+      "result": null,
+      "method": null,
+      "where": "Milwaukee Tool · Digital IoT Service · 2025",
+      "role": "Authored the documentation and demo assets.",
+      "confidence": "estimated",
+      "confidence_note": "An estimate, as the resume says. Treat it as a direction, not a measurement.",
+      "artifact": null,
+      "case": "secure-provisioning",
+      "_todo": "Either describe the basis (how many engineers, days before and after) or drop this from the headline tiles."
+    }
+  },
+  "payload": null,
+  "_payload_todo": "Replace null with {\"before\": \"<sanitized JSON string>\", \"after\": \"<sanitized JSON string>\", \"before_bytes\": 476, \"after_bytes\": 15, \"note\": \"Representative sample: field names changed, structure and sizes real.\"}",
+  "decisions": [
+    {
+      "id": "bus-orchestration",
+      "case": "serverless-bus",
+      "draft": true,
+      "title": "Step Functions orchestration instead of one Lambda for the request bus",
+      "context": "TODO: what the partner integrations needed (validation, transformation, auditability) and what the constraint was.",
+      "options": [
+        "TODO: a single Lambda doing filter, validate, transform and respond",
+        "TODO: SQS or EventBridge fan-out",
+        "Step Functions with one Lambda per concern (chosen)"
+      ],
+      "choice": "TODO: why Step Functions won.",
+      "cost": "TODO: what it cost (latency, cold starts, state-machine complexity, price).",
+      "verdict_later": "TODO: held up / regretted / revisited, and why.",
+      "_todo": "Keep it to six sentences. Name the alternative you rejected and what would have made you choose it instead."
+    },
+    {
+      "id": "provisioning-cli",
+      "case": "secure-provisioning",
+      "draft": true,
+      "title": "A CLI instead of a console or web workflow for device provisioning",
+      "context": "TODO: who provisions devices, how often, in which environments.",
+      "options": [
+        "TODO: keep the console runbook",
+        "TODO: a web UI",
+        "A Python CLI plus supporting APIs (chosen)"
+      ],
+      "choice": "TODO: why a CLI won (repeatability, scripting, audit, permissions).",
+      "cost": "TODO: what it cost (distribution, credentials on laptops, Windows support).",
+      "verdict_later": "TODO"
+    },
+    {
+      "id": "data-parallel-run",
+      "case": "data-foundations",
+      "draft": true,
+      "title": "Parallel run with ETL parity checks instead of a big-bang cutover",
+      "context": "TODO: the legacy tool-data store and what could not be disrupted.",
+      "options": [
+        "TODO: big-bang migration",
+        "Run old and new in parallel with backfill and parity checks (chosen)"
+      ],
+      "choice": "TODO",
+      "cost": "TODO: double writes, parity tooling, longer timeline.",
+      "verdict_later": "TODO"
+    },
+    {
+      "id": "portal-stack",
+      "case": "payment-portal",
+      "draft": true,
+      "title": "TODO: the one architectural decision in the payment portal you would defend",
+      "context": "TODO",
+      "options": [
+        "TODO",
+        "TODO (chosen)"
+      ],
+      "choice": "TODO",
+      "cost": "TODO",
+      "verdict_later": "TODO"
+    }
+  ],
+  "incidents": [
+    {
+      "id": "incident-1",
+      "draft": true,
+      "year": "TODO",
+      "system": "TODO: which system (sanitized name)",
+      "what": "TODO: what happened, in two sentences.",
+      "detected_by": "TODO: an alarm, a test, a teammate, or a user found it first.",
+      "impact": "TODO: blast radius and duration.",
+      "fix": "TODO: what you changed to stop it.",
+      "guard": "TODO: the alarm, test or runbook line added so it cannot recur.",
+      "_todo": "At least one of the three should be your own mistake. No customer data, no internal hostnames."
+    },
+    {
+      "id": "incident-2",
+      "draft": true,
+      "year": "TODO",
+      "system": "TODO",
+      "what": "TODO",
+      "detected_by": "TODO",
+      "impact": "TODO",
+      "fix": "TODO",
+      "guard": "TODO"
+    },
+    {
+      "id": "incident-3",
+      "draft": true,
+      "year": "TODO",
+      "system": "TODO",
+      "what": "TODO",
+      "detected_by": "TODO",
+      "impact": "TODO",
+      "fix": "TODO",
+      "guard": "TODO"
+    }
+  ],
+  "answers": [
+    {
+      "id": "senior-after-a-year",
+      "draft": true,
+      "q": "Why Senior Software Engineer after one year as Software Engineer II?",
+      "a": "TODO: two or three lines in your own voice: what changed in scope, who you influenced, what you owned end to end.",
+      "evidence": [
+        "case:secure-provisioning",
+        "provisioning-time"
+      ]
+    },
+    {
+      "id": "portal-ownership",
+      "draft": true,
+      "q": "Is the $85M payment-portal figure yours?",
+      "a": "TODO: what the number measures (volume through the portal), what you personally designed and built, and who else was on it.",
+      "evidence": [
+        "portal-volume",
+        "case:payment-portal"
+      ]
+    },
+    {
+      "id": "old-numbers",
+      "draft": true,
+      "q": "Are the 2019–2021 numbers still relevant to a senior AWS role?",
+      "a": "TODO: why they are on the page, and which 2024–2025 facts you would rather be judged on.",
+      "evidence": [
+        "payload-bytes",
+        "provisioning-time"
+      ]
+    },
+    {
+      "id": "python-typescript-depth",
+      "draft": true,
+      "q": "How much production Python and TypeScript?",
+      "a": "TODO: years in each, what was built in each, what runs in production today.",
+      "evidence": []
+    },
+    {
+      "id": "cannot-show",
+      "draft": true,
+      "q": "What can't you show, and why?",
+      "a": "TODO: employer code and internal names stay private; what you can show instead (diagrams, sanitized design notes, this site's own source).",
+      "evidence": []
+    },
+    {
+      "id": "logistics",
+      "draft": true,
+      "q": "Location, remote, start date, compensation?",
+      "a": "TODO: Wisconsin, remote-first; start date or notice period; how you want to talk about compensation.",
+      "evidence": []
+    }
+  ]
+}
